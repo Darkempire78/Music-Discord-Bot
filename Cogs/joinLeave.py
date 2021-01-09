@@ -22,6 +22,7 @@ class CogJoinLeave(commands.Cog):
         self.bot.music[ctx.guild.id]["musics"] = []
         self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
         self.bot.music[ctx.guild.id]["nowPlaying"] = None
+        self.bot.music[ctx.guild.id]["volume"] = 0.5
         await ctx.channel.send(f"{ctx.author.mention} Connected!")
 
     @commands.command(name = "leave",
@@ -41,6 +42,7 @@ class CogJoinLeave(commands.Cog):
         self.bot.music[ctx.guild.id]["musics"] = []
         self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
         self.bot.music[ctx.guild.id]["nowPlaying"] = None
+        self.bot.music[ctx.guild.id]["volume"] = 0.5
         await ctx.channel.send(f"{ctx.author.mention} Disconnected!")
         
 

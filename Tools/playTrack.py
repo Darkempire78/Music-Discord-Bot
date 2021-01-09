@@ -4,8 +4,8 @@ import asyncio
 from Tools.sendPlayingSongEmbed import sendPlayingSongEmbed
 
 def playTrack(self, ctx, client, music):
-    self.bot.music[ctx.guild.id]["source"] = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(music["music"].streamUrl, 
-            before_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"))
+    source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(music["music"].streamUrl, 
+            before_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"), self.bot.music[ctx.guild.id]["volume"])
 
     def next(_):
         if self.bot.music[ctx.guild.id]["loop"] and self.bot.music[ctx.guild.id]["nowPlaying"]:
@@ -22,9 +22,10 @@ def playTrack(self, ctx, client, music):
                 asyncio.run_coroutine_threadsafe(client.disconnect(), self.bot.loop)
                 self.bot.music[ctx.guild.id]["nowPlaying"] = None
                 self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
+                self.bot.music[ctx.guild.id]["volume"] = 0.5
                 asyncio.run_coroutine_threadsafe(ctx.channel.send(f"Disconnected!"), self.bot.loop)
 
-    client.play(self.bot.music[ctx.guild.id]["source"], after=next)
+    client.play(source, after=next)
     sendPlayingSongEmbed(self, ctx, music) # Send message
     self.bot.music[ctx.guild.id]["nowPlaying"] = {
         "music": music["music"],

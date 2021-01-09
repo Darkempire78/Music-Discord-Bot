@@ -60,7 +60,7 @@ if __name__ == '__main__':
 async def on_ready():
     for i in bot.guilds:
         bot.music[i.id] = {
-            "source": None,
+            "volume": 0.5,
             "musics": [],
             "skip": {
                 "count": 0,

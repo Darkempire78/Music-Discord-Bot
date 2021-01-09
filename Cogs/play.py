@@ -87,6 +87,7 @@ class CogPlay(commands.Cog):
             music = Music(self, link) # Get music data
             self.bot.music[ctx.guild.id]["musics"] = []
             playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
+            self.bot.music[ctx.guild.id]["volume"] = 0.5
 
 
 def setup(bot):

@@ -63,9 +63,11 @@ class HelpCog(commands.Cog, name="help command"):
                 **{self.bot.command_prefix}leave :** Remove the bot of your voice channel.
                 **{self.bot.command_prefix}pause :** Pause the current song.
                 **{self.bot.command_prefix}resume :** Resume the current song.
+                **{self.bot.command_prefix}volume <0-100> :** Change the bot's volume.
                 **{self.bot.command_prefix}queue :** Display the queue.
                 **{self.bot.command_prefix}shuffle :** Shuffle the queue.
                 **{self.bot.command_prefix}remove :** Remove the song with its index.
+                **{self.bot.command_prefix}removedupes :** Remove all duplicates song from the queue.
                 **{self.bot.command_prefix}clear :** Clear the queue.
                 **{self.bot.command_prefix}replay :** Replay the current song.
                 **{self.bot.command_prefix}loop :** Enable or disable the loop mode.
