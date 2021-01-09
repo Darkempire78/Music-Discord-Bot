@@ -1,5 +1,6 @@
 import discord
 import json
+import aiohttp
 import asyncio
 
 from discord.ext import commands
@@ -26,12 +27,32 @@ class CogPlay(commands.Cog):
 
         args = " ".join(args)
         await ctx.send("Searching...", delete_after=8)
+
+        # Deezer
+        if args.startswith("https://deezer.page.link") or args.startswith("https://www.deezer.com"): 
+            async with aiohttp.ClientSession() as session:
+                async with session.get(args) as response:
+                    # Get the music ID
+                    trackId = response._real_url.name
+                async with session.get(f"https://api.deezer.com/track/{trackId}") as response:
+                    response = await response.json()
+                    title = response["title_short"]
+                    artist = response["artist"]["name"]
+                    # Search on youtube
+                    results = YoutubeSearch(f"{title} {artist}", max_results=1).to_dict()
+                    if len(results) == 0:
+                        embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
+                        embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+                        return await ctx.send(embed=embed)
+                    args = "https://www.youtube.com" + results[0]["url_suffix"]
+ 
         # SoundCloud
-        if args.startswith("https://soundcloud.com"): 
+        elif args.startswith("https://soundcloud.com"): 
             api = SoundcloudAPI()
             try:
                 track = await api.resolve(args)
-                results = YoutubeSearch(track.title.replace("\"", " ") + f" {track.artist}", max_results=1).to_dict() # Search on youtube
+                # Search on youtube
+                results = YoutubeSearch(track.title.replace("-", " ") + f" {track.artist}", max_results=1).to_dict() 
                 if len(results) == 0:
                     embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
                     embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)

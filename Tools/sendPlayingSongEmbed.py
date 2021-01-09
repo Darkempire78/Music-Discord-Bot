@@ -20,7 +20,7 @@ def sendPlayingSongEmbed(self, ctx, music):
     embed.set_thumbnail(url=music.thumbnails)
     embed.add_field(name="Requested by :", value=f"> {requestedBy}", inline=True)
     embed.add_field(name="Duration :", value=f"> {duration}", inline=True)
-    embed.add_field(name="Volume :", value=f"> 100%", inline=True)
+    embed.add_field(name="Volume :", value=f"> " + str(round(self.bot.music[ctx.guild.id]["volume"]*100)) + "%", inline=True)
     embed.add_field(name="Loop :", value=f"> " + str(self.bot.music[ctx.guild.id]["loop"]), inline=True)
     embed.add_field(name="Lyrics :", value=f"> {self.bot.command_prefix}lyrics", inline=True)
     embed.add_field(name="Queue :", value=f"> "+ str(len(self.bot.music[ctx.guild.id]["musics"])) + " song(s) in the queue", inline=True)
