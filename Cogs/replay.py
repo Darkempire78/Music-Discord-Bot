@@ -21,14 +21,15 @@ class CogReplay(commands.Cog):
         if not self.bot.music[ctx.guild.id]["nowPlaying"]:
             await ctx.channel.send(f"{ctx.author.mention} There is currently no song to replay!")
         
-        music = self.bot.music[ctx.guild.id]["nowPlaying"]
-        self.bot.music[ctx.guild.id]["musics"].insert(0, music)
+        music = self.bot.music[ctx.guild.id]["nowPlaying"]["music"]
+        self.bot.music[ctx.guild.id]["musics"].insert(0, {"music": music, "requestedBy": ctx.author})
         music.title = music.title.replace("*", "\\*")
         musicDurationSeconds = music.duration % 60
         if musicDurationSeconds < 10:
             musicDurationSeconds = f"0{musicDurationSeconds}"
         embed=discord.Embed(title="Replay", description=f"New song added : **[{music.title}]({music.url})** ({music.duration//60}:{musicDurationSeconds})", color=discord.Colour.random())
         embed.set_thumbnail(url=music.thumbnails)
+        embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.channel.send(embed=embed)
         
 

@@ -56,7 +56,8 @@ class HelpCog(commands.Cog, name="help command"):
         else:
             message = (f"""
                 **{self.bot.command_prefix}help (command) :** Display the help list or the help data for a specific command.\n
-                **{self.bot.command_prefix}play <Url/Query> :** Search and play the music.
+                **{self.bot.command_prefix}play <Url/Query> :** Search on youtube and play the music.
+                **{self.bot.command_prefix}search <Query> :** Search a song on youtube.
                 **{self.bot.command_prefix}nowplaying :** Display data about the current song.
                 **{self.bot.command_prefix}join :** Add the bot to your voice channel.
                 **{self.bot.command_prefix}leave :** Remove the bot of your voice channel.
@@ -64,6 +65,7 @@ class HelpCog(commands.Cog, name="help command"):
                 **{self.bot.command_prefix}resume :** Resume the current song.
                 **{self.bot.command_prefix}queue :** Display the queue.
                 **{self.bot.command_prefix}shuffle :** Shuffle the queue.
+                **{self.bot.command_prefix}remove :** Remove the song with its index.
                 **{self.bot.command_prefix}clear :** Clear the queue.
                 **{self.bot.command_prefix}replay :** Replay the current song.
                 **{self.bot.command_prefix}loop :** Enable or disable the loop mode.

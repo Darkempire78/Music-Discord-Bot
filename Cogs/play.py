@@ -27,6 +27,10 @@ class CogPlay(commands.Cog):
             results = YoutubeSearch(args, max_results=5).to_dict()
             message = ""
             number = 0
+            if len(results) == 0:
+                embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
+                embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+                return await ctx.send(embed=embed)
             for i in results:
                 number += 1
                 i["title"] =i["title"].replace("*", "\\*")
@@ -58,7 +62,12 @@ class CogPlay(commands.Cog):
             if (self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]):
                 return await ctx.channel.send(f"{ctx.author.mention} I'm already connected in a voice channel!")
             music = Music(self, link)
-            self.bot.music[ctx.guild.id]["musics"].append(music)
+            self.bot.music[ctx.guild.id]["musics"].append(
+                {
+                "music": music,
+                "requestedBy": ctx.author
+                }
+            )
             music.title = music.title.replace("*", "\\*")
             if music.isLive:
                 duration = "Live"
@@ -77,7 +86,7 @@ class CogPlay(commands.Cog):
             client = await voice.channel.connect() # Connect the bot to the voice channel
             music = Music(self, link) # Get music data
             self.bot.music[ctx.guild.id]["musics"] = []
-            playTrack(self, ctx, client, self.bot.music[ctx.guild.id]["musics"], music)
+            playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
 
 
 def setup(bot):

@@ -20,14 +20,14 @@ class CogQueue(commands.Cog):
         message = ""
         number = 0
         for i in self.bot.music[ctx.guild.id]["musics"]:
-            musicDurationSeconds = i.duration % 60
+            musicDurationSeconds = i["music"].duration % 60
             if musicDurationSeconds < 10:
                 musicDurationSeconds = f"0{musicDurationSeconds}"
-            i.title = i.title.replace("*", "\\*")
+            i["music"].title = i["music"].title.replace("*", "\\*")
 
             number += 1
-            i.title =i.title.replace("*", "\\*")
-            message += f"**{number}) ["+ i.title + "](https://www.youtube.com"+ i.url + f"])** (" + str(i.duration//60) + f":{musicDurationSeconds})\n"
+            i["music"].title =i["music"].title.replace("*", "\\*")
+            message += f"**{number}) ["+ i["music"].title + "](https://www.youtube.com"+ i["music"].url + f"])** (" + str(i["music"].duration//60) + f":{musicDurationSeconds})\n"
         embed=discord.Embed(title="Queue", description=message, color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)

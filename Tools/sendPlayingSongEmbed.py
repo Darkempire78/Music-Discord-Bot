@@ -3,6 +3,9 @@ import asyncio
 
 def sendPlayingSongEmbed(self, ctx, music):
     # Send message
+    requestedBy =  music["requestedBy"]
+    music =  music["music"]
+    
     if music.isLive:
         duration = "Live"
     else:
@@ -15,7 +18,7 @@ def sendPlayingSongEmbed(self, ctx, music):
 
     embed=discord.Embed(title="Playing Song :", description=f"**[{music.title}]({music.url})**", color=discord.Colour.random())
     embed.set_thumbnail(url=music.thumbnails)
-    embed.add_field(name="Requested by :", value=f"> {ctx.author}", inline=True)
+    embed.add_field(name="Requested by :", value=f"> {requestedBy}", inline=True)
     embed.add_field(name="Duration :", value=f"> {duration}", inline=True)
     embed.add_field(name="Volume :", value=f"> 100%", inline=True)
     embed.add_field(name="Loop :", value=f"> " + str(self.bot.music[ctx.guild.id]["loop"]), inline=True)
