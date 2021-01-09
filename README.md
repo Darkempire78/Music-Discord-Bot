@@ -1,4 +1,4 @@
-[![CodeFactor](https://www.codefactor.io/repository/github/darkempire78/Music-Discord-Bot/badge/master)](https://www.codefactor.io/repository/github/darkempire78/Music-Discord-Bot/overview/master) ![](https://img.shields.io/github/repo-size/Darkempire78/Music-Discord-Bot) [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
+[![CodeFactor](https://www.codefactor.io/repository/github/darkempire78/music-discord-bot/badge)](https://www.codefactor.io/repository/github/darkempire78/music-discord-bot) ![](https://img.shields.io/github/repo-size/Darkempire78/Music-Discord-Bot) [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
 
 # Music Discord Bot
 
