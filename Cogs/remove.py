@@ -8,7 +8,7 @@ class CogRemove(commands.Cog):
 
 
     @commands.command(name = "remove",
-                    usage="<index>",
+                    usage="<Index>",
                     description = "Remove the song with its index.")
     @commands.guild_only()
     @commands.cooldown(1, 2, commands.BucketType.member)
