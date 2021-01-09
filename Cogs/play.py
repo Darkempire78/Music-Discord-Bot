@@ -47,8 +47,7 @@ class CogPlay(commands.Cog):
                 msg = await self.bot.wait_for('message', timeout=15.0, check=check)
                 if int(msg.content) == 0:
                     return await ctx.send(f"{ctx.author.mention} Search exit.")
-                else:
-                    args = "https://www.youtube.com" + results[int(msg.content) -1]["url_suffix"]
+                args = "https://www.youtube.com" + results[int(msg.content) -1]["url_suffix"]
             except asyncio.TimeoutError:
                 embed = discord.Embed(title = f"**TIME IS OUT**", description = f"{ctx.author.mention} You exceeded the response time (15s)", color = discord.Colour.red())
                 return await ctx.channel.send(embed = embed)
