@@ -36,13 +36,11 @@ class CogPlay(commands.Cog):
             await ctx.send(embed=embed)
 
             def check(message):
-                try:
+                if message.content.isdigit():
                     message.content = int(message.content)
                     if ((message.content >= 0) and (message.content <= 5)):
                         message.content = str(message.content)
                         return message.content
-                except:
-                    pass
             try:
                 msg = await self.bot.wait_for('message', timeout=15.0, check=check)
                 if int(msg.content) == 0:
