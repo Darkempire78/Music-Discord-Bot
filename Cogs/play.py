@@ -6,6 +6,8 @@ from discord.ext import commands
 
 from youtube_search import YoutubeSearch
 
+from sclib.asyncio import SoundcloudAPI, Track
+
 from Tools.Music import Music
 from Tools.playTrack import playTrack
 
@@ -23,7 +25,22 @@ class CogPlay(commands.Cog):
     async def play(self, ctx, *args):
 
         args = " ".join(args)
-        if not args.startswith("https://www.youtube.com"):
+        await ctx.send("Searching...", delete_after=8)
+        # SoundCloud
+        if args.startswith("https://soundcloud.com"): 
+            api = SoundcloudAPI()
+            try:
+                track = await api.resolve(args)
+                results = YoutubeSearch(track.title.replace("\"", " ") + f" {track.artist}", max_results=1).to_dict() # Search on youtube
+                if len(results) == 0:
+                    embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
+                    embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+                    return await ctx.send(embed=embed)
+                args = "https://www.youtube.com" + results[0]["url_suffix"]
+            except:
+                return await ctx.send(f"{ctx.author.mention} The Soundcloud link is invalid!")
+        # Query
+        elif not args.startswith("https://www.youtube.com"):
             results = YoutubeSearch(args, max_results=5).to_dict()
             message = ""
             number = 0
@@ -48,12 +65,12 @@ class CogPlay(commands.Cog):
             try:
                 msg = await self.bot.wait_for('message', timeout=15.0, check=check)
                 if int(msg.content) == 0:
-                    return await ctx.send(f"{ctx.author.mention} Search exit.")
+                    return await ctx.send(f"{ctx.author.mention} Search exit!")
                 args = "https://www.youtube.com" + results[int(msg.content) -1]["url_suffix"]
             except asyncio.TimeoutError:
                 embed = discord.Embed(title = f"**TIME IS OUT**", description = f"{ctx.author.mention} You exceeded the response time (15s)", color = discord.Colour.red())
                 return await ctx.channel.send(embed = embed)
-        
+
         link = args
 
         client = ctx.guild.voice_client

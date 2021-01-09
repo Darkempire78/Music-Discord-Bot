@@ -8,6 +8,7 @@ class CogReplay(commands.Cog):
 
 
     @commands.command(name = "replay",
+                    aliases=["repeat"],
                     usage="",
                     description = "Replay the current song")
     @commands.guild_only()
