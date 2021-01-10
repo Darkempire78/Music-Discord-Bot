@@ -7,6 +7,7 @@ import os
 import sys
 import json
 import youtube_dl
+import tekore # Spotify
 
 from datetime import datetime
 from discord.ext import commands
@@ -21,10 +22,16 @@ with open("configuration.json", "r") as config:
     data = json.load(config)
     token = data["token"]
     prefix = data["prefix"]
+    spotifyClientId = data["spotifyClientId"]
+    spotifyClientSecret = data["spotifyClientSecret"]
 
 intents = discord.Intents.default()
 bot = commands.Bot(prefix, intents = intents)
 # bot = commands.when_mentioned_or(prefix)
+
+# Connect to Spotify
+spotifyAppToken = tekore.request_client_token(spotifyClientId, spotifyClientSecret)
+bot.spotify = tekore.Spotify(spotifyAppToken, asynchronous=True)
 
 # Create music dictionary
 bot.music = {}

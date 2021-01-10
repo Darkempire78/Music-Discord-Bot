@@ -2,6 +2,7 @@ import discord
 import json
 import aiohttp
 import asyncio
+import tekore # Spotify
 
 from discord.ext import commands
 
@@ -26,8 +27,23 @@ class CogPlay(commands.Cog):
         args = " ".join(args)
         await ctx.send("Searching...", delete_after=10)
 
+        # Spotify
+        if args.startswith("https://open.spotify.com/track"):
+            # Get track's id
+            trackId = tekore.from_url(args)
+            track = await self.bot.spotify.track(trackId[1])
+            title = track.name
+            artist = track.artists[0].name
+            # Search on youtube
+            results = YoutubeSearch(f"{title} {artist}", max_results=1).to_dict()
+            if len(results) == 0:
+                embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
+                embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+                return await ctx.send(embed=embed)
+            args = "https://www.youtube.com" + results[0]["url_suffix"]
+        
         # Deezer
-        if args.startswith("https://deezer.page.link") or args.startswith("https://www.deezer.com"): 
+        elif args.startswith("https://deezer.page.link") or args.startswith("https://www.deezer.com"): 
             async with aiohttp.ClientSession() as session:
                 async with session.get(args) as response:
                     # Chack if it's a track
@@ -64,6 +80,7 @@ class CogPlay(commands.Cog):
                     
             except:
                 return await ctx.send(f"{ctx.author.mention} The Soundcloud link is invalid!")
+        
         # Query
         elif not args.startswith("https://www.youtube.com"):
             results = YoutubeSearch(args, max_results=5).to_dict()
