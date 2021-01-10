@@ -22,6 +22,12 @@ Finally, host the bot and invite it to your own server.
 * Many commands
 * Complex queue commands
 
+## Preview
+
+<img src="https://github.com/Darkempire78/Music-Discord-Bot/blob/main/capture1.png" width="600"/>
+
+<img src="https://github.com/Darkempire78/Music-Discord-Bot/blob/main/capture2.png" width="600"/>
+
 ## Commands
 
 ```
