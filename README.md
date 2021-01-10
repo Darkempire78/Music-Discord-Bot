@@ -19,7 +19,7 @@ Finally, host the bot and invite it to your own server.
 ## Features
 
 * Play music from YouTube
-* Support links from YouTube, Deezer and Soudcloud 
+* Support links from YouTube, Spotify, Deezer and Soudcloud 
 * Support lives
 * complex queue commands
 
