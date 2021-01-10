@@ -66,7 +66,7 @@ Finally, host the bot and invite it to your own server.
 
 ### Other
 * YouTube, Spotify, Deezer and Soundcloud playlist support
-* Custom pLaylist system
+* Custom playlist system
 
 
 ## Contributing
