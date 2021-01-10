@@ -14,6 +14,7 @@ Music Discord Bot is a Discord bot wich allow to play music on your server effic
 
 Finally, host the bot and invite it to your own server.
 
+
 ## Features
 
 * Play music from YouTube
@@ -22,11 +23,13 @@ Finally, host the bot and invite it to your own server.
 * Many commands
 * Complex queue commands
 
+
 ## Preview
 
 <img src="https://github.com/Darkempire78/Music-Discord-Bot/blob/main/capture1.png" width="600"/>
 
 <img src="https://github.com/Darkempire78/Music-Discord-Bot/blob/main/capture2.png" width="600"/>
+
 
 ## Commands
 
@@ -50,9 +53,9 @@ Finally, host the bot and invite it to your own server.
 ?help : display help.
 ```
 
-## Soon
 
-### Commands
+## Soon
+### Command
 * Lyrics
 * Move
 * Forward / Rewind
@@ -64,6 +67,7 @@ Finally, host the bot and invite it to your own server.
 ### Other
 * YouTube, Spotify, Deezer and Soundcloud playlist support
 * Custom pLaylist system
+
 
 ## Contributing
 
