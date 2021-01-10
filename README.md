@@ -6,12 +6,10 @@ Music Discord Bot is a Discord bot wich allow to play music on your server effic
 
 ## Installation
 
-* Install all dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-* Then put your Discord token that can be found in the Discord's developers portal inside `configuration example.json`.
+* Install all dependencies : ``pip install -r requirements.txt``.
+* Download [FFmpeg](https://ffmpeg.org/download.html).
+* Put your Discord token that can be found in the [Discord's developers portal](https://discord.com/developers/applications) inside `configuration example.json`.
+* (OPTIONAL : Spotify links support) Add also your Spotify token and ID.
 * Rename it to `configuration.json`.
 
 Finally, host the bot and invite it to your own server.
