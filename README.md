@@ -50,6 +50,21 @@ Finally, host the bot and invite it to your own server.
 ?help : display help.
 ```
 
+## Soon
+
+### Commands
+* Lyrics
+* Move
+* Forward / Rewind
+* Reset
+* Skipto
+* Loopqueue
+* Playfile
+
+### Other
+* YouTube, Spotify, Deezer and Soundcloud playlist support
+* Custom pLaylist system
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
