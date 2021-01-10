@@ -26,12 +26,15 @@ class CogPlay(commands.Cog):
     async def play(self, ctx, *args):
 
         args = " ".join(args)
-        await ctx.send("Searching...", delete_after=8)
+        await ctx.send("Searching...", delete_after=10)
 
         # Deezer
         if args.startswith("https://deezer.page.link") or args.startswith("https://www.deezer.com"): 
             async with aiohttp.ClientSession() as session:
                 async with session.get(args) as response:
+                    # Chack if it's a track
+                    if "track" not in response._real_url.path:
+                        return await ctx.send(f"{ctx.author.mention} The Deezer link is not a track!")
                     # Get the music ID
                     trackId = response._real_url.name
                 async with session.get(f"https://api.deezer.com/track/{trackId}") as response:
@@ -51,6 +54,8 @@ class CogPlay(commands.Cog):
             api = SoundcloudAPI()
             try:
                 track = await api.resolve(args)
+                if not isinstance(track, Track):
+                    return await ctx.send(f"{ctx.author.mention} The Soundcloud link is not a track!")
                 # Search on youtube
                 results = YoutubeSearch(track.title.replace("-", " ") + f" {track.artist}", max_results=1).to_dict() 
                 if len(results) == 0:
@@ -58,6 +63,7 @@ class CogPlay(commands.Cog):
                     embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
                     return await ctx.send(embed=embed)
                 args = "https://www.youtube.com" + results[0]["url_suffix"]
+                    
             except:
                 return await ctx.send(f"{ctx.author.mention} The Soundcloud link is invalid!")
         # Query
