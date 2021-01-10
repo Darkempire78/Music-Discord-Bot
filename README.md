@@ -25,21 +25,21 @@ Finally, host the bot and invite it to your own server.
 ## Commands
 
 ```
-?play <Url/Query> :** Search on youtube and play the music.
-?search <Query> :** Search a song on youtube.
-?nowplaying :** Display data about the current song.
-?join :** Add the bot to your voice channel.
-?leave :** Remove the bot of your voice channel.
-?pause :** Pause the current song.
-?resume :** Resume the current song.
-?volume <0-100> :** Change the bot's volume.
-?queue :** Display the queue.
-?shuffle :** Shuffle the queue.
-?remove <Index> :** Remove the song with its index.
-?removedupes :** Remove all duplicates song from the queue.
-?clear :** Clear the queue.
-?replay :** Replay the current song.
-?loop :** Enable or disable the loop mode.
+?play <Url/Query> : Search on youtube and play the music.
+?search <Query> : Search a song on youtube.
+?nowplaying : Display data about the current song.
+?join : Add the bot to your voice channel.
+?leave : Remove the bot of your voice channel.
+?pause : Pause the current song.
+?resume : Resume the current song.
+?volume <0-100> : Change the bot's volume.
+?queue : Display the queue.
+?shuffle : Shuffle the queue.
+?remove <Index> : Remove the song with its index.
+?removedupes : Remove all duplicates song from the queue.
+?clear : Clear the queue.
+?replay : Replay the current song.
+?loop : Enable or disable the loop mode.
 
 ?help : display help.
 ```
