@@ -12,11 +12,9 @@ from sclib.asyncio import SoundcloudAPI, Track
 from Tools.Music import Music
 from Tools.playTrack import playTrack
 
-
 class CogPlay(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
 
     @commands.command(name = "play",
                     usage="<Link/Query>",
