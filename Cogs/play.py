@@ -176,11 +176,13 @@ class CogPlay(commands.Cog):
             voice = ctx.author.voice
             if ctx.author.voice is None:
                 return await ctx.channel.send(f"{ctx.author.mention} You are not connected in a voice channel!")
+            await ctx.send("Loading...", delete_after=10)
             client = await voice.channel.connect() # Connect the bot to the voice channel
             music = Music(self, link) # Get music data
             self.bot.music[ctx.guild.id]["musics"] = []
-            playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
             self.bot.music[ctx.guild.id]["volume"] = 0.5
+            playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
+            
 
 
 def setup(bot):

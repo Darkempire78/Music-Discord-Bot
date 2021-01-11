@@ -14,6 +14,13 @@ class CogVolume(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def volume(self, ctx, volume):
 
+        if (
+            (not volume.isdigit()) or 
+            (int(volume)) < 0 or 
+            (int(volume) > 100)
+        ):
+            return await ctx.send(f"{ctx.author.mention} The volume have to be a number between 0 and 100 !")
+
         self.bot.music[ctx.guild.id]["volume"] = int(volume)/100
         ctx.guild.voice_client.source.volume = self.bot.music[ctx.guild.id]["volume"]
         
