@@ -2,7 +2,7 @@
 
 # Music Discord Bot
 
-Music Discord Bot is a Discord bot wich allow to play music on your server efficiently.
+A Discord bot with more than 15+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
 
 ## Installation
 
