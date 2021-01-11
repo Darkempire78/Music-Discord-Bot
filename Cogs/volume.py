@@ -17,7 +17,7 @@ class CogVolume(commands.Cog):
         self.bot.music[ctx.guild.id]["volume"] = int(volume)/100
         ctx.guild.voice_client.source.volume = self.bot.music[ctx.guild.id]["volume"]
         
-        embed=discord.Embed(title="Volume changed :", description=f"The volumed was changed to : ``{volume}``.", color=discord.Colour.random())
+        embed=discord.Embed(title="Volume changed :", description=f"The volumed was changed to : ``{volume}%``", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 

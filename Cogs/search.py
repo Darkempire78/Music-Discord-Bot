@@ -2,7 +2,7 @@ import discord
 import asyncio
 from discord.ext import commands
 
-from youtube_search import YoutubeSearch
+from youtubesearchpython import VideosSearch
 
 
 class CogSearch(commands.Cog):
@@ -16,17 +16,15 @@ class CogSearch(commands.Cog):
     @commands.guild_only()
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def search(self, ctx, args):
-        results = YoutubeSearch(args, max_results=8).to_dict()
+        results = VideosSearch(args, limit = 10).result()["result"]
         message = ""
-        number = 0
         if len(results) == 0:
             embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
             embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
             return await ctx.send(embed=embed)
-        for i in results:
-            number += 1
+        for number, i in enumerate(results, start=1):
             i["title"] =i["title"].replace("*", "\\*")
-            message += f"**{number}) ["+ i["title"] + "](https://www.youtube.com"+ i["url_suffix"] + "])** ("+ str(i["duration"]) + ")\n"
+            message += f"**{number}) ["+ i["title"] + "]("+ i["link"] + "])** ("+ str(i["duration"]) + ")\n"
         embed=discord.Embed(title="Search results :", description=f"{message}", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
