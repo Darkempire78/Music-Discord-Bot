@@ -16,16 +16,14 @@ class CogQueue(commands.Cog):
 
         if len(self.bot.music[ctx.guild.id]["musics"]) <= 0:
             return await ctx.channel.send(f"{ctx.author.mention} The queue is empty!")
-            
+
         message = ""
-        number = 0
-        for i in self.bot.music[ctx.guild.id]["musics"]:
+        for number, i in enumerate(self.bot.music[ctx.guild.id]["musics"], start=1):
             musicDurationSeconds = i["music"].duration % 60
             if musicDurationSeconds < 10:
                 musicDurationSeconds = f"0{musicDurationSeconds}"
             i["music"].title = i["music"].title.replace("*", "\\*")
 
-            number += 1
             i["music"].title =i["music"].title.replace("*", "\\*")
             message += f"**{number}) ["+ i["music"].title + "](https://www.youtube.com"+ i["music"].url + f"])** (" + str(i["music"].duration//60) + f":{musicDurationSeconds})\n"
         embed=discord.Embed(title="Queue", description=message, color=discord.Colour.random())
