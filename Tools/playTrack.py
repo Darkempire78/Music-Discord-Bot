@@ -23,7 +23,7 @@ def playTrack(self, ctx, client, music):
                 self.bot.music[ctx.guild.id]["nowPlaying"] = None
                 self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
                 self.bot.music[ctx.guild.id]["volume"] = 0.5
-                asyncio.run_coroutine_threadsafe(ctx.channel.send(f"Disconnected!"), self.bot.loop)
+                asyncio.run_coroutine_threadsafe(ctx.channel.send(f"Disconnected because the queue is empty!"), self.bot.loop)
 
     client.play(source, after=next)
     sendPlayingSongEmbed(self, ctx, music) # Send message

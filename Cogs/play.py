@@ -6,7 +6,7 @@ import tekore # Spotify
 
 from discord.ext import commands
 
-from youtube_search import YoutubeSearch
+from youtubesearchpython import VideosSearch
 
 from sclib.asyncio import SoundcloudAPI, Track
 
@@ -35,12 +35,12 @@ class CogPlay(commands.Cog):
             title = track.name
             artist = track.artists[0].name
             # Search on youtube
-            results = YoutubeSearch(f"{title} {artist}", max_results=1).to_dict()
+            results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
             if len(results) == 0:
                 embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
                 embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
                 return await ctx.send(embed=embed)
-            args = "https://www.youtube.com" + results[0]["url_suffix"]
+            args = results[0]["link"]
         
         # Deezer
         elif args.startswith("https://deezer.page.link") or args.startswith("https://www.deezer.com"): 
@@ -56,12 +56,12 @@ class CogPlay(commands.Cog):
                     title = response["title_short"]
                     artist = response["artist"]["name"]
                     # Search on youtube
-                    results = YoutubeSearch(f"{title} {artist}", max_results=1).to_dict()
+                    results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
                     if len(results) == 0:
                         embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
                         embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
                         return await ctx.send(embed=embed)
-                    args = "https://www.youtube.com" + results[0]["url_suffix"]
+                    args = results[0]["link"]
  
         # SoundCloud
         elif args.startswith("https://soundcloud.com"): 
@@ -71,19 +71,21 @@ class CogPlay(commands.Cog):
                 if not isinstance(track, Track):
                     return await ctx.send(f"{ctx.author.mention} The Soundcloud link is not a track!")
                 # Search on youtube
-                results = YoutubeSearch(track.title.replace("-", " ") + f" {track.artist}", max_results=1).to_dict() 
+                results = VideosSearch(track.title.replace("-", " ") + f" {track.artist}", limit = 1).result()["result"]
                 if len(results) == 0:
                     embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
                     embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
                     return await ctx.send(embed=embed)
-                args = "https://www.youtube.com" + results[0]["url_suffix"]
+                args = results[0]["link"]
                     
             except:
                 return await ctx.send(f"{ctx.author.mention} The Soundcloud link is invalid!")
         
         # Query
         elif not args.startswith("https://www.youtube.com"):
-            results = YoutubeSearch(args, max_results=5).to_dict()
+
+            results = VideosSearch(args, limit = 5).result()["result"]
+            
             message = ""
             number = 0
             if len(results) == 0:
@@ -93,7 +95,7 @@ class CogPlay(commands.Cog):
             for i in results:
                 number += 1
                 i["title"] =i["title"].replace("*", "\\*")
-                message += f"**{number}) ["+ i["title"] + "](https://www.youtube.com"+ i["url_suffix"] + "])** ("+ str(i["duration"]) + ")\n"
+                message += f"**{number}) ["+ i["title"] + "](https://www.youtube.com"+ i["link"] + "])** ("+ str(i["duration"]) + ")\n"
             embed=discord.Embed(title="Search results :", description=f"Choose your result.\nWrite ``0`` to pass the cooldown.\n\n{message}", color=discord.Colour.random())
             embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
@@ -108,7 +110,7 @@ class CogPlay(commands.Cog):
                 msg = await self.bot.wait_for('message', timeout=15.0, check=check)
                 if int(msg.content) == 0:
                     return await ctx.send(f"{ctx.author.mention} Search exit!")
-                args = "https://www.youtube.com" + results[int(msg.content) -1]["url_suffix"]
+                args = results[int(msg.content) -1]["link"]
             except asyncio.TimeoutError:
                 embed = discord.Embed(title = f"**TIME IS OUT**", description = f"{ctx.author.mention} You exceeded the response time (15s)", color = discord.Colour.red())
                 return await ctx.channel.send(embed = embed)
