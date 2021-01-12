@@ -65,6 +65,7 @@ Finally, host the bot and invite it to your own server.
 * Playfile
 
 ### Other
+* DJ system
 * YouTube, Spotify, Deezer and Soundcloud playlist support
 * Custom playlist system
 
