@@ -11,7 +11,7 @@ class CogSkip(commands.Cog):
     @commands.command(name = "skip",
                     aliases=["s"],
                     usage="",
-                    description = "Skip the current music")
+                    description = "Skip the current music.")
     @commands.guild_only()
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def skip(self, ctx):

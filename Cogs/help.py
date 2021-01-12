@@ -70,6 +70,7 @@ class HelpCog(commands.Cog, name="help command"):
                 **{self.bot.command_prefix}removedupes :** Remove all duplicates song from the queue.
                 **{self.bot.command_prefix}clear :** Clear the queue.
                 **{self.bot.command_prefix}replay :** Replay the current song.
+                **{self.bot.command_prefix}reload :** Reload the current song.
                 **{self.bot.command_prefix}loop :** Enable or disable the loop mode.
             """)
             embed = discord.Embed(title=f"__**Help page of {self.bot.user.name.upper()}**__", description="[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)", color=discord.Colour.random())

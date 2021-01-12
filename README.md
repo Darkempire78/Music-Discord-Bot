@@ -48,6 +48,7 @@ Finally, host the bot and invite it to your own server.
 ?removedupes : Remove all duplicates song from the queue.
 ?clear : Clear the queue.
 ?replay : Replay the current song.
+?reload : Reload the current song.
 ?loop : Enable or disable the loop mode.
 
 ?help : display help.
@@ -59,7 +60,6 @@ Finally, host the bot and invite it to your own server.
 * Lyrics
 * Move
 * Forward / Rewind
-* Reset
 * Skipto
 * Loopqueue
 * Playfile
