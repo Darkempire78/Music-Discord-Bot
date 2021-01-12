@@ -19,7 +19,7 @@ class CogVolume(commands.Cog):
             (int(volume)) < 0 or 
             (int(volume) > 100)
         ):
-            return await ctx.send(f"{ctx.author.mention} The volume have to be a number between 0 and 100 !")
+            return await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The volume have to be a number between 0 and 100 !")
 
         self.bot.music[ctx.guild.id]["volume"] = int(volume)/100
         ctx.guild.voice_client.source.volume = self.bot.music[ctx.guild.id]["volume"]

@@ -9,6 +9,7 @@ class CogSkip(commands.Cog):
 
 
     @commands.command(name = "skip",
+                    aliases=["s"],
                     usage="",
                     description = "Skip the current music")
     @commands.guild_only()
@@ -16,11 +17,11 @@ class CogSkip(commands.Cog):
     async def skip(self, ctx):
         if not ctx.author.guild_permissions.administrator:
             if ctx.author.voice is None:
-                return await ctx.channel.send(f"{ctx.author.mention} You are not connected in a voice channel!")
+                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
 
             # If user is not in the same voice channel that the bot
             if self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]: 
-                return await ctx.channel.send(f"{ctx.author.mention} You are not connected in the same voice channel that the bot!")
+                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in the same voice channel that the bot!")
 
             # If user had already skip
             if ctx.author.id in self.bot.music[ctx.guild.id]["skip"]["users"]:

@@ -15,7 +15,7 @@ class CogQueue(commands.Cog):
     async def queue(self, ctx):
 
         if len(self.bot.music[ctx.guild.id]["musics"]) <= 0:
-            return await ctx.channel.send(f"{ctx.author.mention} The queue is empty!")
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The queue is empty!")
 
         message = ""
         for number, i in enumerate(self.bot.music[ctx.guild.id]["musics"], start=1):

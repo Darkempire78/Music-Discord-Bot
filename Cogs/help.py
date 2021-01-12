@@ -34,7 +34,7 @@ class HelpCog(commands.Cog, name="help command"):
                     break 
 
             if commandName2 is None:
-                await ctx.channel.send("No command found!")   
+                await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} No command found!")   
             else:
                 embed = discord.Embed(title=f"**{commandName2.name.upper()} COMMAND :**", description="[**GitHub**](https://github.com/Darkempire78/Raid-Protect-Discord-Bot)", color=discord.Colour.random())
                 embed.set_thumbnail(url=f'{self.bot.user.avatar_url}')

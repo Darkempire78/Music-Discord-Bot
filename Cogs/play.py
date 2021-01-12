@@ -16,12 +16,13 @@ from Tools.playTrack import playTrack
 
 async def searchSpotify(self, ctx, args):
     """Get a YouTube link from a Spotify link."""
+    await ctx.send("<:SpotifyLogo:798492403882262569> Searching...", delete_after=10)
     # Get track's id
     trackId = tekore.from_url(args)
     try:
         track = await self.bot.spotify.track(trackId[1])
     except:
-        await ctx.send(f"{ctx.author.mention} The Spotify link is invalid!")
+        await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Spotify link is invalid!")
         return None
     title = track.name
     artist = track.artists[0].name
@@ -34,11 +35,12 @@ async def searchSpotify(self, ctx, args):
 
 async def searchDeezer(self, ctx, args):
     """Get a YouTube link from a Deezer link."""
+    await ctx.send("<:DeezerLogo:798492403048644628> Searching...", delete_after=10)
     async with aiohttp.ClientSession() as session:
         async with session.get(args) as response:
             # Chack if it's a track
             if "track" not in response._real_url.path:
-                await ctx.send(f"{ctx.author.mention} The Deezer link is not a track!")
+                await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Deezer link is not a track!")
                 return None
             # Get the music ID
             trackId = response._real_url.name
@@ -55,11 +57,12 @@ async def searchDeezer(self, ctx, args):
 
 async def searchSoundcloud(self, ctx, args):
     """Get a YouTube link from a SoundCloud link."""
+    await ctx.send("<:SoundCloudLogo:798492403459424256> Searching...", delete_after=10)
     soundcloud = SoundcloudAPI()
     try:
         track = await soundcloud.resolve(args)
         if not isinstance(track, Track):
-            await ctx.send(f"{ctx.author.mention} The Soundcloud link is not a track!")
+            await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Soundcloud link is not a track!")
             return None
         # Search on youtube
         results = VideosSearch(track.title.replace("-", " ") + f" {track.artist}", limit = 1).result()["result"]
@@ -69,11 +72,12 @@ async def searchSoundcloud(self, ctx, args):
         return results[0]["link"]
             
     except:
-        await ctx.send(f"{ctx.author.mention} The Soundcloud link is invalid!")
+        await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Soundcloud link is invalid!")
         return None
 
 async def searchQuery(self, ctx, args):
     """Get a YouTube link from a query."""
+    await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
     results = VideosSearch(args, limit = 5).result()["result"]
             
     message = ""
@@ -102,13 +106,13 @@ async def searchQuery(self, ctx, args):
             return None
         return results[int(msg.content) -1]["link"]
     except asyncio.TimeoutError:
-        embed = discord.Embed(title = f"**TIME IS OUT**", description = f"{ctx.author.mention} You exceeded the response time (15s)", color = discord.Colour.red())
+        embed = discord.Embed(title = f"**TIME IS OUT**", description = f"<:False:798596718563950653> {ctx.author.mention} You exceeded the response time (15s)", color = discord.Colour.red())
         await ctx.channel.send(embed = embed)
         return None
 
 async def noResultFound(self, ctx):
     """Send an embed with the error : no result found."""
-    embed=discord.Embed(title="Search results :", description=f"No result found!", color=discord.Colour.random())
+    embed=discord.Embed(title="Search results :", description=f"<:False:798596718563950653> No result found!", color=discord.Colour.random())
     embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
 
@@ -118,6 +122,7 @@ class CogPlay(commands.Cog):
 
 
     @commands.command(name = "play",
+                    aliases=["p"],
                     usage="<Link/Query>",
                     description = "The bot searches and plays the music.")
     @commands.guild_only()
@@ -125,7 +130,6 @@ class CogPlay(commands.Cog):
     async def play(self, ctx, *args):
 
         args = " ".join(args)
-        await ctx.send("Searching...", delete_after=10)
 
         # Spotify
         if args.startswith("https://open.spotify.com/track"):
@@ -135,7 +139,8 @@ class CogPlay(commands.Cog):
         # Deezer
         elif args.startswith("https://deezer.page.link") or args.startswith("https://www.deezer.com"): 
             args = await searchDeezer(self, ctx, args)
-            if args is None: return
+            if args is None:
+                return
  
         # SoundCloud
         elif args.startswith("https://soundcloud.com"): 
@@ -147,14 +152,19 @@ class CogPlay(commands.Cog):
             args = await searchQuery(self, ctx, args)
             if args is None: return
 
+        # YouTube
+        else:
+           await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10) 
+
         link = args
 
         client = ctx.guild.voice_client
 
         if client and client.channel:
             if (self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]):
-                return await ctx.channel.send(f"{ctx.author.mention} I'm already connected in a voice channel!")
-            await ctx.send("Loading...", delete_after=10)
+                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm already connected in a voice channel!")
+            if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
+                await ctx.send("Loading...", delete_after=10)
             music = Music(self, link)
             music.title = music.title.replace("*", "\\*")
             if music.isLive:
@@ -182,7 +192,7 @@ class CogPlay(commands.Cog):
         else:
             voice = ctx.author.voice
             if ctx.author.voice is None:
-                return await ctx.channel.send(f"{ctx.author.mention} You are not connected in a voice channel!")
+                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
             await ctx.send("Loading...", delete_after=10)
             client = await voice.channel.connect() # Connect the bot to the voice channel
             music = Music(self, link) # Get music data

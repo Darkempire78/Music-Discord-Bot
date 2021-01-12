@@ -15,15 +15,15 @@ class CogRemove(commands.Cog):
     async def remove(self, ctx, index):
         
         if ctx.author.voice is None:
-            return await ctx.channel.send(f"{ctx.author.mention} You are not connected in a voice channel!")
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
         if self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]: 
-            return await ctx.channel.send(f"{ctx.author.mention} You are not connected in the same voice channel that the bot!")
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in the same voice channel that the bot!")
         if len(self.bot.music[ctx.guild.id]["musics"]) <= 0:
-            return await ctx.channel.send(f"{ctx.author.mention} The queue is empty!")
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The queue is empty!")
         if not index.isdigit():
-            return await ctx.channel.send(f"{ctx.author.mention} The index have to be a number!")
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The index have to be a number!")
         if (int(index) -1) > len(self.bot.music[ctx.guild.id]["musics"]):
-            return await ctx.channel.send(f"{ctx.author.mention} The index is invalid!")
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The index is invalid!")
 
         index = int(index) - 1
         music = self.bot.music[ctx.guild.id]["musics"][index]["music"]

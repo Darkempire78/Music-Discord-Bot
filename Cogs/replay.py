@@ -16,11 +16,11 @@ class CogReplay(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def replay(self, ctx):
         if ctx.author.voice is None:
-            return await ctx.channel.send(f"{ctx.author.mention} You are not connected in a voice channel!")
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
         if self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]: 
-            return await ctx.channel.send(f"{ctx.author.mention} You are not connected in the same voice channel that the bot!")
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in the same voice channel that the bot!")
         if not self.bot.music[ctx.guild.id]["nowPlaying"]:
-            await ctx.channel.send(f"{ctx.author.mention} There is currently no song to replay!")
+            await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} There is currently no song to replay!")
         
         music = self.bot.music[ctx.guild.id]["nowPlaying"]["music"]
         self.bot.music[ctx.guild.id]["musics"].insert(0, {"music": music, "requestedBy": ctx.author})

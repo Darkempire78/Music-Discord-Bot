@@ -5,7 +5,7 @@ def sendPlayingSongEmbed(self, ctx, music):
     # Send message
     requestedBy =  music["requestedBy"]
     music =  music["music"]
-    
+
     # Musique duration
     if music.isLive:
         duration = "Live"
@@ -16,10 +16,12 @@ def sendPlayingSongEmbed(self, ctx, music):
         duration = f"{music.duration//60}:{musicDurationSeconds}"
 
     # Queue duration
-    queueDuration = 0
-    for i in self.bot.music[ctx.guild.id]["musics"]:
-        if not i["music"].isLive:
-            queueDuration += i["music"].duration
+    queueDuration = sum(
+        i["music"].duration
+        for i in self.bot.music[ctx.guild.id]["musics"]
+        if not i["music"].isLive
+    )
+
     queueDurationSeconds = queueDuration % 60
     if queueDurationSeconds < 10:
         queueDurationSeconds = f"0{queueDurationSeconds}"
