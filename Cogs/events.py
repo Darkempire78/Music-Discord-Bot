@@ -33,7 +33,9 @@ class EventsCog(commands.Cog, name="EventsCog"):
         elif isinstance(error, CheckFailure):
             await ctx.send(error.original.text)
         else:
-            await ctx.send(error)
+            embed = discord.Embed(title=f"__**COMMAND ERROR**__", description=f"[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)\n\n**You may repport this issue on the [GitHub repository](https://github.com/Darkempire78/Music-Discord-Bot)**\n```{error}```", color=discord.Colour.red())
+            embed.set_footer(text="Bot Created by Darkempire#8245")
+            await ctx.channel.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
