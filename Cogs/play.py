@@ -154,13 +154,8 @@ class CogPlay(commands.Cog):
         if client and client.channel:
             if (self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]):
                 return await ctx.channel.send(f"{ctx.author.mention} I'm already connected in a voice channel!")
+            await ctx.send("Loading...", delete_after=10)
             music = Music(self, link)
-            self.bot.music[ctx.guild.id]["musics"].append(
-                {
-                "music": music,
-                "requestedBy": ctx.author
-                }
-            )
             music.title = music.title.replace("*", "\\*")
             if music.isLive:
                 duration = "Live"
@@ -169,6 +164,18 @@ class CogPlay(commands.Cog):
                 if musicDurationSeconds < 10:
                     musicDurationSeconds = f"0{musicDurationSeconds}"
                 duration = f"{music.duration//60}:{musicDurationSeconds}"
+            
+            if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
+                self.bot.music[ctx.guild.id]["musics"] = []
+                self.bot.music[ctx.guild.id]["volume"] = 0.5
+                return playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
+
+            self.bot.music[ctx.guild.id]["musics"].append(
+                {
+                "music": music,
+                "requestedBy": ctx.author
+                }
+            )
             embed=discord.Embed(title="Song added in the queue", description=f"New song added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
             embed.set_thumbnail(url=music.thumbnails)
             await ctx.channel.send(embed=embed)
