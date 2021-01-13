@@ -19,7 +19,8 @@ Finally, host the bot and invite it to your own server.
 
 * Play music from YouTube
 * Support links from YouTube, Spotify, Deezer and Soudcloud 
-* Support lives
+* Support YouTube lives
+* Support playlists from YouTube.
 * Many commands
 * Complex queue commands
 
@@ -66,7 +67,7 @@ Finally, host the bot and invite it to your own server.
 
 ### Other
 * DJ system
-* YouTube, Spotify, Deezer and Soundcloud playlist support
+* Add Spotify, Deezer and Soundcloud playlist support
 * Custom playlist system
 
 

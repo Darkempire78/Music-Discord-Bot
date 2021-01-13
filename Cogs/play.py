@@ -6,7 +6,7 @@ import tekore # Spotify
 
 from discord.ext import commands
 
-from youtubesearchpython import VideosSearch
+from youtubesearchpython import VideosSearch, PlaylistsSearch
 
 from sclib.asyncio import SoundcloudAPI, Track
 
@@ -110,6 +110,29 @@ async def searchQuery(self, ctx, args):
         await ctx.channel.send(embed = embed)
         return None
 
+async def searchPlaylist(self, ctx, args):
+    """Get YouTube links from a playlist link."""
+    await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
+    videoCount = int(PlaylistsSearch(args, limit = 1).result()["result"][0]["videoCount"])
+    if videoCount == 0:
+        await noResultFound(self, ctx)
+        return None
+    if videoCount > 25:
+        await playlistTooLarge(self, ctx)
+        return None
+    await ctx.send("<:YouTubeLogo:798492404587954176> Loading... (This process can takes several seconds)", delete_after=60)
+    with self.bot.ytdl:
+        result = self.bot.ytdl.extract_info(args, download=False)
+        videos = result['entries']
+        return [i["webpage_url"] for i in videos]
+
+
+async def playlistTooLarge(self, ctx):
+    """Send an embed with the error : playlist is too big."""
+    embed=discord.Embed(title="Search results :", description=f"<:False:798596718563950653> The playlist is too big! (max : 25 tracks)", color=discord.Colour.random())
+    embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+    await ctx.send(embed=embed)
+
 async def noResultFound(self, ctx):
     """Send an embed with the error : no result found."""
     embed=discord.Embed(title="Search results :", description=f"<:False:798596718563950653> No result found!", color=discord.Colour.random())
@@ -146,59 +169,67 @@ class CogPlay(commands.Cog):
         elif args.startswith("https://soundcloud.com"): 
             args = await searchSoundcloud(self, ctx, args)
             if args is None: return
-            
+        
+        # Youtube Playlist
+        elif args.startswith("https://www.youtube.com/playlist"): 
+            args = await searchPlaylist(self, ctx, args)
+            if args is None: return
+
         # Query
-        elif not args.startswith("https://www.youtube.com"):
+        elif not args.startswith("https://www.youtube.com/watch"):
             args = await searchQuery(self, ctx, args)
             if args is None: return
 
-        # YouTube
+        # YouTube video
         else:
            await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10) 
 
-        link = args
-
+        links = args
         client = ctx.guild.voice_client
 
-        if client and client.channel:
-            if (self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]):
-                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm already connected in a voice channel!")
-            if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
-                await ctx.send("Loading...", delete_after=10)
-            music = Music(self, link)
-            music.title = music.title.replace("*", "\\*")
-            if music.isLive:
-                duration = "Live"
+        if not isinstance(links, list):
+            links = [links]
+
+        for link in links:
+            if client and client.channel:
+                if (self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]):
+                    return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm already connected in a voice channel!")
+                if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
+                    await ctx.send("Loading...", delete_after=10)
+                music = Music(self, link)
+                music.title = music.title.replace("*", "\\*")
+                if music.isLive:
+                    duration = "Live"
+                else:
+                    musicDurationSeconds = music.duration % 60
+                    if musicDurationSeconds < 10:
+                        musicDurationSeconds = f"0{musicDurationSeconds}"
+                    duration = f"{music.duration//60}:{musicDurationSeconds}"
+                
+                if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
+                    self.bot.music[ctx.guild.id]["musics"] = []
+                    self.bot.music[ctx.guild.id]["volume"] = 0.5
+                    return playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
+
+                self.bot.music[ctx.guild.id]["musics"].append(
+                    {
+                    "music": music,
+                    "requestedBy": ctx.author
+                    }
+                )
+                embed=discord.Embed(title="Song added in the queue", description=f"New song added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
+                embed.set_thumbnail(url=music.thumbnails)
+                await ctx.channel.send(embed=embed)
             else:
-                musicDurationSeconds = music.duration % 60
-                if musicDurationSeconds < 10:
-                    musicDurationSeconds = f"0{musicDurationSeconds}"
-                duration = f"{music.duration//60}:{musicDurationSeconds}"
-            
-            if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
+                voice = ctx.author.voice
+                if ctx.author.voice is None:
+                    return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
+                await ctx.send("Loading...", delete_after=10)
+                client = await voice.channel.connect() # Connect the bot to the voice channel
+                music = Music(self, link) # Get music data
                 self.bot.music[ctx.guild.id]["musics"] = []
                 self.bot.music[ctx.guild.id]["volume"] = 0.5
-                return playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
-
-            self.bot.music[ctx.guild.id]["musics"].append(
-                {
-                "music": music,
-                "requestedBy": ctx.author
-                }
-            )
-            embed=discord.Embed(title="Song added in the queue", description=f"New song added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
-            embed.set_thumbnail(url=music.thumbnails)
-            await ctx.channel.send(embed=embed)
-        else:
-            voice = ctx.author.voice
-            if ctx.author.voice is None:
-                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
-            await ctx.send("Loading...", delete_after=10)
-            client = await voice.channel.connect() # Connect the bot to the voice channel
-            music = Music(self, link) # Get music data
-            self.bot.music[ctx.guild.id]["musics"] = []
-            self.bot.music[ctx.guild.id]["volume"] = 0.5
-            playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
+                playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
             
 
 
