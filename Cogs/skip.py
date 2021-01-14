@@ -36,7 +36,7 @@ class CogSkip(commands.Cog):
 
         # Clean the dict
         self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
-        await ctx.send(f"{ctx.author.mention} Current music skiped!")
+        await ctx.send(f"{ctx.author.mention} Current music skipped!")
         client = ctx.guild.voice_client
         client.stop()
 
