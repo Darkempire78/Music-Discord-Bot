@@ -39,22 +39,29 @@ class EventsCog(commands.Cog, name="EventsCog"):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        if member != self.bot.user:
-            return
-
-        # If the bot is disconnected
-        if (before.channel is not None) and (after.channel is None):
-            self.bot.music[before.channel.guild.id]["musics"] = []
-            self.bot.music[before.channel.guild.id]["volume"] = 0.5
-            self.bot.music[before.channel.guild.id]["skip"] = {"count": 0, "users": []}
-            self.bot.music[before.channel.guild.id]["nowPlaying"] = None
-            self.bot.music[before.channel.guild.id]["loop"] = None
+            
+        if (before.channel is not None) and (after.channel is not before.channel):
+            if (
+                (self.bot.user.id in before.channel.voice_states.keys() and 
+                len(before.channel.voice_states) == 1) 
+                or 
+                (member == self.bot.user)
+            ):
+                if member != self.bot.user:
+                    client = before.channel.guild.voice_client
+                    await client.disconnect()
+                self.bot.music[before.channel.guild.id]["musics"] = []
+                self.bot.music[before.channel.guild.id]["volume"] = 0.5
+                self.bot.music[before.channel.guild.id]["skip"] = {"count": 0, "users": []}
+                self.bot.music[before.channel.guild.id]["nowPlaying"] = None
+                self.bot.music[before.channel.guild.id]["loop"] = False
         elif (before.channel is  None) and (after.channel is not None):
-            self.bot.music[after.channel.guild.id]["musics"] = []
-            self.bot.music[after.channel.guild.id]["volume"] = 0.5
-            self.bot.music[after.channel.guild.id]["skip"] = {"count": 0, "users": []}
-            self.bot.music[after.channel.guild.id]["nowPlaying"] = None
-            self.bot.music[after.channel.guild.id]["loop"] = None
+            if member == self.bot.user:
+                self.bot.music[after.channel.guild.id]["musics"] = []
+                self.bot.music[after.channel.guild.id]["volume"] = 0.5
+                self.bot.music[after.channel.guild.id]["skip"] = {"count": 0, "users": []}
+                self.bot.music[after.channel.guild.id]["nowPlaying"] = None
+                self.bot.music[after.channel.guild.id]["loop"] = False
 
 # ------------------------ BOT ------------------------ #  
 
