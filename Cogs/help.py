@@ -54,7 +54,7 @@ class HelpCog(commands.Cog, name="help command"):
                 embed.set_footer(text="Bot Created by Darkempire#8245")
                 await ctx.channel.send(embed=embed)
         else:
-            message = (f"""
+            message1 = (f"""
                 **{self.bot.command_prefix}help (command) :** Display the help list or the help data for a specific command.\n
                 **{self.bot.command_prefix}play <Url/Query> :** Search on youtube and play the music.
                 **{self.bot.command_prefix}search <Query> :** Search a song on youtube.
@@ -70,12 +70,20 @@ class HelpCog(commands.Cog, name="help command"):
                 **{self.bot.command_prefix}removedupes :** Remove all duplicates song from the queue.
                 **{self.bot.command_prefix}clear :** Clear the queue.
                 **{self.bot.command_prefix}replay :** Replay the current song.
+            """)
+
+            message2 = (f"""
                 **{self.bot.command_prefix}reload :** Reload the current song.
                 **{self.bot.command_prefix}loop :** Enable or disable the loop mode.
             """)
-            embed = discord.Embed(title=f"__**Help page of {self.bot.user.name.upper()}**__", description="[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)", color=discord.Colour.random())
+            embed = discord.Embed(title=f"__**Help page 1 of {self.bot.user.name.upper()}**__", description="[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)", color=discord.Colour.random())
             embed.set_thumbnail(url=f'{self.bot.user.avatar_url}')
-            embed.add_field(name=f"__COMMANDS :__", value=message, inline=False)
+            embed.add_field(name=f"__COMMANDS :__", value=message1, inline=False)
+            embed.set_footer(text="Bot Created by Darkempire#8245")
+            await ctx.channel.send(embed=embed)
+
+            embed = discord.Embed(title=f"__**Help page 2 of {self.bot.user.name.upper()}**__", description=f"{message2}", color=discord.Colour.random())
+            embed.set_thumbnail(url=f'{self.bot.user.avatar_url}')
             embed.set_footer(text="Bot Created by Darkempire#8245")
             await ctx.channel.send(embed=embed)
 
