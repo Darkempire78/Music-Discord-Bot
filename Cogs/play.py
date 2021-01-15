@@ -239,7 +239,7 @@ class CogPlay(commands.Cog):
                     usage="<Link/Query>",
                     description = "The bot searches and plays the music.")
     @commands.guild_only()
-    @commands.cooldown(1, 2, commands.BucketType.member)
+    @commands.cooldown(1, 3, commands.BucketType.member)
     async def play(self, ctx, *args):
 
         args = " ".join(args)
@@ -288,6 +288,11 @@ class CogPlay(commands.Cog):
         if not isinstance(links, list):
             links = [links]
 
+        playlistMessage = None
+        isPlaylist = False
+        if len(links) > 1:
+            isPlaylist = True
+
         for link in links:
             if client and client.channel:
                 if (self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]):
@@ -315,9 +320,28 @@ class CogPlay(commands.Cog):
                     "requestedBy": ctx.author
                     }
                 )
-                embed=discord.Embed(title="Song added in the queue", description=f"New song added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
-                embed.set_thumbnail(url=music.thumbnails)
-                await ctx.channel.send(embed=embed)
+                if not isPlaylist:
+                    embed=discord.Embed(title="Songs added in the queue", description=f"New songs added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
+                    embed.set_thumbnail(url=music.thumbnails)
+                    await ctx.channel.send(embed=embed)
+                else:
+                    # If it's a plylist => Update the same message to do not spam the channel
+                    if playlistMessage is None:
+                        embed=discord.Embed(title="Song added in the queue", description=f"- **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
+                        embed.set_thumbnail(url=music.thumbnails)
+                        playlistMessage = await ctx.channel.send(embed=embed)
+                    else:
+                        # Update the message
+                        embedEdited = discord.Embed(title="Songs added in the queue", description= playlistMessage.embeds[0].description + f"\n- **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
+                        playlistMessage.embeds[0].description = embedEdited.description
+                        if len(playlistMessage.embeds[0].description) > 1800:
+                            embed=discord.Embed(title="Song added in the queue", description=f"- **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
+                            embed.set_thumbnail(url=music.thumbnails)
+                            playlistMessage = await ctx.channel.send(embed=embed)
+                        else:
+                            await playlistMessage.edit(embed=embedEdited)
+                        
+                
             else:
                 voice = ctx.author.voice
                 if ctx.author.voice is None:
