@@ -25,10 +25,18 @@ class CogQueue(commands.Cog):
             i["music"].title = i["music"].title.replace("*", "\\*")
 
             i["music"].title =i["music"].title.replace("*", "\\*")
+            
             message += f"**{number}) ["+ i["music"].title + "](https://www.youtube.com"+ i["music"].url + f"])** (" + str(i["music"].duration//60) + f":{musicDurationSeconds})\n"
-        embed=discord.Embed(title="Queue", description=message, color=discord.Colour.random())
-        embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
-        await ctx.send(embed=embed)
+            if len(message) > 1800:
+                embed=discord.Embed(title="Queue", description=message, color=discord.Colour.random())
+                embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+                await ctx.send(embed=embed)
+                message = ""
+        if len(message) > 0:
+            embed=discord.Embed(title="Queue", description=message, color=discord.Colour.random())
+            embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+            await ctx.send(embed=embed)
+
 
 
 def setup(bot):
