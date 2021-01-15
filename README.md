@@ -64,6 +64,7 @@ Finally, host the bot and invite it to your own server.
 * Skipto
 * Loopqueue
 * Playfile
+* Blindtest
 
 ### Other
 * DJ system
