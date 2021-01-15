@@ -63,6 +63,23 @@ class EventsCog(commands.Cog, name="EventsCog"):
                 self.bot.music[after.channel.guild.id]["nowPlaying"] = None
                 self.bot.music[after.channel.guild.id]["loop"] = False
 
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        self.bot.music[guild.id] = {
+            "volume": 0.5,
+            "musics": [],
+            "skip": {
+                "count": 0,
+                "users": []
+            },
+            "nowPlaying": None,
+            "loop": False
+        }
+
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild):
+        del self.bot.music[guild.id]
+
 # ------------------------ BOT ------------------------ #  
 
 def setup(bot):

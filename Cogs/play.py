@@ -6,7 +6,7 @@ import tekore # Spotify
 
 from discord.ext import commands
 
-from youtubesearchpython import VideosSearch, PlaylistsSearch
+from youtubesearchpython import VideosSearch, PlaylistsSearch, Video, ResultMode
 
 from sclib.asyncio import SoundcloudAPI, Track
 
@@ -182,7 +182,12 @@ class CogPlay(commands.Cog):
 
         # YouTube video
         else:
-           await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10) 
+            await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
+            try:
+                # Check if the link exist
+                Video.get(args, mode = ResultMode.json)
+            except:
+                return await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The YouTube link is invalid!")
 
         links = args
         client = ctx.guild.voice_client
