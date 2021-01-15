@@ -14,6 +14,9 @@ class CogVolume(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def volume(self, ctx, volume):
 
+        if not ctx.guild.voice_client:
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm not connected in a voice channel!")
+
         if (
             (not volume.isdigit()) or 
             (int(volume)) < 0 or 

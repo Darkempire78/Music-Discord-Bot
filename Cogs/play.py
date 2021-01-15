@@ -14,7 +14,7 @@ from Tools.Music import Music
 from Tools.playTrack import playTrack
 
 
-async def searchSpotify(self, ctx, args):
+async def searchSpotifyTrack(self, ctx, args):
     """Get a YouTube link from a Spotify link."""
     await ctx.send("<:SpotifyLogo:798492403882262569> Searching...", delete_after=10)
     # Get track's id
@@ -32,6 +32,35 @@ async def searchSpotify(self, ctx, args):
         await noResultFound(self, ctx)
         return None
     return results[0]["link"]
+
+async def searchSpotifyPlaylist(self, ctx, args):
+    """Get Spotify links from a playlist link."""
+    await ctx.send("<:SpotifyLogo:798492403882262569> Searching...", delete_after=10)
+    # Get palylist's id
+    playlistId = tekore.from_url(args)
+    try:
+        playlist = await self.bot.spotify.playlist(playlistId[1])
+    except:
+        await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Spotify playlist is invalid!")
+        return None
+
+    trackLinks = []
+    if playlist.tracks.total > 25:
+        await playlistTooLarge(self, ctx)
+        return None
+    await ctx.send("<:SpotifyLogo:798492403882262569> Loading... (This process can takes several seconds)", delete_after=60)
+    for i in playlist.tracks.items:
+        title = i.track.name
+        artist = i.track.artists[0].name
+        # Search on youtube
+        results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
+        if len(results) == 0:
+            await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} No song found to : `{title} - {artist}` !")
+        trackLinks.append(results[0]["link"])
+    if not trackLinks: # if len(trackLinks) == 0:
+        return None
+    return trackLinks
+
 
 async def searchDeezer(self, ctx, args):
     """Get a YouTube link from a Deezer link."""
@@ -155,8 +184,11 @@ class CogPlay(commands.Cog):
         args = " ".join(args)
 
         # Spotify
-        if args.startswith("https://open.spotify.com/track"):
-            args = await searchSpotify(self, ctx, args)
+        if args.startswith("https://open.spotify.com"):
+            if args.startswith("https://open.spotify.com/track"):
+                args = await searchSpotifyTrack(self, ctx, args)
+            if args.startswith("https://open.spotify.com/playlist"):
+                args = await searchSpotifyPlaylist(self, ctx, args)
             if args is None: return
         
         # Deezer
