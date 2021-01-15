@@ -8,7 +8,7 @@ from discord.ext import commands
 
 from youtubesearchpython import VideosSearch, PlaylistsSearch, Video, ResultMode
 
-from sclib.asyncio import SoundcloudAPI, Track
+from sclib.asyncio import SoundcloudAPI, Track, Playlist
 
 from Tools.Music import Music
 from Tools.playTrack import playTrack
@@ -56,7 +56,8 @@ async def searchSpotifyPlaylist(self, ctx, args):
         results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
         if len(results) == 0:
             await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} No song found to : `{title} - {artist}` !")
-        trackLinks.append(results[0]["link"])
+        else:
+            trackLinks.append(results[0]["link"])
     if not trackLinks: # if len(trackLinks) == 0:
         return None
     return trackLinks
@@ -101,6 +102,10 @@ async def searchDeezerPlaylist(self, ctx, session, response):
     playlistId = response._real_url.name
     async with session.get(f"https://api.deezer.com/playlist/{playlistId}") as response:
         response = await response.json()
+        if response["nb_tracks"] > 25:
+            await playlistTooLarge(self, ctx)
+            return None
+        await ctx.send("<:DeezerLogo:798492403048644628> Loading... (This process can takes several seconds)", delete_after=60)
         trackLinks = []
         for i in response["tracks"]["data"]:
             title = i["title_short"]
@@ -109,7 +114,8 @@ async def searchDeezerPlaylist(self, ctx, session, response):
             results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
             if len(results) == 0:
                 await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} No song found to : `{title} - {artist}` !")
-            trackLinks.append(results[0]["link"])
+            else:
+                trackLinks.append(results[0]["link"])
         if not trackLinks:
             return None
         return trackLinks
@@ -119,20 +125,45 @@ async def searchSoundcloud(self, ctx, args):
     await ctx.send("<:SoundCloudLogo:798492403459424256> Searching...", delete_after=10)
     soundcloud = SoundcloudAPI()
     try:
-        track = await soundcloud.resolve(args)
-        if not isinstance(track, Track):
-            await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Soundcloud link is not a track!")
+        trackOrPlaylist = await soundcloud.resolve(args)
+        if isinstance(trackOrPlaylist, Track):
+            link = await searchSoundcloudTrack(self, ctx, trackOrPlaylist)
+            if link is None: 
+                return None
+            return link
+        elif isinstance(trackOrPlaylist, Playlist):
+            links = await searchSoundcloudPlaylist(self, ctx, trackOrPlaylist)
+            if links is None: 
+                return None
+            return links
+        else:
+            await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Soundcloud link is not a track or a playlist!")
             return None
-        # Search on youtube
-        results = VideosSearch(track.title.replace("-", " ") + f" {track.artist}", limit = 1).result()["result"]
-        if len(results) == 0:
-            await noResultFound(self, ctx)
-            return None
-        return results[0]["link"]
-            
     except:
         await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Soundcloud link is invalid!")
         return None
+
+async def searchSoundcloudTrack(self, ctx, track):
+    # Search on youtube
+    results = VideosSearch(track.title.replace("-", " ") + f" {track.artist}", limit = 1).result()["result"]
+    if len(results) == 0:
+        await noResultFound(self, ctx)
+        return None
+    return results[0]["link"] 
+
+async def searchSoundcloudPlaylist(self, ctx, playlist):
+    if playlist.track_count > 25:
+        await playlistTooLarge(self, ctx)
+        return None
+    await ctx.send("<:SoundCloudLogo:798492403459424256> Loading... (This process can takes several seconds)", delete_after=60)
+    trackLinks = []
+    for i in playlist.tracks:
+        results = VideosSearch(i.title.replace("-", " ") + f" {i.artist}", limit = 1).result()["result"]
+        if len(results) == 0:
+            await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} No song found to : `{i.title} - {i.artist}` !")
+        else:
+            trackLinks.append(results[0]["link"])
+    return trackLinks
 
 async def searchQuery(self, ctx, args):
     """Get a YouTube link from a query."""
