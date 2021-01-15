@@ -74,7 +74,7 @@ async def searchDeezer(self, ctx, args):
                 if link is None: 
                     return None
                 return link
-            elif "playlist" in response._real_url.path:
+            if "playlist" in response._real_url.path:
                 links = await searchDeezerPlaylist(self, ctx, session, response)
                 if links is None: 
                     return None
@@ -131,7 +131,7 @@ async def searchSoundcloud(self, ctx, args):
             if link is None: 
                 return None
             return link
-        elif isinstance(trackOrPlaylist, Playlist):
+        if isinstance(trackOrPlaylist, Playlist):
             links = await searchSoundcloudPlaylist(self, ctx, trackOrPlaylist)
             if links is None: 
                 return None
