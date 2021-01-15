@@ -68,21 +68,51 @@ async def searchDeezer(self, ctx, args):
     async with aiohttp.ClientSession() as session:
         async with session.get(args) as response:
             # Chack if it's a track
-            if "track" not in response._real_url.path:
+            if "track" in response._real_url.path:
+                link = await searchDeezerTrack(self, ctx, session, response)
+                if link is None: 
+                    return None
+                return link
+            elif "playlist" in response._real_url.path:
+                links = await searchDeezerPlaylist(self, ctx, session, response)
+                if links is None: 
+                    return None
+                return links
+            else:
                 await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Deezer link is not a track!")
                 return None
-            # Get the music ID
-            trackId = response._real_url.name
-        async with session.get(f"https://api.deezer.com/track/{trackId}") as response:
-            response = await response.json()
-            title = response["title_short"]
-            artist = response["artist"]["name"]
+            
+async def searchDeezerTrack(self, ctx, session, response):
+    # Get the music ID
+    trackId = response._real_url.name
+    async with session.get(f"https://api.deezer.com/track/{trackId}") as response:
+        response = await response.json()
+        title = response["title_short"]
+        artist = response["artist"]["name"]
+        # Search on youtube
+        results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
+        if len(results) == 0:
+            await noResultFound(self, ctx)
+            return None
+        return results[0]["link"]
+
+async def searchDeezerPlaylist(self, ctx, session, response):
+    #Get the playlist ID
+    playlistId = response._real_url.name
+    async with session.get(f"https://api.deezer.com/playlist/{playlistId}") as response:
+        response = await response.json()
+        trackLinks = []
+        for i in response["tracks"]["data"]:
+            title = i["title_short"]
+            artist = i["artist"]["name"]
             # Search on youtube
             results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
             if len(results) == 0:
-                await noResultFound(self, ctx)
-                return None
-            return results[0]["link"]
+                await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} No song found to : `{title} - {artist}` !")
+            trackLinks.append(results[0]["link"])
+        if not trackLinks:
+            return None
+        return trackLinks
 
 async def searchSoundcloud(self, ctx, args):
     """Get a YouTube link from a SoundCloud link."""
@@ -187,7 +217,7 @@ class CogPlay(commands.Cog):
         if args.startswith("https://open.spotify.com"):
             if args.startswith("https://open.spotify.com/track"):
                 args = await searchSpotifyTrack(self, ctx, args)
-            if args.startswith("https://open.spotify.com/playlist"):
+            elif args.startswith("https://open.spotify.com/playlist"):
                 args = await searchSpotifyPlaylist(self, ctx, args)
             if args is None: return
         
