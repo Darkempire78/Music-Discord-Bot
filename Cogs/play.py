@@ -79,9 +79,8 @@ async def searchDeezer(self, ctx, args):
                 if links is None: 
                     return None
                 return links
-            else:
-                await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Deezer link is not a track!")
-                return None
+            await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Deezer link is not a track!")
+            return None
             
 async def searchDeezerTrack(self, ctx, session, response):
     # Get the music ID
@@ -136,9 +135,8 @@ async def searchSoundcloud(self, ctx, args):
             if links is None: 
                 return None
             return links
-        else:
-            await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Soundcloud link is not a track or a playlist!")
-            return None
+        await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Soundcloud link is not a track or a playlist!")
+        return None
     except:
         await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The Soundcloud link is invalid!")
         return None
