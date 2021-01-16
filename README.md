@@ -45,6 +45,7 @@ Finally, host the bot and invite it to your own server.
 ?volume <0-100> : Change the bot's volume.
 ?queue : Display the queue.
 ?shuffle : Shuffle the queue.
+?move <IndexFrom> <IndexTo> : Move a song in the queue.
 ?remove <Index> : Remove the song with its index.
 ?removedupes : Remove all duplicates song from the queue.
 ?clear : Clear the queue.
@@ -59,7 +60,6 @@ Finally, host the bot and invite it to your own server.
 ## Soon
 ### Command
 * Lyrics
-* Move
 * Forward / Rewind
 * Skipto
 * Loopqueue

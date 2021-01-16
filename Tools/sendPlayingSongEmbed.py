@@ -22,10 +22,10 @@ def sendPlayingSongEmbed(self, ctx, music):
         if i["music"].duration is not None
     )
 
-    queueDurationSeconds = queueDuration % 60
+    queueDurationSeconds = round(queueDuration % 60)
     if queueDurationSeconds < 10:
-        queueDurationSeconds = f"0{queueDurationSeconds}"
-    queueDuration = f"{queueDuration//60}:{queueDurationSeconds}"
+        queueDurationSeconds = f"0{round(queueDurationSeconds)}"
+    queueDuration = f"{round(queueDuration//60)}:{queueDurationSeconds}"
 
 
     music.title = music.title.replace("*", "\\*")
