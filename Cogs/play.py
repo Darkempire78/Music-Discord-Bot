@@ -337,7 +337,7 @@ class CogPlay(commands.Cog):
                     embed.set_thumbnail(url=music.thumbnails)
                     await ctx.channel.send(embed=embed)
                 else:
-                    # If it's a plylist => Update the same message to do not spam the channel
+                    # If it's a playlist => Update the same message to do not spam the channel
                     if playlistMessage is None:
                         embed=discord.Embed(title="Song added in the queue", description=f"- **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
                         embed.set_thumbnail(url=music.thumbnails)
