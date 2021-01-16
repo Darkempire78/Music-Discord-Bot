@@ -319,7 +319,7 @@ class CogPlay(commands.Cog):
                     }
                 )
                 if not isPlaylist:
-                    embed=discord.Embed(title="Songs added in the queue", description=f"New songs added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
+                    embed=discord.Embed(title="Song added in the queue", description=f"New song added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
                     embed.set_thumbnail(url=music.thumbnails)
                     await ctx.channel.send(embed=embed)
                 else:
