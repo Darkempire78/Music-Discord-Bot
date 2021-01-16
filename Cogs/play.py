@@ -318,8 +318,22 @@ class CogPlay(commands.Cog):
                     "requestedBy": ctx.author
                     }
                 )
+
+                # Queue duration
+                queueDuration = sum(
+                    i["music"].duration
+                    for i in self.bot.music[ctx.guild.id]["musics"]
+                    if i["music"].duration is not None
+                )
+                queueDurationSeconds = round(queueDuration % 60)
+                if queueDurationSeconds < 10:
+                    queueDurationSeconds = f"0{round(queueDurationSeconds)}"
+                queueDuration = f"{round(queueDuration//60)}:{queueDurationSeconds}"
+
                 if not isPlaylist:
                     embed=discord.Embed(title="Song added in the queue", description=f"New song added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
+                    embed.add_field(name="Place in the queue : ", value="`" + str(len(self.bot.music[ctx.guild.id]["musics"])) + f"`", inline=True)
+                    embed.add_field(name="Estimated time before playing :", value=f"`{queueDuration}`", inline=True)
                     embed.set_thumbnail(url=music.thumbnails)
                     await ctx.channel.send(embed=embed)
                 else:
