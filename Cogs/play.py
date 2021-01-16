@@ -178,7 +178,7 @@ async def searchQuery(self, ctx, args):
         i["title"] =i["title"].replace("*", "\\*")
         message += f"**{number}) ["+ i["title"] + "]("+ i["link"] + "])** ("+ str(i["duration"]) + ")\n"
     embed=discord.Embed(title="Search results :", description=f"Choose your result.\nWrite `0` to pass the cooldown.\n\n{message}", color=discord.Colour.random())
-    embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+    embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
 
     def check(message):
@@ -218,13 +218,13 @@ async def searchPlaylist(self, ctx, args):
 async def playlistTooLarge(self, ctx):
     """Send an embed with the error : playlist is too big."""
     embed=discord.Embed(title="Search results :", description=f"<:False:798596718563950653> The playlist is too big! (max : 25 tracks)", color=discord.Colour.random())
-    embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+    embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
 
 async def noResultFound(self, ctx):
     """Send an embed with the error : no result found."""
     embed=discord.Embed(title="Search results :", description=f"<:False:798596718563950653> No result found!", color=discord.Colour.random())
-    embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+    embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
 
 class CogPlay(commands.Cog):
@@ -299,13 +299,13 @@ class CogPlay(commands.Cog):
                     await ctx.send("Loading...", delete_after=10)
                 music = Music(self, link)
                 music.title = music.title.replace("*", "\\*")
-                if music.isLive:
+                if music.duration is None:
                     duration = "Live"
                 else:
                     musicDurationSeconds = music.duration % 60
                     if musicDurationSeconds < 10:
                         musicDurationSeconds = f"0{musicDurationSeconds}"
-                    duration = f"{music.duration//60}:{musicDurationSeconds}"
+                    duration = f"{round(music.duration//60)}:{round(musicDurationSeconds)}"
                 
                 if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
                     self.bot.music[ctx.guild.id]["musics"] = []
@@ -338,8 +338,7 @@ class CogPlay(commands.Cog):
                             playlistMessage = await ctx.channel.send(embed=embed)
                         else:
                             await playlistMessage.edit(embed=embedEdited)
-                        
-                
+                         
             else:
                 voice = ctx.author.voice
                 if ctx.author.voice is None:

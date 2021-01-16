@@ -30,7 +30,7 @@ class CogremoveDupes(commands.Cog):
         self.bot.music[ctx.guild.id]["musics"] = newQueue
 
         embed=discord.Embed(title="Duplicate songs removed", description=f"All duplicate songs in the queue was removed!", color=discord.Colour.random())
-        embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
         await ctx.channel.send(embed=embed)
 
 def setup(bot):
