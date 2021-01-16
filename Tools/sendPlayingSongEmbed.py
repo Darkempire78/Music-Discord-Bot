@@ -10,10 +10,10 @@ def sendPlayingSongEmbed(self, ctx, music):
     if music.duration is None:
         duration = "Live"
     else:
-        musicDurationSeconds = music.duration % 60
+        musicDurationSeconds = round(music.duration % 60)
         if musicDurationSeconds < 10:
-            musicDurationSeconds = f"0{musicDurationSeconds}"
-        duration = f"{round(music.duration//60)}:{round(musicDurationSeconds)}"
+            musicDurationSeconds = "0" + str(round(musicDurationSeconds))
+        duration = f"{round(music.duration//60)}:{musicDurationSeconds}"
 
     # Queue duration
     queueDuration = sum(

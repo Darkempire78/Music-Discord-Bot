@@ -28,10 +28,10 @@ class CogReplay(commands.Cog):
         if music.duration is None:
             duration = "Live"
         else:
-            musicDurationSeconds = music.duration % 60
+            musicDurationSeconds = round(music.duration % 60)
             if musicDurationSeconds < 10:
-                musicDurationSeconds = f"0{musicDurationSeconds}"
-            duration = f"{round(music.duration//60)}:{round(musicDurationSeconds)}"
+                musicDurationSeconds = "0" + str(round(musicDurationSeconds))
+            duration = f"{round(music.duration//60)}:{musicDurationSeconds}"
         embed=discord.Embed(title="Replay", description=f"New song added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
         embed.set_thumbnail(url=music.thumbnails)
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)

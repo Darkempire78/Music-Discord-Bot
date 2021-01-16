@@ -22,9 +22,9 @@ class CogQueue(commands.Cog):
             if i["music"].duration is None:
                 duration = "Live"
             else:
-                musicDurationSeconds = i["music"].duration % 60
+                musicDurationSeconds = round(i["music"].duration % 60)
                 if musicDurationSeconds < 10:
-                    musicDurationSeconds = f"0{musicDurationSeconds}"
+                    musicDurationSeconds = "0" + str(round(musicDurationSeconds))
                 duration = str(round(i["music"].duration//60)) + f":{round(musicDurationSeconds)}"
             i["music"].title = i["music"].title.replace("*", "\\*")
 
