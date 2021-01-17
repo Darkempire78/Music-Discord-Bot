@@ -4,7 +4,7 @@
 
 # Music Discord Bot
 
-A Discord bot with more than 18+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
+A Discord bot with more than 20+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
 
 ## Installation
 
