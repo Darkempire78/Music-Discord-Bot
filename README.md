@@ -50,6 +50,7 @@ Finally, host the bot and invite it to your own server.
 ?move <IndexFrom> <IndexTo> : Move a song in the queue.
 ?remove <Index> : Remove the song with its index.
 ?removedupes : Remove all duplicates song from the queue.
+?leavecleanup : Remove absent user's songs from the queue.
 ?clear : Clear the queue.
 ?replay : Replay the current song.
 ?reload : Reload the current song.

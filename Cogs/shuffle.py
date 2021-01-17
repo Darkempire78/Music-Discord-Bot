@@ -18,7 +18,9 @@ class CogShuffle(commands.Cog):
 
         if ctx.author.voice is None:
             return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
-        if self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]: 
+        if ctx.guild.voice_client and self.bot.user.id not in [
+            i.id for i in ctx.author.voice.channel.members
+        ]:
             return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in the same voice channel that the bot!")
 
         if len(self.bot.music[ctx.guild.id]["musics"]) <= 0:

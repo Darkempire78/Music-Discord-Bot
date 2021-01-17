@@ -16,7 +16,7 @@ class CogJoinLeave(commands.Cog):
         voice = ctx.author.voice
         if ctx.guild.voice_client:
             return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm already connected in a voice channel!")
-        if ctx.author.voice is None:
+        if voice is None:
             return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
         await voice.channel.connect()
         self.bot.music[ctx.guild.id]["musics"] = []
@@ -35,7 +35,9 @@ class CogJoinLeave(commands.Cog):
             return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
 
         # If user is not in the same voice channel that the bot
-        if self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]: 
+        if ctx.guild.voice_client and self.bot.user.id not in [
+            i.id for i in ctx.author.voice.channel.members
+        ]:
             return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in the same voice channel that the bot!")
         client = ctx.guild.voice_client
         await client.disconnect()

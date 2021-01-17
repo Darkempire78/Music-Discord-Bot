@@ -75,6 +75,7 @@ class HelpCog(commands.Cog, name="help command"):
 
             message2 = (f"""
                 **{self.bot.command_prefix}removedupes :** Remove all duplicates song from the queue.
+                **{self.bot.command_prefix}leavecleanup :** Remove absent user's songs from the queue.
                 **{self.bot.command_prefix}clear :** Clear the queue.
                 **{self.bot.command_prefix}replay :** Replay the current song.
                 **{self.bot.command_prefix}reload :** Reload the current song.
