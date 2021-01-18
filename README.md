@@ -56,6 +56,7 @@ Finally, host the bot and invite it to your own server.
 ?reload : Reload the current song.
 ?loop : Enable or disable the loop mode.
 
+?stats : Display the bot's stats.
 ?support : Give a link to join the support server.
 ?invite : Give a link to invite the bot.
 ?help : Display the help.
