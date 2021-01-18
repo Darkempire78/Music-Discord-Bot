@@ -372,6 +372,5 @@ class CogPlay(commands.Cog):
                 playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
             
 
-
 def setup(bot):
     bot.add_cog(CogPlay(bot))
