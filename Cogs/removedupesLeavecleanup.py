@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 
-class CogremoveDupes(commands.Cog):
+class CogRemoveDupes(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -66,4 +66,4 @@ class CogremoveDupes(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(CogremoveDupes(bot))
+    bot.add_cog(CogRemoveDupes(bot))
