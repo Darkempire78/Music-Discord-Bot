@@ -83,6 +83,7 @@ class EventsCog(commands.Cog, name="EventsCog"):
             "loop": False
         }
 
+        # Print the log on the support server
         channel = self.bot.get_channel(799998669926563860)
         if channel is not None:
             await channel.send(f":green_circle: Joined a server: {guild.name} ({guild.id})")
@@ -91,6 +92,7 @@ class EventsCog(commands.Cog, name="EventsCog"):
     async def on_guild_remove(self, guild):
         del self.bot.music[guild.id]
 
+        # Print the log on the support server
         channel = self.bot.get_channel(799998669926563860)
         if channel is not None:
             await channel.send(f":red_circle: Left a server: {guild.name} ({guild.id})")
