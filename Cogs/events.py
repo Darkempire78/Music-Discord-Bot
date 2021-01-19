@@ -37,6 +37,13 @@ class EventsCog(commands.Cog, name="EventsCog"):
             embed.set_footer(text="Bot Created by Darkempire#8245")
             await ctx.channel.send(embed=embed)
 
+            # Send the error on the support server 
+            channel = self.bot.get_channel(800839028659453952)
+            if channel is not None:
+                embed = discord.Embed(title=f"**ERROR :**", description=f"```{error}```", color=discord.Colour.red())
+                embed.set_footer(text=f"Server : {ctx.guild.name} - {ctx.guild.id} | Author : {ctx.author} - {ctx.author.id}")
+                await channel.send(embed=embed)
+
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
             

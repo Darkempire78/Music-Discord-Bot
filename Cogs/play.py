@@ -48,7 +48,7 @@ async def searchSpotifyPlaylist(self, ctx, args):
     if playlist.tracks.total > 25:
         await playlistTooLarge(self, ctx)
         return None
-    await ctx.send("<:SpotifyLogo:798492403882262569> Loading... (This process can takes several seconds)", delete_after=60)
+    await ctx.send("<:SpotifyLogo:798492403882262569> Loading... (This process can take several seconds)", delete_after=60)
     for i in playlist.tracks.items:
         title = i.track.name
         artist = i.track.artists[0].name
@@ -104,7 +104,7 @@ async def searchDeezerPlaylist(self, ctx, session, response):
         if response["nb_tracks"] > 25:
             await playlistTooLarge(self, ctx)
             return None
-        await ctx.send("<:DeezerLogo:798492403048644628> Loading... (This process can takes several seconds)", delete_after=60)
+        await ctx.send("<:DeezerLogo:798492403048644628> Loading... (This process can take several seconds)", delete_after=60)
         trackLinks = []
         for i in response["tracks"]["data"]:
             title = i["title_short"]
@@ -153,7 +153,7 @@ async def searchSoundcloudPlaylist(self, ctx, playlist):
     if playlist.track_count > 25:
         await playlistTooLarge(self, ctx)
         return None
-    await ctx.send("<:SoundCloudLogo:798492403459424256> Loading... (This process can takes several seconds)", delete_after=60)
+    await ctx.send("<:SoundCloudLogo:798492403459424256> Loading... (This process can take several seconds)", delete_after=60)
     trackLinks = []
     for i in playlist.tracks:
         results = VideosSearch(i.title.replace("-", " ") + f" {i.artist}", limit = 1).result()["result"]
@@ -208,7 +208,7 @@ async def searchPlaylist(self, ctx, args):
     if videoCount > 25:
         await playlistTooLarge(self, ctx)
         return None
-    await ctx.send("<:YouTubeLogo:798492404587954176> Loading... (This process can takes several seconds)", delete_after=60)
+    await ctx.send("<:YouTubeLogo:798492404587954176> Loading... (This process can take several seconds)", delete_after=60)
     with self.bot.ytdl:
         result = self.bot.ytdl.extract_info(args, download=False)
         videos = result['entries']

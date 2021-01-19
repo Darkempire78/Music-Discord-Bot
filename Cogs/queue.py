@@ -17,6 +17,7 @@ class CogQueue(commands.Cog):
         if len(self.bot.music[ctx.guild.id]["musics"]) <= 0:
             return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The queue is empty!")
 
+        isFirstMessage = True
         message = ""
         for number, i in enumerate(self.bot.music[ctx.guild.id]["musics"], start=1):
             if i["music"].duration is None:
@@ -25,19 +26,26 @@ class CogQueue(commands.Cog):
                 musicDurationSeconds = round(i["music"].duration % 60)
                 if musicDurationSeconds < 10:
                     musicDurationSeconds = "0" + str(round(musicDurationSeconds))
-                duration = str(round(i["music"].duration//60)) + f":{round(musicDurationSeconds)}"
+                duration = str(round(i["music"].duration//60)) + f":{round(int(musicDurationSeconds))}"
             i["music"].title = i["music"].title.replace("*", "\\*")
 
             i["music"].title =i["music"].title.replace("*", "\\*")
-            
+
             message += f"**{number}) ["+ i["music"].title + "](https://www.youtube.com"+ i["music"].url + f"])** ({duration})\n"
             if len(message) > 1800:
-                embed=discord.Embed(title="Queue", description=message, color=discord.Colour.random())
+                
+                if isFirstMessage:
+                    embedTitle = "Queue"
+                    isFirstMessage = False
+                else:
+                    embedTitle = ""
+
+                embed=discord.Embed(title=embedTitle, description=message, color=discord.Colour.random())
                 embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
                 await ctx.send(embed=embed)
                 message = ""
         if len(message) > 0:
-            embed=discord.Embed(title="Queue", description=message, color=discord.Colour.random())
+            embed=discord.Embed(title="", description=message, color=discord.Colour.random())
             embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
 
