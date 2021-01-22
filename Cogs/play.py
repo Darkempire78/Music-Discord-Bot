@@ -281,10 +281,9 @@ class CogPlay(commands.Cog):
         # YouTube video
         else:
             await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
-            try:
-                # Check if the link exist
-                Video.get(args, mode = ResultMode.json)
-            except:
+            # Check if the link exists
+            isYoutubeVideo = Video.get(args, mode = ResultMode.json)
+            if not isYoutubeVideo:
                 return await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The YouTube link is invalid!")
 
         links = args

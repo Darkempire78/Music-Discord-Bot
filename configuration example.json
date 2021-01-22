@@ -1,6 +1,12 @@
 {
     "token": "",
     "prefix": "?",
+    
     "spotifyClientId": "",
-    "spotifyClientSecret": ""
+    "spotifyClientSecret": "",
+    
+    "MySQLHost": "",
+    "MySQLLogin": "",
+    "MySQLPasword": "",
+    "MySQLDatabase": ""
 }

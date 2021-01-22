@@ -89,7 +89,7 @@ class HelpCog(commands.Cog, name="help command"):
             embed.set_footer(text="Bot Created by Darkempire#8245")
             await ctx.channel.send(embed=embed)
 
-            embed = discord.Embed(title=f"__**Help page 2 of {self.bot.user.name.upper()}**__", description=f"{message2}", color=discord.Colour.random())
+            embed = discord.Embed(title=f"", description=f"{message2}", color=discord.Colour.random())
             embed.set_thumbnail(url=f'{self.bot.user.avatar_url}')
             embed.set_footer(text="Bot Created by Darkempire#8245")
             await ctx.channel.send(embed=embed)

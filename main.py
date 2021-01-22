@@ -76,8 +76,8 @@ async def on_ready():
             "nowPlaying": None,
             "loop": False
         }
-    print(f'We have logged in as {bot.user}')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name =f"{bot.command_prefix}help"))
+    print(f'We have logged in as {bot.user}')
     print(discord.__version__)
 
 # ------------------------ RUN ------------------------ # 
