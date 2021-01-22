@@ -66,17 +66,8 @@ Finally, host the bot and invite it to your own server.
 
 
 ## Soon
-### Command
-* Lyrics
-* Forward / Rewind
-* Skipto
-* Loopqueue
-* Playfile
-* Blindtest
 
-### Other
-* DJ system
-* Custom playlist system
+**Project :** https://github.com/Darkempire78/Music-Discord-Bot/projects/2
 
 
 ## Contributing
@@ -87,6 +78,7 @@ Please make sure to update tests as appropriate.
 
 
 ## Support
+
 <a href="https://discord.gg/FxXQwKvmUY">
   <img src = "https://discordapp.com/api/guilds/798492323860185108/widget.png?style=banner2">
 </a>
