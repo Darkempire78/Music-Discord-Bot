@@ -12,7 +12,24 @@ A Discord bot with more than 20+ commands which allows to play music on your ser
 
 * Install all dependencies : ``pip install -r requirements.txt``.
 * Download [FFmpeg](https://ffmpeg.org/download.html).
-* Put your Discord token that can be found in the [Discord's developers portal](https://discord.com/developers/applications) inside `configuration example.json`.
+
+* Edit `configuration example.json` :
+
+```Javascript
+{
+    "token": "", // Your bot token
+    "prefix": "?", // Your prefix
+    
+    "spotifyClientId": "", // Your Spotify ID (OPTIONAL : Spotify links support)
+    "spotifyClientSecret": "", // Your Spotify secret (OPTIONAL : Spotify links support)
+    
+    "MySQLHost": "", // Your MySQL host (playlist system)
+    "MySQLLogin": "", // Your MySQL login (playlist system)
+    "MySQLPasword": "", // Your MySQL password (playlist system)
+    "MySQLDatabase": "" // Your MySQL database name (playlist system)
+}
+```
+
 * **(OPTIONAL : Spotify links support)** Add also your Spotify token and ID.
 * Rename it to `configuration.json`.
 
