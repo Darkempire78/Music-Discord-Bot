@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 
-class CogSUpportInvite(commands.Cog):
+class CogSupportInviteGithub(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -28,6 +28,16 @@ class CogSUpportInvite(commands.Cog):
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
+    @commands.command(name = "github",
+                    usage="",
+                    description = "Give the github link of the bot.")
+    @commands.guild_only()
+    @commands.cooldown(1, 2, commands.BucketType.member)
+    async def github(self, ctx):
+        embed=discord.Embed(title="Github link :", description=f"See the code of {self.bot.user.mention} on GitHub : https://github.com/Darkempire78/Music-Discord-Bot", color=discord.Colour.random())
+        embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
-    bot.add_cog(CogSUpportInvite(bot))
+    bot.add_cog(CogSupportInviteGithub(bot))
