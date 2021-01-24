@@ -2,6 +2,8 @@
 
 ![](https://img.shields.io/codefactor/grade/github/Darkempire78/Music-Discord-Bot?style=for-the-badge) ![](https://img.shields.io/github/repo-size/Darkempire78/Music-Discord-Bot?style=for-the-badge) ![](https://img.shields.io/badge/SOURCERY-ENABLED-green?style=for-the-badge) <a href="https://discord.gg/FxXQwKvmUY"><img src="https://img.shields.io/discord/798492323860185108?color=%237289DA&label=DISCORD&style=for-the-badge"></a>
 
+**INVITE :** https://discord.com/oauth2/authorize?client_id=796749718217555978&scope=bot&permissions=2147483647
+
 # Music Discord Bot
 
 A Discord bot with more than 20+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
@@ -10,7 +12,24 @@ A Discord bot with more than 20+ commands which allows to play music on your ser
 
 * Install all dependencies : ``pip install -r requirements.txt``.
 * Download [FFmpeg](https://ffmpeg.org/download.html).
-* Put your Discord token that can be found in the [Discord's developers portal](https://discord.com/developers/applications) inside `configuration example.json`.
+
+* Edit `configuration example.json` :
+
+```Javascript
+{
+    "token": "", // Your bot token
+    "prefix": "?", // Your prefix
+    
+    "spotifyClientId": "", // Your Spotify ID (OPTIONAL : Spotify links support)
+    "spotifyClientSecret": "", // Your Spotify secret (OPTIONAL : Spotify links support)
+    
+    "MySQLHost": "", // Your MySQL host (playlist system)
+    "MySQLLogin": "", // Your MySQL login (playlist system)
+    "MySQLPasword": "", // Your MySQL password (playlist system)
+    "MySQLDatabase": "" // Your MySQL database name (playlist system)
+}
+```
+
 * **(OPTIONAL : Spotify links support)** Add also your Spotify token and ID.
 * Rename it to `configuration.json`.
 
@@ -64,17 +83,8 @@ Finally, host the bot and invite it to your own server.
 
 
 ## Soon
-### Command
-* Lyrics
-* Forward / Rewind
-* Skipto
-* Loopqueue
-* Playfile
-* Blindtest
 
-### Other
-* DJ system
-* Custom playlist system
+**Project :** https://github.com/Darkempire78/Music-Discord-Bot/projects/2
 
 
 ## Contributing
@@ -85,6 +95,7 @@ Please make sure to update tests as appropriate.
 
 
 ## Support
+
 <a href="https://discord.gg/FxXQwKvmUY">
   <img src = "https://discordapp.com/api/guilds/798492323860185108/widget.png?style=banner2">
 </a>
