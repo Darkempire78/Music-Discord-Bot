@@ -29,6 +29,7 @@ A Discord bot with more than 25+ commands which allows to play music on your ser
     "MySQLDatabase": "" // Your MySQL database name (playlist system)
 }
 ```
+
 * Rename it to `configuration.json`.
 
 Finally, host the bot and invite it to your own server.
