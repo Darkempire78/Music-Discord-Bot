@@ -77,8 +77,8 @@ Finally, host the bot and invite it to your own server.
 
 ?playlist add <Url> : Add a track to your playlist.
 ?playlist remove <Index> : Remove a track to your playlist.
-?playlist display <Url> : Display playlist's songs.
-?playlist load <Url> : Add the whole playlist to the queue.
+?playlist display : Display playlist's songs.
+?playlist load : Add the whole playlist to the queue.
 
 ?stats : Display the bot's stats.
 ?support : Give a link to join the support server.

@@ -85,8 +85,8 @@ class HelpCog(commands.Cog, name="help command"):
 
             **{self.bot.command_prefix}playlist add <Url> :** Add a track to your playlist.
             **{self.bot.command_prefix}playlist remove <Index> :** Remove a track to your playlist.
-            **{self.bot.command_prefix}playlist display <Url> :** Display playlist's songs.
-            **{self.bot.command_prefix}playlist load <Url> :** Add the whole playlist to the queue.
+            **{self.bot.command_prefix}playlist display :** Display playlist's songs.
+            **{self.bot.command_prefix}playlist load :** Add the whole playlist to the queue.
 
             **{self.bot.command_prefix}stats :** Display the bot's stats.
             """)
