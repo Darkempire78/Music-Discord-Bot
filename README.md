@@ -42,6 +42,7 @@ Finally, host the bot and invite it to your own server.
 * Support links from YouTube, Spotify, Deezer and Soudcloud 
 * Support YouTube lives
 * Support playlists from Spotify, Deezer, Soundcloud and YouTube.
+* Playlist system
 * Many commands
 * Complex queue commands
 
