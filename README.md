@@ -29,8 +29,6 @@ A Discord bot with more than 25+ commands which allows to play music on your ser
     "MySQLDatabase": "" // Your MySQL database name (playlist system)
 }
 ```
-
-* **(OPTIONAL : Spotify links support)** Add also your Spotify token and ID.
 * Rename it to `configuration.json`.
 
 Finally, host the bot and invite it to your own server.
