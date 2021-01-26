@@ -6,13 +6,13 @@
 
 # Music Discord Bot
 
-A Discord bot with more than 20+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
+A Discord bot with more than 25+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
 
 ## Installation
 
 * Install all dependencies : ``pip install -r requirements.txt``.
 * Download [FFmpeg](https://ffmpeg.org/download.html).
-
+* Create a MySQL database (required for playlist system) with : ``generateDataBase.sql``.
 * Edit `configuration example.json` :
 
 ```Javascript
@@ -74,6 +74,11 @@ Finally, host the bot and invite it to your own server.
 ?replay : Replay the current song.
 ?reload : Reload the current song.
 ?loop : Enable or disable the loop mode.
+
+?playlist add <Url> : Add a track to your playlist.
+?playlist remove <Index> : Remove a track to your playlist.
+?playlist display <Url> : Display playlist's songs.
+?playlist load <Url> : Add the whole playlist to the queue.
 
 ?stats : Display the bot's stats.
 ?support : Give a link to join the support server.

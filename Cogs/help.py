@@ -83,6 +83,11 @@ class HelpCog(commands.Cog, name="help command"):
             **{self.bot.command_prefix}reload :** Reload the current song.
             **{self.bot.command_prefix}loop :** Enable or disable the loop mode.
 
+            **{self.bot.command_prefix}playlist add <Url> :** Add a track to your playlist.
+            **{self.bot.command_prefix}playlist remove <Index> :** Remove a track to your playlist.
+            **{self.bot.command_prefix}playlist display <Url> :** Display playlist's songs.
+            **{self.bot.command_prefix}playlist load <Url> :** Add the whole playlist to the queue.
+
             **{self.bot.command_prefix}stats :** Display the bot's stats.
             """)
             embed = discord.Embed(title=f"__**Help page 1 of {self.bot.user.name.upper()}**__", description="[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)", color=discord.Colour.random())

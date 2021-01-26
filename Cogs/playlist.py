@@ -6,6 +6,8 @@ from youtubesearchpython import Video, ResultMode
 
 from DataBase.playlist import DBPlaylist
 
+from Tools.addTrack import addTrack
+
 class CogPlaylist(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -13,7 +15,7 @@ class CogPlaylist(commands.Cog):
 
     @commands.group(name="playlist", invoke_without_command=True)
     async def playlist(self, ctx):
-        await ctx.send("playlist")
+        pass
 
 
     @playlist.command(name = "add",
@@ -79,6 +81,7 @@ class CogPlaylist(commands.Cog):
             embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
 
+
     @playlist.command(name = "remove",
                     aliases=["delete"],
                     usage="<Index>",
@@ -100,7 +103,22 @@ class CogPlaylist(commands.Cog):
         embed=discord.Embed(title="Song removed from your playlist (liked)", description=f"- **[" + playlistContent[index][2] + "](" + playlistContent[index][3] + ")**", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
         await ctx.channel.send(embed=embed)
+
+
+    @playlist.command(name = "load",
+                    aliases=[],
+                    usage="",
+                    description = "Load all songs of your playlist in the queue")
+    @commands.guild_only()
+    @commands.cooldown(1, 4, commands.BucketType.member)
+    async def playlist_load(self, ctx):
         
+        playlistContent = DBPlaylist().display(ctx.author.id, "liked") # Request
+        if len(playlistContent) <= 0:
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} Your playlist (liked) is empty!")
+
+        links = [i[3] for i in playlistContent]
+        await addTrack(self, ctx, links)
 
 
 def setup(bot):
