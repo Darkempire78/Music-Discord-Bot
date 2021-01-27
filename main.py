@@ -41,27 +41,10 @@ bot.ytdl = youtube_dl.YoutubeDL()
 bot.remove_command("help") # To create a personal help command 
 
 # Load cogs
-path = os.path.realpath(__file__)
-path = path.replace('\\', '/')
-path = path.replace('main.py', 'Cogs')
-initial_extensions = os.listdir(path)
-try:
-    initial_extensions.remove("__pycache__")
-except Exception as error:
-    print(error)
-print(initial_extensions)
-initial_extensions3 = []
-for initial_extensions2 in initial_extensions:
-    initial_extensions2 = "Cogs." + initial_extensions2
-    initial_extensions2 = initial_extensions2.replace(".py", "")
-    initial_extensions3.append(initial_extensions2)
-
 if __name__ == '__main__':
-    for extension in initial_extensions3:
-        try:
-            bot.load_extension(extension)
-        except Exception as e:
-            print(f'Failed to load extension {extension}.', file=sys.stderr)
+    for filename in os.listdir("Cogs"):
+        if filename.endswith(".py") and filename != "__init__.py":
+            bot.load_extension(f"Cogs.{filename[:-3]}")
 
 @bot.event
 async def on_ready():
