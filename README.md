@@ -6,7 +6,7 @@
 
 # Music Discord Bot
 
-A Discord bot with more than 25+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
+A Discord bot with more than 30+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
 
 ## Installation
 
@@ -74,6 +74,7 @@ Finally, host the bot and invite it to your own server.
 ?replay : Replay the current song.
 ?reload : Reload the current song.
 ?loop : Enable or disable the loop mode.
+?loopqueue :** Enable or disable the loop queue mode.
 
 ?playlist add <Url> : Add a track to your playlist.
 ?playlist remove <Index> : Remove a track to your playlist.

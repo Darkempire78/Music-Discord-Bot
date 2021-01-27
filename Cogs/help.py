@@ -82,6 +82,7 @@ class HelpCog(commands.Cog, name="help command"):
             **{self.bot.command_prefix}replay :** Replay the current song.
             **{self.bot.command_prefix}reload :** Reload the current song.
             **{self.bot.command_prefix}loop :** Enable or disable the loop mode.
+            **{self.bot.command_prefix}loopqueue :** Enable or disable the loop queue mode.
 
             **{self.bot.command_prefix}playlist add <Url> :** Add a track to your playlist.
             **{self.bot.command_prefix}playlist remove <Index> :** Remove a track to your playlist.

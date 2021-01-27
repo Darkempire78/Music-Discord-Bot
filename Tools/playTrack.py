@@ -18,6 +18,8 @@ def playTrack(self, ctx, client, music):
                 new_music = queue[0]
                 del queue[0]
                 playTrack(self, ctx, client, new_music)
+                if self.bot.music[ctx.guild.id]["loopQueue"]:
+                    queue.append(new_music)
             else:
                 asyncio.run_coroutine_threadsafe(client.disconnect(), self.bot.loop)
                 self.bot.music[ctx.guild.id]["nowPlaying"] = None
