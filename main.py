@@ -43,7 +43,7 @@ bot.remove_command("help") # To create a personal help command
 # Load cogs
 if __name__ == '__main__':
     for filename in os.listdir("Cogs"):
-        if filename.endswith(".py") and filename != "__init__.py":
+        if filename.endswith(".py"):
             bot.load_extension(f"Cogs.{filename[:-3]}")
 
 @bot.event
