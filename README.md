@@ -20,6 +20,7 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
     "token": "", // Your bot token
     "prefix": "?", // Your prefix
     
+    // Spotify => https://developer.spotify.com/dashboard/ 
     "spotifyClientId": "", // Your Spotify ID (OPTIONAL : Spotify links support)
     "spotifyClientSecret": "", // Your Spotify secret (OPTIONAL : Spotify links support)
     
