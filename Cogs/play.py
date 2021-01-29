@@ -165,6 +165,7 @@ async def searchSoundcloudPlaylist(self, ctx, playlist):
 async def searchQuery(self, ctx, args):
     """Get a YouTube link from a query."""
     await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
+
     results = VideosSearch(args, limit = 5).result()["result"]
             
     message = ""
