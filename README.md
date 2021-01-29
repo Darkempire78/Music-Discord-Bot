@@ -12,7 +12,7 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
 
 * Install all dependencies : ``pip install -r requirements.txt``.
 * Download [FFmpeg](https://ffmpeg.org/download.html).
-* Create a MySQL database (required for playlist system) with : ``generateDataBase.sql``.
+* Create a MySQL database (required for playlist system) and use the ``generateDataBase.sql`` file to create the table.
 * Edit `configuration example.json` :
 
 ```Javascript
