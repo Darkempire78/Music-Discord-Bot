@@ -118,6 +118,7 @@ async def searchDeezerPlaylist(self, ctx, session, response):
             return None
         return trackLinks
 
+
 async def searchSoundcloud(self, ctx, args):
     """Get a YouTube link from a SoundCloud link."""
     await ctx.send("<:SoundCloudLogo:798492403459424256> Searching...", delete_after=10)
@@ -161,6 +162,7 @@ async def searchSoundcloudPlaylist(self, ctx, playlist):
         else:
             trackLinks.append(results[0]["link"])
     return trackLinks
+
 
 async def searchQuery(self, ctx, args):
     """Get a YouTube link from a query."""

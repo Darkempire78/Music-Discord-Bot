@@ -29,7 +29,7 @@ class CogMove(commands.Cog):
         former = self.bot.music[ctx.guild.id]["musics"][int(indexFrom) -1]
         self.bot.music[ctx.guild.id]["musics"].insert(int(indexTo), former.copy())
         self.bot.music[ctx.guild.id]["musics"].remove(former)
-        await ctx.channel.send(f"{ctx.author.mention} " + former["music"] + f"was moved from `{indexFrom}` to `{indexTo}`.")
+        await ctx.channel.send(f"{ctx.author.mention} [" + former["music"].title + f"](" + former["music"].url + ") was moved from `{indexFrom}` to `{indexTo}`.")
 
 
         
