@@ -29,8 +29,11 @@ class CogMove(commands.Cog):
         former = self.bot.music[ctx.guild.id]["musics"][int(indexFrom) -1]
         self.bot.music[ctx.guild.id]["musics"].insert(int(indexTo), former.copy())
         self.bot.music[ctx.guild.id]["musics"].remove(former)
-        await ctx.channel.send(f"{ctx.author.mention} [" + former["music"].title + f"](" + former["music"].url + ") was moved from `{indexFrom}` to `{indexTo}`.")
-
+        
+        embed=discord.Embed(title="Song moved", description="- [**" + former["music"].title + f"**](" + former["music"].url + f") was moved from `{indexFrom}` to `{indexTo}`.", color=discord.Colour.random())
+        embed.set_thumbnail(url=former["music"].thumbnails)
+        embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
+        await ctx.channel.send(embed=embed)
 
         
 
