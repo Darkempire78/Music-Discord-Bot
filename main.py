@@ -35,7 +35,9 @@ bot.spotify = tekore.Spotify(spotifyAppToken, asynchronous=True)
 
 # Create music dictionary
 bot.music = {}
-bot.ytdl = youtube_dl.YoutubeDL()
+bot.ytdl = youtube_dl.YoutubeDL({
+    "quiet": True # Do not print messages to stdout.
+})
 
 # HELP
 bot.remove_command("help") # To create a personal help command 
