@@ -22,12 +22,11 @@ class EventsCog(commands.Cog, name="EventsCog"):
             minute = round(error.retry_after/60)
             if jour > 0:
                 return await ctx.send('This command has a cooldown, be sure to wait for '+str(jour)+ "day(s)")
-            elif heure > 0:
+            if heure > 0:
                 return await ctx.send('This command has a cooldown, be sure to wait for '+str(heure)+ " hour(s)")
-            elif minute > 0:
+            if minute > 0:
                 return await ctx.send('This command has a cooldown, be sure to wait for '+ str(minute)+" minute(s)")
-            else:
-                return await ctx.send(f'This command has a cooldown, be sure to wait for {error.retry_after:.2f} second(s)')
+            return await ctx.send(f'This command has a cooldown, be sure to wait for {error.retry_after:.2f} second(s)')
         elif isinstance(error, CommandNotFound):
             return
         elif isinstance(error, MissingPermissions):
