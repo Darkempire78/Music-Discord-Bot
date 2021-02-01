@@ -24,7 +24,9 @@ class DBPlaylist:
         """Add a song in a playlist"""
         mydb = self.getConnection()
         mycursor = mydb.cursor()
-        mycursor.execute(f"INSERT INTO `playlist` (`user`, `name`, `title`, `link`) VALUES ('{user}', '{name}', '{title}', '{link}');")
+        query = f"INSERT INTO `playlist` (`user`, `name`, `title`, `link`) VALUES (%s, %s, %s, %s);"
+        val = (str(user), name, title, link)
+        mycursor.execute(query, val)
         mydb.commit()
         mydb.close()
 
@@ -32,7 +34,9 @@ class DBPlaylist:
         """Return the size of a user's playlist"""
         mydb = self.getConnection()
         mycursor = mydb.cursor()
-        mycursor.execute(f"SELECT COUNT(*) FROM playlist WHERE user = '{user}' AND name = '{name}';")
+        query = f"SELECT COUNT(*) FROM playlist WHERE user = %s AND name = %s;"
+        val = (str(user), name)
+        mycursor.execute(query, val)
         result = mycursor.fetchall()
         mydb.close()
         return result[0][0]
@@ -41,7 +45,9 @@ class DBPlaylist:
         """Return the content of a user's playlist"""
         mydb = self.getConnection()
         mycursor = mydb.cursor()
-        mycursor.execute(f"SELECT * FROM playlist WHERE user = '{user}' AND name = '{name}';")
+        query = f"SELECT * FROM playlist WHERE user = %s AND name = %s;"
+        val = (str(user), name)
+        mycursor.execute(query, val)
         result = mycursor.fetchall()
         mydb.close()
         return result
@@ -50,6 +56,8 @@ class DBPlaylist:
         """Remove a song in a playlist"""
         mydb = self.getConnection()
         mycursor = mydb.cursor()
-        mycursor.execute(f"DELETE FROM playlist WHERE user='{user}' AND name='{name}' AND link='{link}' LIMIT 1;")
+        query = f"DELETE FROM playlist WHERE user=%s AND name=%s AND link=%s LIMIT 1;"
+        val = (str(user), name, link)
+        mycursor.execute(query, val)
         mydb.commit()
         mydb.close()
