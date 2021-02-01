@@ -4,6 +4,8 @@ import asyncio
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions, CheckFailure, CommandNotFound, MissingRequiredArgument
 
+from Tools.Utils import Utils
+
 # ------------------------ COGS ------------------------ #  
 
 class EventsCog(commands.Cog, name="EventsCog"):
@@ -75,16 +77,7 @@ class EventsCog(commands.Cog, name="EventsCog"):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        self.bot.music[guild.id] = {
-            "volume": 0.5,
-            "musics": [],
-            "skip": {
-                "count": 0,
-                "users": []
-            },
-            "nowPlaying": None,
-            "loop": False
-        }
+        await Utils().generateGuildDictionnary(self.bot, guild)
 
         # Print the log on the support server
         channel = self.bot.get_channel(799998669926563860)

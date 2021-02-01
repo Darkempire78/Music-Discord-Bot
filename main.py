@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
 
 import discord
-import asyncio
-import time
 import os
-import sys
 import json
 import youtube_dl
 import tekore # Spotify
 
-from datetime import datetime
 from discord.ext import commands
-from discord.ext import tasks
+
+from Tools.Utils import Utils
 
 class Greetings(commands.Cog):
     def __init__(self, bot):
@@ -50,18 +47,8 @@ if __name__ == '__main__':
 
 @bot.event
 async def on_ready():
-    for i in bot.guilds:
-        bot.music[i.id] = {
-            "volume": 0.5,
-            "musics": [],
-            "skip": {
-                "count": 0,
-                "users": []
-            },
-            "nowPlaying": None,
-            "loop": False,
-            "loopQueue": False
-        }
+    await Utils().generateGuildDictionnary(bot, bot.guilds)
+    
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name =f"{bot.command_prefix}help"))
     print(f'We have logged in as {bot.user}')
     print(discord.__version__)
