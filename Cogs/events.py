@@ -74,7 +74,7 @@ class EventsCog(commands.Cog, name="EventsCog"):
                 self.bot.music[after.channel.guild.id]["skip"] = {"count": 0, "users": []}
                 self.bot.music[after.channel.guild.id]["nowPlaying"] = None
                 self.bot.music[after.channel.guild.id]["loop"] = False
-                self.bot.music[before.channel.guild.id]["loopQueue"] = False
+                self.bot.music[after.channel.guild.id]["loopQueue"] = False
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
