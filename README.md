@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/codefactor/grade/github/Darkempire78/Music-Discord-Bot?style=for-the-badge) ![](https://img.shields.io/github/repo-size/Darkempire78/Music-Discord-Bot?style=for-the-badge) ![](https://img.shields.io/badge/SOURCERY-ENABLED-green?style=for-the-badge) <a href="https://discord.gg/FxXQwKvmUY"><img src="https://img.shields.io/discord/798492323860185108?color=%237289DA&label=DISCORD&style=for-the-badge"></a>
 
-**INVITE :** https://discord.com/oauth2/authorize?client_id=796749718217555978&scope=bot&permissions=2147483647
+**INVITE :** https://top.gg/bot/796749718217555978
 
 # Music Discord Bot
 
