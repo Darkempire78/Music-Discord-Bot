@@ -25,7 +25,6 @@ with open("configuration.json", "r") as config:
 
 intents = discord.Intents.default()
 bot = commands.Bot(prefix, intents = intents)
-# bot = commands.when_mentioned_or(prefix)
 
 # Connect to Spotify
 spotifyAppToken = tekore.request_client_token(spotifyClientId, spotifyClientSecret)

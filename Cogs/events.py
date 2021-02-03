@@ -2,7 +2,7 @@ import discord
 import asyncio
 
 from discord.ext import commands
-from discord.ext.commands import MissingPermissions, CommandNotFound, MissingRequiredArgument, ExpectedClosingQuoteError
+from discord.ext.commands import CommandOnCooldown, MissingPermissions, CommandNotFound, MissingRequiredArgument, ExpectedClosingQuoteError, BotMissingPermissions
 
 from Tools.Utils import Utils
 
@@ -16,7 +16,9 @@ class EventsCog(commands.Cog, name="EventsCog"):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
+        if isinstance(error, CommandNotFound):
+            return
+        if isinstance(error, CommandOnCooldown):
             jour = round(error.retry_after/86400)
             heure = round(error.retry_after/3600)
             minute = round(error.retry_after/60)
@@ -27,10 +29,12 @@ class EventsCog(commands.Cog, name="EventsCog"):
             if minute > 0:
                 return await ctx.send(f'{ctx.author.mention} This command has a cooldown, be sure to wait for '+ str(minute)+" minute(s)")
             return await ctx.send(f'{ctx.author.mention} This command has a cooldown, be sure to wait for {error.retry_after:.2f} second(s)')
-        if isinstance(error, CommandNotFound):
-            return
+        if isinstance(error, BotMissingPermissions):
+            missing = ", ".join(error.missing_perms)
+            return await ctx.send(f"{ctx.author.mention} I need the `{missing}` permission(s) to run this command.")
         if isinstance(error, MissingPermissions):
-            return await ctx.send(error.text)
+            missing = ", ".join(error.missing_perms)
+            return await ctx.send(f"{ctx.author.mention} You need the `{missing}` permission(s) to run this command.")
         if isinstance(error, MissingRequiredArgument):
             return await ctx.send(f"{ctx.author.mention} Required argument is missed!\nUse this model : `{self.bot.command_prefix}{ctx.command.name} {ctx.command.usage}`")
         if isinstance(error, ExpectedClosingQuoteError):
