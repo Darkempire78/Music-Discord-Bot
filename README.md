@@ -89,6 +89,8 @@ Finally, host the bot and invite it to your own server.
 ?help : Display the help.
 ```
 
+[![Discord Bots](https://top.gg/api/widget/796749718217555978.svg)](https://top.gg/bot/796749718217555978)
+
 
 ## Soon
 
