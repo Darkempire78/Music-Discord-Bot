@@ -2,7 +2,7 @@ import discord
 import asyncio
 
 from discord.ext import commands
-from discord.ext.commands import MissingPermissions, CheckFailure, CommandNotFound, MissingRequiredArgument
+from discord.ext.commands import MissingPermissions, CommandNotFound, MissingRequiredArgument, ExpectedClosingQuoteError
 
 from Tools.Utils import Utils
 
@@ -21,20 +21,20 @@ class EventsCog(commands.Cog, name="EventsCog"):
             heure = round(error.retry_after/3600)
             minute = round(error.retry_after/60)
             if jour > 0:
-                return await ctx.send('This command has a cooldown, be sure to wait for '+str(jour)+ "day(s)")
+                return await ctx.send(f'{ctx.author.mention} This command has a cooldown, be sure to wait for '+str(jour)+ "day(s)")
             if heure > 0:
-                return await ctx.send('This command has a cooldown, be sure to wait for '+str(heure)+ " hour(s)")
+                return await ctx.send(f'{ctx.author.mention} This command has a cooldown, be sure to wait for '+str(heure)+ " hour(s)")
             if minute > 0:
-                return await ctx.send('This command has a cooldown, be sure to wait for '+ str(minute)+" minute(s)")
-            return await ctx.send(f'This command has a cooldown, be sure to wait for {error.retry_after:.2f} second(s)')
+                return await ctx.send(f'{ctx.author.mention} This command has a cooldown, be sure to wait for '+ str(minute)+" minute(s)")
+            return await ctx.send(f'{ctx.author.mention} This command has a cooldown, be sure to wait for {error.retry_after:.2f} second(s)')
         if isinstance(error, CommandNotFound):
             return
         if isinstance(error, MissingPermissions):
             return await ctx.send(error.text)
         if isinstance(error, MissingRequiredArgument):
-            return await ctx.send(f"Required argument is missed!\nUse this model : `{self.bot.command_prefix}{ctx.command.name} {ctx.command.usage}`")
-        if isinstance(error, CheckFailure):
-            return await ctx.send(error.original.text)
+            return await ctx.send(f"{ctx.author.mention} Required argument is missed!\nUse this model : `{self.bot.command_prefix}{ctx.command.name} {ctx.command.usage}`")
+        if isinstance(error, ExpectedClosingQuoteError):
+            return await ctx.send(f"{ctx.author.mention} Your request can't only contain `{error.close_quote}`")
         
         embed = discord.Embed(title=f"__**COMMAND ERROR**__", description=f"[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)\n\n**You may repport this issue on the [GitHub repository](https://github.com/Darkempire78/Music-Discord-Bot)**\n```{error}```", color=discord.Colour.red())
         embed.set_footer(text="Bot Created by Darkempire#8245")
