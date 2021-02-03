@@ -23,6 +23,8 @@ class CogSearch(commands.Cog):
             embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
             return await ctx.send(embed=embed)
         for number, i in enumerate(results, start=1):
+            if i["duration"] is None:
+                i["duration"] = "Live"
             i["title"] =i["title"].replace("*", "\\*")
             message += f"**{number}) ["+ i["title"] + "]("+ i["link"] + "])** ("+ str(i["duration"]) + ")\n"
         embed=discord.Embed(title="Search results :", description=f"{message}", color=discord.Colour.random())

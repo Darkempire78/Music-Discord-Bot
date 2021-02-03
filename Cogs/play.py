@@ -176,6 +176,8 @@ async def searchQuery(self, ctx, args):
         await noResultFound(self, ctx)
         return None
     for i in results:
+        if i["duration"] is None:
+            i["duration"] = "Live"
         number += 1
         i["title"] =i["title"].replace("*", "\\*")
         message += f"**{number}) ["+ i["title"] + "]("+ i["link"] + "])** ("+ str(i["duration"]) + ")\n"
