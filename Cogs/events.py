@@ -101,8 +101,11 @@ class EventsCog(commands.Cog, name="EventsCog"):
     async def on_message(self, message):
         if message.author.bot:
             return
-        if str(self.bot.user.id) in message.content:
+            
+        # If the bot is mentioned
+        if self.bot.user in message.mentions:
             await message.channel.send(f"{message.author.mention} My prefix on this server is : `{self.bot.command_prefix}`", delete_after=10)
+       
 
 # ------------------------ BOT ------------------------ #  
 
