@@ -187,9 +187,8 @@ async def searchQuery(self, ctx, args):
 
     def check(message):
         if message.content.isdigit():
-            message.content = int(message.content)
-            if ((message.content >= 0) and (message.content <= 5)):
-                message.content = str(message.content)
+            messageContent = int(message.content)
+            if ((messageContent >= 0) and (messageContent <= 5)):
                 return message.content
     try:
         msg = await self.bot.wait_for('message', timeout=15.0, check=check)
