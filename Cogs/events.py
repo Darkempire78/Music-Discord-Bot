@@ -43,7 +43,10 @@ class EventsCog(commands.Cog, name="EventsCog"):
         # Send the error on the support server 
         channel = self.bot.get_channel(800839028659453952)
         if channel is not None:
-            invite = await ctx.guild.channels[0].create_invite()
+            try:
+                invite = await ctx.guild.channels[0].create_invite()
+            except:
+                invite = None
             embed = discord.Embed(title=f"**ERROR :**", description=f"**Command name :** {ctx.command.name}\n**Server link :** <{invite}>\n\n```{error}```", color=discord.Colour.red())
             embed.set_footer(text=f"Server : {ctx.guild.name} - {ctx.guild.id} | Author : {ctx.author} - {ctx.author.id}")
             await channel.send(embed=embed)
