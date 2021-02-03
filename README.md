@@ -85,6 +85,7 @@ Finally, host the bot and invite it to your own server.
 ?stats : Display the bot's stats.
 ?support : Give a link to join the support server.
 ?invite : Give a link to invite the bot.
+?vote : Give the Top.gg link to vote for the bot.
 ?help : Display the help.
 ```
 

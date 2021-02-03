@@ -59,6 +59,7 @@ class HelpCog(commands.Cog, name="help command"):
             **{self.bot.command_prefix}support :** Give a link to join the support server.
             **{self.bot.command_prefix}invite :** Give a link to invite the bot.
             **{self.bot.command_prefix}github :** Give the github link of the bot (source code).
+            **{self.bot.command_prefix}vote :** Give the Top.gg link to vote for the bot.
 
             **{self.bot.command_prefix}play <Url/Query> :** Search on youtube and play the music.
             **{self.bot.command_prefix}search <Query> :** Search a song on youtube.
