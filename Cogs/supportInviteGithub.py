@@ -40,7 +40,7 @@ class CogSupportInviteGithub(commands.Cog):
                     description = "Give the Top.gg link to vote for the bot.")
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def vote(self, ctx):
-        embed=discord.Embed(title="Vote link :", description=f"Vote for {self.bot.user.mention} on Top.gg : # https://top.gg/bot/796749718217555978/vote", color=discord.Colour.random())
+        embed=discord.Embed(title="Vote link :", description=f"Vote for {self.bot.user.mention} on Top.gg : https://top.gg/bot/796749718217555978/vote", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
