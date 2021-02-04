@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+from Tools.Check import Check
 
 class CogReplay(commands.Cog):
     def __init__(self, bot):
@@ -15,16 +16,11 @@ class CogReplay(commands.Cog):
     @commands.has_permissions()
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def replay(self, ctx):
-        if ctx.author.voice is None:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
-        if ctx.guild.voice_client is None:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm not connected in a voice channel!")
-        if ctx.guild.voice_client and self.bot.user.id not in [
-            i.id for i in ctx.author.voice.channel.members
-        ]:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in the same voice channel that the bot!")
-        if not self.bot.music[ctx.guild.id]["nowPlaying"]:
-            await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} There is currently no song to replay!")
+        
+        if not await Check().userInVoiceChannel(ctx): return 
+        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
+        if not await Check().botIsPlaying(ctx, self.bot): return 
         
         music = self.bot.music[ctx.guild.id]["nowPlaying"]["music"]
         self.bot.music[ctx.guild.id]["musics"].insert(0, {"music": music, "requestedBy": ctx.author})

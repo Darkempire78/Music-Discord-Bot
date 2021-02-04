@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+from Tools.Check import Check
 
 class CogRemoveDupes(commands.Cog):
     def __init__(self, bot):
@@ -14,16 +15,10 @@ class CogRemoveDupes(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def ping(self, ctx):
 
-        if ctx.author.voice is None:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
-        if ctx.guild.voice_client is None:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm not connected in a voice channel!")
-        if ctx.guild.voice_client and self.bot.user.id not in [
-            i.id for i in ctx.author.voice.channel.members
-        ]:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in the same voice channel that the bot!")
-        if len(self.bot.music[ctx.guild.id]["musics"]) <= 0:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The queue is empty!")
+        if not await Check().userInVoiceChannel(ctx): return 
+        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
+        if not await Check().queueEmpty(ctx, self.bot): return 
 
         # Remove duplicates
         newQueue = []
@@ -45,16 +40,10 @@ class CogRemoveDupes(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def leavecleanup(self, ctx):
         
-        if ctx.author.voice is None:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
-        if ctx.guild.voice_client is None:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm not connected in a voice channel!")
-        if ctx.guild.voice_client and self.bot.user.id not in [
-            i.id for i in ctx.author.voice.channel.members
-        ]: 
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in the same voice channel that the bot!")
-        if len(self.bot.music[ctx.guild.id]["musics"]) <= 0:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The queue is empty!")
+        if not await Check().userInVoiceChannel(ctx): return 
+        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
+        if not await Check().queueEmpty(ctx, self.bot): return 
 
         newQueue = [
             i

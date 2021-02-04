@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+from Tools.Check import Check
 
 class CogQueue(commands.Cog):
     def __init__(self, bot):
@@ -14,8 +15,7 @@ class CogQueue(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def queue(self, ctx):
 
-        if len(self.bot.music[ctx.guild.id]["musics"]) <= 0:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The queue is empty!")
+        if not await Check().queueEmpty(ctx, self.bot): return 
 
         isFirstMessage = True
         message = ""
