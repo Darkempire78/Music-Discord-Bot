@@ -255,6 +255,8 @@ class CogPlay(commands.Cog):
                 args = await searchSpotifyTrack(self, ctx, args)
             elif args.startswith("https://open.spotify.com/playlist"):
                 args = await searchSpotifyPlaylist(self, ctx, args)
+            else:
+                return await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} Only Spotify playlist and Spotify track are available!")
             if args is None: return
         
         # Deezer
