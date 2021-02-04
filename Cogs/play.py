@@ -273,18 +273,18 @@ class CogPlay(commands.Cog):
             args = await searchPlaylist(self, ctx, args)
             if args is None: return
 
-        # Query
-        elif not args.startswith("https://www.youtube.com/watch"):
-            args = await searchQuery(self, ctx, args)
-            if args is None: return
-
         # YouTube video
-        else:
+        elif args.startswith("https://www.youtube.com/watch"):
             await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
             # Check if the link exists
             isYoutubeVideo = Video.get(args, mode = ResultMode.json)
             if not isYoutubeVideo:
                 return await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The YouTube link is invalid!")
+        
+        # Query
+        else:
+            args = await searchQuery(self, ctx, args)
+            if args is None: return
 
         links = args
 

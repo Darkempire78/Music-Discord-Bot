@@ -109,7 +109,7 @@ class EventsCog(commands.Cog, name="EventsCog"):
         # If the bot is mentioned
         if self.bot.user in message.mentions:
             await message.channel.send(f"{message.author.mention} My prefix on this server is : `{self.bot.command_prefix}`", delete_after=10)
-       
+
 
 # ------------------------ BOT ------------------------ #  
 
