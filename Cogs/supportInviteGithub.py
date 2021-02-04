@@ -12,7 +12,7 @@ class CogSupportInviteGithub(commands.Cog):
                     description = "Give a link to join the support server.")
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def support(self, ctx):
-        embed=discord.Embed(title="Support server :", description=f"Join the support server : https://discord.gg/FxXQwKvmUY", color=discord.Colour.random())
+        embed=discord.Embed(title="Support server :", description=f"Join the support server : https://discord.gg/f2UMbk95bv", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
