@@ -17,7 +17,6 @@ class CogJoinLeave(commands.Cog):
     async def join(self, ctx):
         
         if not await Check().userInVoiceChannel(ctx): return 
-        if not await Check().botInVoiceChannel(ctx): return 
 
         voice = ctx.author.voice
         await voice.channel.connect()
