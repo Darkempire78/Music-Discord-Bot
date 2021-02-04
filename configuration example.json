@@ -4,6 +4,8 @@
     
     "spotifyClientId": "",
     "spotifyClientSecret": "",
+
+    "dblToken": "",
     
     "MySQLHost": "",
     "MySQLLogin": "",

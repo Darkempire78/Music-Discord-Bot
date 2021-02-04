@@ -10,9 +10,9 @@ class TopGG(commands.Cog):
         self.token = self.bot.dblToken
         self.dblpy = dbl.DBLClient(self.bot, self.token, autopost=True)  # Autopost will post your guild count every 30 minutes
 
-    @commands.Cog.listener()
-    async def on_guild_post(self):
-        print("Server count posted successfully")
+    # @commands.Cog.listener()
+    # async def on_guild_post(self):
+    #     print("Server count posted successfully")
 
     @commands.Cog.listener()
     async def on_dbl_vote(data):
