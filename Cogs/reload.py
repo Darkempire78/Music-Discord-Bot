@@ -16,6 +16,8 @@ class CogReaload(commands.Cog):
     async def skip(self, ctx):
         if ctx.author.voice is None:
             return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
+        if ctx.guild.voice_client is None:
+            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm not connected in a voice channel!")
 
         # If user is not in the same voice channel that the bot
         if ctx.guild.voice_client and self.bot.user.id not in [

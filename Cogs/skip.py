@@ -18,6 +18,8 @@ class CogSkip(commands.Cog):
         if not ctx.author.guild_permissions.administrator:
             if ctx.author.voice is None:
                 return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
+            if ctx.guild.voice_client is None:
+                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm not connected in a voice channel!")
 
             # If user is not in the same voice channel that the bot
             if ctx.guild.voice_client and self.bot.user.id not in [
@@ -39,6 +41,7 @@ class CogSkip(commands.Cog):
         # Clean the dict
         self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
         await ctx.send(f"{ctx.author.mention} Current music skipped!")
+
         client = ctx.guild.voice_client
         client.stop()
 
