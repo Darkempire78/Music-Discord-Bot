@@ -59,7 +59,7 @@ bot.spotify = tekore.Spotify(spotifyAppToken, asynchronous=True)
 # Top.gg
 bot.dblToken = dblToken
 bot.dblWebhookPath = dblWebhookPath
-bot.dblWebhookPath = dblWebhookPath
+bot.dblWebhookAuth = dblWebhookAuth
 
 # Create music dictionary
 bot.music = {}

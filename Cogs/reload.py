@@ -16,8 +16,8 @@ class CogReaload(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def skip(self, ctx):
 
-        if not await Check().userInVoiceChannel(ctx): return 
-        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userInVoiceChannel(ctx, self.bot): return 
+        if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
         
         self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []} # Clean the dict

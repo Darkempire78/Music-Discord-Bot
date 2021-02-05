@@ -15,8 +15,8 @@ class CogPauseResume(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def resume(self, ctx):
 
-        if not await Check().userInVoiceChannel(ctx): return 
-        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userInVoiceChannel(ctx, self.bot): return 
+        if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
 
         client = ctx.guild.voice_client
@@ -34,8 +34,8 @@ class CogPauseResume(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def pause(self, ctx):
         
-        if not await Check().userInVoiceChannel(ctx): return 
-        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userInVoiceChannel(ctx, self.bot): return 
+        if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
 
         client = ctx.guild.voice_client

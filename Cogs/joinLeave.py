@@ -16,7 +16,7 @@ class CogJoinLeave(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def join(self, ctx):
         
-        if not await Check().userInVoiceChannel(ctx): return 
+        if not await Check().userInVoiceChannel(ctx, self.bot): return 
 
         voice = ctx.author.voice
         await voice.channel.connect()
@@ -33,8 +33,8 @@ class CogJoinLeave(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def leave(self, ctx):
         
-        if not await Check().userInVoiceChannel(ctx): return 
-        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userInVoiceChannel(ctx, self.bot): return 
+        if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
 
         client = ctx.guild.voice_client

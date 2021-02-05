@@ -244,7 +244,7 @@ class CogPlay(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.member)
     async def play(self, ctx, *args):
 
-        if not await Check().userInVoiceChannel(ctx): return 
+        if not await Check().userInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return
 
         args = " ".join(args)

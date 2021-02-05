@@ -15,8 +15,8 @@ class CogRemoveDupes(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def ping(self, ctx):
 
-        if not await Check().userInVoiceChannel(ctx): return 
-        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userInVoiceChannel(ctx, self.bot): return 
+        if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
         if not await Check().queueEmpty(ctx, self.bot): return 
 
@@ -40,8 +40,8 @@ class CogRemoveDupes(commands.Cog):
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def leavecleanup(self, ctx):
         
-        if not await Check().userInVoiceChannel(ctx): return 
-        if not await Check().botInVoiceChannel(ctx): return 
+        if not await Check().userInVoiceChannel(ctx, self.bot): return 
+        if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
         if not await Check().queueEmpty(ctx, self.bot): return 
 
