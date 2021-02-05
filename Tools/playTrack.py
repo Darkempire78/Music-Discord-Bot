@@ -4,9 +4,18 @@ import asyncio
 from Tools.sendPlayingSongEmbed import sendPlayingSongEmbed
 
 def playTrack(self, ctx, client, music):
+
+    def clearVoiceParameters(self):
+        self.bot.music[ctx.guild.id]["nowPlaying"] = None
+        self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
+        self.bot.music[ctx.guild.id]["volume"] = 0.5
+
+
     if music["music"].streamUrl:
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(music["music"].streamUrl, 
                 before_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"), self.bot.music[ctx.guild.id]["volume"])
+
+        
 
         def nextSong(_):
             if self.bot.music[ctx.guild.id]["loop"] and self.bot.music[ctx.guild.id]["nowPlaying"]:
@@ -18,21 +27,25 @@ def playTrack(self, ctx, client, music):
                 if len(queue) > 0:
                     new_music = queue[0]
                     del queue[0]
-                    playTrack(self, ctx, client, new_music)
-                    if self.bot.music[ctx.guild.id]["loopQueue"]:
-                        queue.append(new_music)
+                    if client:
+                        playTrack(self, ctx, client, new_music)
+                        if self.bot.music[ctx.guild.id]["loopQueue"]:
+                            queue.append(new_music)
+                    else:
+                        clearVoiceParameters(self)
                 else:
                     asyncio.run_coroutine_threadsafe(client.disconnect(), self.bot.loop)
-                    self.bot.music[ctx.guild.id]["nowPlaying"] = None
-                    self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
-                    self.bot.music[ctx.guild.id]["volume"] = 0.5
+                    clearVoiceParameters(self)
                     asyncio.run_coroutine_threadsafe(ctx.channel.send(f"Disconnected because the queue is empty!"), self.bot.loop)
-
-        client.play(source, after=nextSong)
-        sendPlayingSongEmbed(self, ctx, music) # Send message
-        self.bot.music[ctx.guild.id]["nowPlaying"] = {
-            "music": music["music"],
-            "requestedBy": music["requestedBy"]
-        } # Update nowPlawing
+        if client:
+            client.play(source, after=nextSong)
+            sendPlayingSongEmbed(self, ctx, music) # Send message
+            self.bot.music[ctx.guild.id]["nowPlaying"] = {
+                "music": music["music"],
+                "requestedBy": music["requestedBy"]
+            } # Update nowPlawing
+        else:
+            clearVoiceParameters(self)
     else:
         asyncio.run_coroutine_threadsafe(ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The song is unreadable!"), self.bot.loop)
+        clearVoiceParameters(self)
