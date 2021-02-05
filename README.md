@@ -32,6 +32,7 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
 ```
 
 * Rename it to `configuration.json`.
+* Edit `emojis.json`
 
 Finally, host the bot and invite it to your own server.
 
@@ -87,6 +88,8 @@ Finally, host the bot and invite it to your own server.
 ?invite : Give a link to invite the bot.
 ?vote : Give the Top.gg link to vote for the bot.
 ?help : Display the help.
+
+?logout : Stop the bot process.
 ```
 
 [![Discord Bots](https://top.gg/api/widget/796749718217555978.svg)](https://top.gg/bot/796749718217555978)
