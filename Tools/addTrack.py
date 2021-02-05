@@ -21,7 +21,7 @@ async def addTrack(self, ctx, links):
                 return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm already connected in a voice channel!")
             if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
                 await ctx.send("Loading...", delete_after=10)
-            music = Music(self, link)
+            music = Music(ctx, self, link)
             music.title = music.title.replace("*", "\\*")
             if music.duration is None:
                 duration = "Live"
@@ -84,7 +84,7 @@ async def addTrack(self, ctx, links):
             await ctx.send("Loading...", delete_after=10)
             # perm = voice.channel.overwrites_for(self.bot.user)
             client = await voice.channel.connect() # Connect the bot to the voice channel
-            music = Music(self, link) # Get music data
+            music = Music(ctx, self, link) # Get music data
             self.bot.music[ctx.guild.id]["musics"] = []
             self.bot.music[ctx.guild.id]["volume"] = 0.5
             playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})

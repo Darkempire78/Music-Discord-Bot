@@ -7,7 +7,7 @@ import datetime
 from youtubesearchpython import Video, StreamURLFetcher
 
 class Music:
-    def __init__(self, bot, link):
+    def __init__(self, ctx, bot, link):
         
         # try:
         #     fetcher = StreamURLFetcher()
@@ -19,10 +19,13 @@ class Music:
         #     self.thumbnails = video["thumbnails"][len(video["thumbnails"] )-1]["url"]
         # # If it's a Youtube live
         # except:
-        video = bot.bot.ytdl.extract_info(link, download=False)
-        video_format = video["formats"][0]
-        self.url = video["webpage_url"]
-        self.title = video["title"]
-        self.duration = video["duration"]
-        self.streamUrl = video_format["url"]
-        self.thumbnails = video["thumbnails"][len(video["thumbnails"] )-1]["url"]
+        try:
+            video = bot.bot.ytdl.extract_info(link, download=False)
+            self.url = video["webpage_url"]
+            self.title = video["title"]
+            self.duration = video["duration"]
+            self.streamUrl = video["formats"][0]["url"]
+            self.thumbnails = video["thumbnails"][len(video["thumbnails"] )-1]["url"]
+        except Exception as e:
+            asyncio.run_coroutine_threadsafe(ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The song is unreadable!"), self.bot.loop)
+            print("Extract video error : " + e)
