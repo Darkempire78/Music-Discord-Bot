@@ -29,9 +29,13 @@ with open("configuration.json", "r") as config:
     data = json.load(config)
     token = data["token"]
     prefix = data["prefix"]
+
     spotifyClientId = data["spotifyClientId"]
     spotifyClientSecret = data["spotifyClientSecret"]
+
     dblToken = data["dblToken"]
+    dblWebhookPath = data["dblWebhookPath"]
+    dblWebhookAuth = data["dblWebhookAuth"]
 
 with open("emojis.json", "r") as emojiList:
     emojiList = json.load(emojiList)
@@ -54,6 +58,8 @@ bot.spotify = tekore.Spotify(spotifyAppToken, asynchronous=True)
 
 # Top.gg
 bot.dblToken = dblToken
+bot.dblWebhookPath = dblWebhookPath
+bot.dblWebhookPath = dblWebhookPath
 
 # Create music dictionary
 bot.music = {}

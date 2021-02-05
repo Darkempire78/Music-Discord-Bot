@@ -6,6 +6,8 @@
     "spotifyClientSecret": "",
 
     "dblToken": "",
+    "dblWebhookPath": "",
+    "dblWebhookAuth": "",
     
     "MySQLHost": "",
     "MySQLLogin": "",
