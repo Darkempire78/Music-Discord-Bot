@@ -18,7 +18,7 @@ async def addTrack(self, ctx, links):
     for link in links:
         if client and client.channel:
             if (self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]):
-                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} I'm already connected in a voice channel!")
+                return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} I'm already connected in a voice channel!")
             if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
                 await ctx.send("Loading...", delete_after=10)
             music = Music(ctx, self, link)
@@ -80,7 +80,7 @@ async def addTrack(self, ctx, links):
         else:
             voice = ctx.author.voice
             if ctx.author.voice is None:
-                return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} You are not connected in a voice channel!")
+                return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} You are not connected in a voice channel!")
             await ctx.send("Loading...", delete_after=10)
             # perm = voice.channel.overwrites_for(self.bot.user)
             client = await voice.channel.connect() # Connect the bot to the voice channel

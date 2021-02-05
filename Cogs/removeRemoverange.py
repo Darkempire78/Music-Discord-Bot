@@ -21,9 +21,9 @@ class CogRemoveRemoverange(commands.Cog):
         if not await Check().queueEmpty(ctx, self.bot): return 
 
         if not index.isdigit():
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The index have to be a number!")
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The index have to be a number!")
         if (int(index) -1) > len(self.bot.music[ctx.guild.id]["musics"]):
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The index is invalid!")
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The index is invalid!")
 
         index = int(index) - 1
         music = self.bot.music[ctx.guild.id]["musics"][index]["music"]
@@ -56,11 +56,11 @@ class CogRemoveRemoverange(commands.Cog):
         # if not await Check().queueEmpty(ctx, self.bot): return 
         
     #     if (not index1.isdigit()) or (not index2.isdigit()):
-    #         return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} Indexs have to be numbers!")
+    #         return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} Indexs have to be numbers!")
     #     if (int(index2) -1) > len(self.bot.music[ctx.guild.id]["musics"]):
-    #         return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} Indexs are invalid!")
+    #         return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} Indexs are invalid!")
     #     if index1 >= index2:
-    #         return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The second index have to be bigger than the fisrt index invalid!")
+    #         return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The second index have to be bigger than the fisrt index invalid!")
         
     #     index1 = int(index1) - 1
     #     index2 = int(index2)

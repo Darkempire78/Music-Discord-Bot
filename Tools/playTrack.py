@@ -35,4 +35,4 @@ def playTrack(self, ctx, client, music):
             "requestedBy": music["requestedBy"]
         } # Update nowPlawing
     else:
-        asyncio.run_coroutine_threadsafe(ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The song is unreadable!"), self.bot.loop)
+        asyncio.run_coroutine_threadsafe(ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The song is unreadable!"), self.bot.loop)

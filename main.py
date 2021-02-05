@@ -10,6 +10,16 @@ from discord.ext import commands
 
 from Tools.Utils import Utils
 
+class createEmojiList:
+    def __init__(self, emojiList):
+        self.youtubeLogo = emojiList["YoutubeLogo"]
+        self.spotifyLogo = emojiList["SpotifyLogo"]
+        self.soundcloudLogo = emojiList["SoundcloudLogo"]
+        self.deezerLogo = emojiList["DeezerLogo"]
+        self.true = emojiList["True"]
+        self.false = emojiList["False"]
+        self.alert = emojiList["Alert"]
+
 class Greetings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -22,6 +32,18 @@ with open("configuration.json", "r") as config:
     spotifyClientId = data["spotifyClientId"]
     spotifyClientSecret = data["spotifyClientSecret"]
     dblToken = data["dblToken"]
+
+with open("emojis.json", "r") as emojiList:
+    emojiList = json.load(emojiList)
+    emojiList = {
+        "YoutubeLogo": emojiList["YouTubeLogo"],
+        "SpotifyLogo": emojiList["SpotifyLogo"],
+        "SoundcloudLogo": emojiList["SoundCloudLogo"],
+        "DeezerLogo": emojiList["DeezerLogo"],
+        "True": emojiList["True"],
+        "False": emojiList["False"],
+        "Alert": emojiList["Alert"] 
+    }
 
 intents = discord.Intents.default()
 bot = commands.Bot(prefix, intents = intents)
@@ -38,6 +60,9 @@ bot.music = {}
 bot.ytdl = youtube_dl.YoutubeDL({
     "quiet": True # Do not print messages to stdout.
 })
+
+# Emojis
+bot.emojiList = createEmojiList(emojiList)
 
 # HELP
 bot.remove_command("help") # To create a personal help command 

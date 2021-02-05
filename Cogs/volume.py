@@ -24,11 +24,11 @@ class CogVolume(commands.Cog):
             (int(volume)) < 0 or 
             (int(volume) > 100)
         ):
-            return await ctx.send(f"<:False:798596718563950653> {ctx.author.mention} The volume have to be a number between 0 and 100!")
+            return await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} The volume have to be a number between 0 and 100!")
 
         self.bot.music[ctx.guild.id]["volume"] = int(volume)/100
         if ctx.guild.voice_client.source is  None:
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} There is currently no song!")
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} There is currently no song!")
         ctx.guild.voice_client.source.volume = self.bot.music[ctx.guild.id]["volume"]
         
         embed=discord.Embed(title="Volume changed :", description=f"The volumed was changed to : ``{volume}%``", color=discord.Colour.random())

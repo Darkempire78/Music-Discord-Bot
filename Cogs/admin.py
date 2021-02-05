@@ -14,16 +14,16 @@ class CogAdmin(commands.Cog):
     @commands.guild_only()
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def logout(self, ctx):
-        await ctx.send("<:Alert:804761370125402173> Stoping process...")
+        await ctx.send(f"{self.bot.emojiList.alert} Stoping process...")
         for i in self.bot.voice_clients:
             try:
                 await i.disconnect()
-                await ctx.send(f"<:True:798596718349385799> Disconected from {i.channel.id} in {i.channel.guild.name}")
+                await ctx.send(f"{self.bot.emojiList.true} Disconected from {i.channel.id} in {i.channel.guild.name}")
                 print(f"Disconected from {i.channel.id} in {i.channel.guild.name}")
             except:
-                await ctx.send(f"<:False:798596718563950653> **Error :** Can't disconect from {i.channel.id} in {i.channel.guild.name}")
+                await ctx.send(f"{self.bot.emojiList.false} **Error :** Can't disconect from {i.channel.id} in {i.channel.guild.name}")
                 print(f"Error : Can't disconect from {i.channel.id} in {i.channel.guild.name}")
-        await ctx.send(f"<:Alert:804761370125402173> Stoped!")
+        await ctx.send(f"{self.bot.emojiList.alert} Stoped!")
         print(f"Stoping process... (by {ctx.author})")
         await self.bot.logout() # Stop the bot
 

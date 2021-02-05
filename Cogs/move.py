@@ -22,9 +22,9 @@ class CogMove(commands.Cog):
         if not await Check().queueEmpty(ctx, self.bot): return 
 
         if not indexFrom.isdigit() or not indexTo.isdigit():
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The index have to be a number!")
+            return await ctx.channel.send(f"{self.bot.emojiList.false}{ctx.author.mention} The index have to be a number!")
         if (int(indexFrom) -1) > len(self.bot.music[ctx.guild.id]["musics"]) or (int(indexTo) -1) > len(self.bot.music[ctx.guild.id]["musics"]):
-            return await ctx.channel.send(f"<:False:798596718563950653> {ctx.author.mention} The index is invalid!")
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The index is invalid!")
 
         former = self.bot.music[ctx.guild.id]["musics"][int(indexFrom) -1]
         self.bot.music[ctx.guild.id]["musics"].insert(int(indexTo), former.copy())
