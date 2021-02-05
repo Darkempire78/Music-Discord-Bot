@@ -9,8 +9,8 @@ class TopGG(commands.Cog):
         self.bot = bot
         self.token = self.bot.dblToken
         self.dblpy = dbl.DBLClient(
-            self.bot, self.token, autopost=True, # Autopost will post your guild count every 30 minutes
-            webhook_path=bot.dblWebhookPath, webhook_auth=bot.dblWebhookAuth
+            self.bot, self.token, autopost=True # Autopost will post your guild count every 30 minutes
+            # webhook_path=bot.dblWebhookPath, webhook_auth=bot.dblWebhookAuth
         )  
 
     # @commands.Cog.listener()
