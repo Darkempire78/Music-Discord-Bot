@@ -27,5 +27,5 @@ class Music:
             self.streamUrl = video["formats"][0]["url"]
             self.thumbnails = video["thumbnails"][len(video["thumbnails"] )-1]["url"]
         except Exception as e:
-            asyncio.run_coroutine_threadsafe(ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The song is unreadable!"), self.bot.loop)
+            asyncio.run_coroutine_threadsafe(ctx.channel.send(f"{bot.bot.emojiList.false} {ctx.author.mention} The song is unreadable!"), self.bot.loop)
             print("Extract video error : " + e)

@@ -49,6 +49,7 @@ with open("emojis.json", "r") as emojiList:
         "Alert": emojiList["Alert"] 
     }
 
+
 intents = discord.Intents.default()
 bot = commands.Bot(prefix, intents = intents)
 

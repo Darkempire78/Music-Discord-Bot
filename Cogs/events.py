@@ -1,6 +1,4 @@
 import discord
-import asyncio
-import traceback
 
 from discord.ext import commands
 from discord.ext.commands import CommandOnCooldown, MissingPermissions, CommandNotFound, MissingRequiredArgument, ExpectedClosingQuoteError, BotMissingPermissions
@@ -56,7 +54,6 @@ class EventsCog(commands.Cog, name="EventsCog"):
             embed.set_footer(text=f"Server : {ctx.guild.name} - {ctx.guild.id} | Author : {ctx.author} - {ctx.author.id}")
             await channel.send(embed=embed)
 
-        traceback.print_exception(error)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
