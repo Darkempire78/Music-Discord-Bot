@@ -182,7 +182,7 @@ async def searchQuery(self, ctx, args):
         number += 1
         i["title"] =i["title"].replace("*", "\\*")
         message += f"**{number}) ["+ i["title"] + "]("+ i["link"] + "])** ("+ str(i["duration"]) + ")\n"
-    embed=discord.Embed(title="Search results :", description=f"Choose your result.\nWrite `0` to pass the cooldown.\n\n{message}", color=discord.Colour.random())
+    embed=discord.Embed(title="Search results :", description=f"choose the number that corresponds to the music.\nWrite `0` to pass the cooldown.\n\n{message}", color=discord.Colour.random())
     embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
 
