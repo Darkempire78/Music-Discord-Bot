@@ -39,8 +39,8 @@ Finally, host the bot and invite it to your own server.
 
 ## Run the bot
 
-* Run Lavalink.jar
-* Run The bot
+* Run `Lavalink.jar` (from [Lavalink](https://github.com/Frederikam/Lavalink))
+* Run the bot
 
 ## Features
 
