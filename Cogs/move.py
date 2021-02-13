@@ -21,7 +21,7 @@ class CogMove(commands.Cog):
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
         
-        tracks = DBQueue().display(ctx.guild.id)
+        tracks = DBQueue(self.bot.dbConnection).display(ctx.guild.id)
         tracksCount = len(tracks)
 
         if len(tracks) == 0:
@@ -38,25 +38,25 @@ class CogMove(commands.Cog):
         indexToFake = int(indexTo)
 
         # Get real index 
-        indexFrom = DBQueue().getIndexFromFakeIndex(ctx.guild.id, indexFromFake -1)
-        indexTo = DBQueue().getIndexFromFakeIndex(ctx.guild.id, indexToFake -1)
+        indexFrom = DBQueue(self.bot.dbConnection).getIndexFromFakeIndex(ctx.guild.id, indexFromFake -1)
+        indexTo = DBQueue(self.bot.dbConnection).getIndexFromFakeIndex(ctx.guild.id, indexToFake -1)
 
         # Get the track to move
-        trackToMove = DBQueue().displaySpecific(ctx.guild.id, indexFrom)
+        trackToMove = DBQueue(self.bot.dbConnection).displaySpecific(ctx.guild.id, indexFrom)
         indexFrom = trackToMove[7]
 
         # Delete the track to move
-        DBQueue().remove(ctx.guild.id, indexFrom)
+        DBQueue(self.bot.dbConnection).remove(ctx.guild.id, indexFrom)
 
         if indexFrom < indexTo:
             # -1 to each track between trackToMove index and 
-            DBQueue().updateRemoveOneToEach(ctx.guild.id, indexFrom, indexTo)
+            DBQueue(self.bot.dbConnection).updateRemoveOneToEach(ctx.guild.id, indexFrom, indexTo)
         else:
             # +1 to each track between trackToMove index and 
-            DBQueue().updateAddOneToEach(ctx.guild.id, indexFrom, indexTo)
+            DBQueue(self.bot.dbConnection).updateAddOneToEach(ctx.guild.id, indexFrom, indexTo)
     
         # Re-create the track
-        DBQueue().add(trackToMove[0], trackToMove[1], trackToMove[2], trackToMove[3], trackToMove[4], trackToMove[5], trackToMove[6], indexTo) 
+        DBQueue(self.bot.dbConnection).add(trackToMove[0], trackToMove[1], trackToMove[2], trackToMove[3], trackToMove[4], trackToMove[5], trackToMove[6], indexTo) 
 
         embed=discord.Embed(title="Song moved", description=f"- [**{trackToMove.title}**]({trackToMove.uri}) was moved from `{indexFromFake}` to `{indexToFake}`.", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)

@@ -21,13 +21,13 @@ class CogLoopLoopQueue(commands.Cog):
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
 
-        isLoop = DBServer().displayServer(ctx.guild.id)[2]
+        isLoop = DBServer(self.bot.dbConnection).displayServer(ctx.guild.id)[2]
 
         if isLoop == 1:
-            DBServer().updateLoop(ctx.guild.id, False)
+            DBServer(self.bot.dbConnection).updateLoop(ctx.guild.id, False)
             await ctx.channel.send(f"{ctx.author.mention} The loop mode was disabled!")
         else:
-            DBServer().updateLoop(ctx.guild.id, True)
+            DBServer(self.bot.dbConnection).updateLoop(ctx.guild.id, True)
             await ctx.channel.send(f"{ctx.author.mention} The loop mode was enabled!")
 
 
@@ -43,13 +43,13 @@ class CogLoopLoopQueue(commands.Cog):
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
         
-        isLoopQueue = DBServer().displayServer(ctx.guild.id)[3]
+        isLoopQueue = DBServer(self.bot.dbConnection).displayServer(ctx.guild.id)[3]
 
         if isLoopQueue == 1:
-            DBServer().updateLoopQueue(ctx.guild.id, False)
+            DBServer(self.bot.dbConnection).updateLoopQueue(ctx.guild.id, False)
             await ctx.channel.send(f"{ctx.author.mention} The loop queue mode was disabled!")
         else:
-            DBServer().updateLoopQueue(ctx.guild.id, True)
+            DBServer(self.bot.dbConnection).updateLoopQueue(ctx.guild.id, True)
             await ctx.channel.send(f"{ctx.author.mention} The loop queue mode was enabled!")
 
 

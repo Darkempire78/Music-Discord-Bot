@@ -30,15 +30,15 @@ class CogLavalinkEvents(commands.Cog, wavelink.WavelinkMixin):
     @wavelink.WavelinkMixin.listener('on_track_exception')
     async def on_player_stop(self, node: wavelink.Node, payload):
            
-        serverParameters = DBServer().displayServer(payload.player.guild_id)
+        serverParameters = DBServer(self.bot.dbConnection).displayServer(payload.player.guild_id)
         isLoop = serverParameters[2]
         isLoopQueue = serverParameters[3]
 
         # Clear the skip DB
-        DBSkip().clear(payload.player.guild_id)
+        DBSkip(self.bot.dbConnection).clear(payload.player.guild_id)
 
         if isLoop == 1:
-            currentTrack = DBQueue().getCurrentSong(payload.player.guild_id)
+            currentTrack = DBQueue(self.bot.dbConnection).getCurrentSong(payload.player.guild_id)
             requester = currentTrack[2]
             channelID = currentTrack[3]
             channel = self.bot.get_channel(int(channelID))
@@ -48,9 +48,9 @@ class CogLavalinkEvents(commands.Cog, wavelink.WavelinkMixin):
             return await playTrack(self, channel, payload.player, track, requester)
         
         # If not looped
-        track = DBQueue().getNextSong(payload.player.guild_id)
+        track = DBQueue(self.bot.dbConnection).getNextSong(payload.player.guild_id)
         if track is None:
-            currentTrack = DBQueue().getCurrentSong(payload.player.guild_id)
+            currentTrack = DBQueue(self.bot.dbConnection).getCurrentSong(payload.player.guild_id)
             channelID = currentTrack[3]
             channel = self.bot.get_channel(int(channelID))
             if channel:
@@ -64,27 +64,27 @@ class CogLavalinkEvents(commands.Cog, wavelink.WavelinkMixin):
         track = track[4]
 
         # Remove the former track
-        DBQueue().removeFormer(payload.player.guild_id)
+        DBQueue(self.bot.dbConnection).removeFormer(payload.player.guild_id)
         # update playing track to former track (index = 0)
-        DBQueue().updatePlayingToFormer(payload.player.guild_id)
+        DBQueue(self.bot.dbConnection).updatePlayingToFormer(payload.player.guild_id)
         # Change the new track to isPlaying
-        trackIndex = DBQueue().getNextIndex(payload.player.guild_id)
-        DBQueue().setIsPlaying(payload.player.guild_id, trackIndex)
+        trackIndex = DBQueue(self.bot.dbConnection).getNextIndex(payload.player.guild_id)
+        DBQueue(self.bot.dbConnection).setIsPlaying(payload.player.guild_id, trackIndex)
 
         await playTrack(self, channel, payload.player, track, requester)
 
         if isLoopQueue == 1:
-            formerTrack = DBQueue().displayFormer(payload.player.guild_id)
+            formerTrack = DBQueue(self.bot.dbConnection).displayFormer(payload.player.guild_id)
 
             if len(formerTrack) > 0:
-                futureIndex = DBQueue().getFutureIndex(payload.player.guild_id)
+                futureIndex = DBQueue(self.bot.dbConnection).getFutureIndex(payload.player.guild_id)
                 futureIndex += 1
 
                 title = formerTrack[5]
                 duration = formerTrack[6]
 
                 # Add the former track at the end of the queue
-                DBQueue().add(payload.player.guild_id, False, requester, channel.id, track, title, duration, futureIndex)
+                DBQueue(self.bot.dbConnection).add(payload.player.guild_id, False, requester, channel.id, track, title, duration, futureIndex)
 
 
     @wavelink.WavelinkMixin.listener()
@@ -95,7 +95,7 @@ class CogLavalinkEvents(commands.Cog, wavelink.WavelinkMixin):
         # with open("logoutData.json", "r") as logoutData:
         #     logoutData = json.load(logoutData)
 
-        # serversInQueue = DBQueue().displayAllPlaying()
+        # serversInQueue = DBQueue(self.bot.dbConnection).displayAllPlaying()
 
         # if serversInQueue:
         #     for server in serversInQueue:

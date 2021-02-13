@@ -21,7 +21,7 @@ class CogClear(commands.Cog):
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
         
-        DBQueue().clearFutureTracks(ctx.guild.id)
+        DBQueue(self.bot.dbConnection).clearFutureTracks(ctx.guild.id)
 
         await ctx.channel.send(f"{ctx.author.mention} The queue is cleared!")
 

@@ -16,7 +16,7 @@ async def sendPlayingSongEmbed(self, channel, track):
     trackDuration = await Utils().durationFormat(track.duration)
     
     # Queue size and duration
-    queueSizeAndDuration = DBQueue().queueSizeAndDuration(channel.guild.id)
+    queueSizeAndDuration = DBQueue(self.bot.dbConnection).queueSizeAndDuration(channel.guild.id)
     if queueSizeAndDuration:
         queueDuration = int(queueSizeAndDuration[0])
         queueDuration = await Utils().durationFormat(queueDuration)
@@ -29,8 +29,8 @@ async def sendPlayingSongEmbed(self, channel, track):
     trackTitle = track.title.replace("*", "\\*")
 
     # Loop and LoopQueue
-    isLoop = str(DBServer().displayServer(channel.guild.id)[2])
-    isLoopQueue = str(DBServer().displayServer(channel.guild.id)[3])
+    isLoop = str(DBServer(self.bot.dbConnection).displayServer(channel.guild.id)[2])
+    isLoopQueue = str(DBServer(self.bot.dbConnection).displayServer(channel.guild.id)[3])
 
 
     # Embed 

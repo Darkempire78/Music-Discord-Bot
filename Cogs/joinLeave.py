@@ -30,9 +30,9 @@ class CogJoinLeave(commands.Cog):
         await player.connect(channel.id)
 
         # Clear all the queue
-        DBQueue().clear(ctx.guild.id)
+        DBQueue(self.bot.dbConnection).clear(ctx.guild.id)
         # Clear all server music parameters
-        DBServer().clearMusicParameters(ctx.guild.id, False, False)
+        DBServer(self.bot.dbConnection).clearMusicParameters(ctx.guild.id, False, False)
         
         await ctx.send(f"{ctx.author.mention} Connected in **`{channel.name}`**!")
         
@@ -59,9 +59,9 @@ class CogJoinLeave(commands.Cog):
         await player.disconnect()
 
         # Clear all the queue
-        DBQueue().clear(ctx.guild.id)
+        DBQueue(self.bot.dbConnection).clear(ctx.guild.id)
         # Clear all server music parameters
-        DBServer().clearMusicParameters(ctx.guild.id, False, False)
+        DBServer(self.bot.dbConnection).clearMusicParameters(ctx.guild.id, False, False)
 
         await ctx.channel.send(f"{ctx.author.mention} Disconnected from **`{channel.name}`**!")
         

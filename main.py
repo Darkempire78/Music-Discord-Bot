@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from DataBase.Connection import DBConnection
 import discord
 import wavelink
 import os
@@ -23,6 +24,18 @@ class createEmojiList:
         self.true = emojiList["True"]
         self.false = emojiList["False"]
         self.alert = emojiList["Alert"]
+
+class createLavalink:
+    def __init__(self):
+        with open("configuration.json", "r") as config:
+            data = json.load(config)
+
+        self.host = data["lavalinkHost"]
+        self.port = data["lavalinkPort"]
+        self.restUri = data["lavalinkRestUri"]
+        self.password = data["lavalinkPassword"]
+        self.identifier = data["lavalinkIdentifier"]
+        self.region = data["lavalinkRegion"]
 
 class Greetings(commands.Cog):
     def __init__(self, bot):
@@ -56,24 +69,24 @@ with open("emojis.json", "r") as emojiList:
 intents = discord.Intents.default()
 bot = commands.Bot(prefix, intents = intents)
 
-# Connect to Spotify
+# Spotify
 spotifyAppToken = tekore.request_client_token(spotifyClientId, spotifyClientSecret)
 bot.spotify = tekore.Spotify(spotifyAppToken, asynchronous=True)
+
+# Lavalink
+bot.lavalink = createLavalink()
 
 # Top.gg
 bot.dblToken = dblToken
 
-# Create music dictionary
-bot.music = {}
-bot.ytdl = youtube_dl.YoutubeDL({
-    "quiet": True # Do not print messages to stdout.
-})
-
 # Emojis
 bot.emojiList = createEmojiList(emojiList)
 
-# HELP
+# Help
 bot.remove_command("help") # To create a personal help command 
+
+# Database
+bot.dbConnection = DBConnection()
 
 # Load cogs
 if __name__ == '__main__':
@@ -87,11 +100,12 @@ async def on_ready():
     
     # Check if each server is in the DB
     print("Database check")
-    servers = DBServer().display()
+    servers = DBServer(bot.dbConnection).display()
+    servers = DBServer(bot.dbConnection).display()
     serversId = [int(i[0]) for i in servers]
     for guild in bot.guilds:
         if guild.id not in serversId:
-            DBServer().add(guild.id, "?", False, False, "")
+            DBServer(bot.dbConnection).add(guild.id, "?", False, False, "")
             print(f"* {guild.name} ({guild.id}) added")
     
     print("----------------------------")

@@ -22,7 +22,7 @@ async def addTrack(self, ctx, tracks):
 
     if not player.is_connected:
         # Clear all the queue
-        DBQueue().clear(ctx.guild.id)
+        DBQueue(self.bot.dbConnection).clear(ctx.guild.id)
 
         channel = ctx.author.voice.channel
         await player.connect(channel.id)
@@ -36,14 +36,14 @@ async def addTrack(self, ctx, tracks):
         requester = f"{ctx.author.name}#{ctx.author.discriminator}"
         # Add the requester
         if player.is_playing:
-            queueSize = DBQueue().countQueueItems(ctx.guild.id)
+            queueSize = DBQueue(self.bot.dbConnection).countQueueItems(ctx.guild.id)
             if queueSize >= 50:
                 return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} You are over the queue limit! The limit of the queue is 50 songs.")
-            index = DBQueue().getFutureIndex(ctx.guild.id)
+            index = DBQueue(self.bot.dbConnection).getFutureIndex(ctx.guild.id)
             if index is not None:
                 index += 1
             # Add to the queue
-            DBQueue().add(ctx.guild.id, False, requester, ctx.channel.id, track.uri, track.title, track.duration, index) 
+            DBQueue(self.bot.dbConnection).add(ctx.guild.id, False, requester, ctx.channel.id, track.uri, track.title, track.duration, index) 
 
             trackDuration = await Utils().durationFormat(track.duration)
             trackTitle = track.title.replace("*", "\\*")
@@ -51,7 +51,7 @@ async def addTrack(self, ctx, tracks):
             if len(tracks) == 1:
 
                 # Queue size and duration
-                queueSizeAndDuration = DBQueue().queueSizeAndDuration(ctx.guild.id)
+                queueSizeAndDuration = DBQueue(self.bot.dbConnection).queueSizeAndDuration(ctx.guild.id)
                 if queueSizeAndDuration:
                     queueDuration = int(queueSizeAndDuration[0])
                     queueDuration = await Utils().durationFormat(queueDuration)
@@ -82,7 +82,7 @@ async def addTrack(self, ctx, tracks):
                     else:
                         await playlistMessage.edit(embed=embedEdited)
         else:
-            DBServer().clearMusicParameters(ctx.guild.id, False, False)
-            DBQueue().add(ctx.guild.id, True, requester, ctx.channel.id, track.uri, track.title, track.duration, 1) # Add to the DB
+            DBServer(self.bot.dbConnection).clearMusicParameters(ctx.guild.id, False, False)
+            DBQueue(self.bot.dbConnection).add(ctx.guild.id, True, requester, ctx.channel.id, track.uri, track.title, track.duration, 1) # Add to the DB
             # Play the track
             await playTrack(self, ctx, player, track, requester)

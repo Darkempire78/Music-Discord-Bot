@@ -28,16 +28,16 @@ class CogRemoveRemoverange(commands.Cog):
         if (int(index) -1) > len(self.bot.music[ctx.guild.id]["musics"]):
             return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The index is invalid!")
 
-        tracks = DBQueue().display(ctx.guild.id)
+        tracks = DBQueue(self.bot.dbConnection).display(ctx.guild.id)
 
         if len(tracks) == 0:
             return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The queue is empty!")
 
         index = int(index)
-        index = DBQueue().getIndexFromFakeIndex(ctx.guild.id, index -1)
+        index = DBQueue(self.bot.dbConnection).getIndexFromFakeIndex(ctx.guild.id, index -1)
         
         # Remove
-        DBQueue().remove(ctx.guild.id, index)
+        DBQueue(self.bot.dbConnection).remove(ctx.guild.id, index)
         
         track = tracks[index]
         trackDuration = await Utils().durationFormat(track[6])

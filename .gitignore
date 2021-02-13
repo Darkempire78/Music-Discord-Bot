@@ -2,3 +2,4 @@ __pycache__/
 Cogs/__pycache__/
 configuration.json
 logs.log
+logoutData.json

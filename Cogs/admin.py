@@ -20,7 +20,7 @@ class CogAdmin(commands.Cog):
 
         await ctx.send(f"{self.bot.emojiList.alert} Stoping process...")
 
-        serversInQueue = DBQueue().displayAllPlaying()
+        serversInQueue = DBQueue(self.bot.dbConnection).displayAllPlaying()
 
         if serversInQueue:
             for server in serversInQueue:

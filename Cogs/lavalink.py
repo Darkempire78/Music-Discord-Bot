@@ -17,12 +17,12 @@ class CogLavalink(commands.Cog):
 
         # Initiate our nodes. For this example we will use one server.
         # Region should be a discord.py guild.region e.g sydney or us_central (Though this is not technically required)
-        await self.bot.wavelink.initiate_node(host='127.0.0.1',
-                                              port=2333,
-                                              rest_uri='http://127.0.0.1:2333',
-                                              password='ynj5qra7+',
-                                              identifier='TEST',
-                                              region='us_central')
+        await self.bot.wavelink.initiate_node(host= self.bot.lavalink.host,
+                                              port= self.bot.lavalink.port,
+                                              rest_uri= self.bot.lavalink.restUri,
+                                              password= self.bot.lavalink.password,
+                                              identifier= self.bot.lavalink.identifier,
+                                              region= self.bot.lavalink.region)
 
 
 def setup(bot):

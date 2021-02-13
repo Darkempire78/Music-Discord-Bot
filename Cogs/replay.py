@@ -25,12 +25,12 @@ class CogReplay(commands.Cog):
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return
         if not await Check().botIsPlaying(ctx, self.bot): return 
 
-        formerTrack = DBQueue().displayFormer(ctx.guild.id)
+        formerTrack = DBQueue(self.bot.dbConnection).displayFormer(ctx.guild.id)
 
         if formerTrack is None:
             return await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} There is no former track to replay!")
 
-        futureIndex = DBQueue().getFutureIndex(ctx.guild.id)
+        futureIndex = DBQueue(self.bot.dbConnection).getFutureIndex(ctx.guild.id)
         futureIndex += 1
 
         trackUri = formerTrack[4]
@@ -40,7 +40,7 @@ class CogReplay(commands.Cog):
         requester = f"{ctx.author.name}#{ctx.author.discriminator}"
 
         # Add the former track at the end of the queue
-        DBQueue().add(ctx.guild.id, False, requester, ctx.channel.id, trackUri, trackTitle, durationInMs, futureIndex)
+        DBQueue(self.bot.dbConnection).add(ctx.guild.id, False, requester, ctx.channel.id, trackUri, trackTitle, durationInMs, futureIndex)
 
         embed=discord.Embed(title="Replay", description=f"New song added : **[{trackTitle}]({trackUri})** ({trackDuration})", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)

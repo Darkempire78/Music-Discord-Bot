@@ -2,6 +2,8 @@ import discord
 import psutil
 import platform
 
+import datetime
+
 from discord.ext import commands
 
 from DataBase.Queue import DBQueue
@@ -21,7 +23,7 @@ class CogStats(commands.Cog):
 
         serverCount = len(self.bot.guilds)
         userCount = sum(i.member_count for i in self.bot.guilds)
-        playingServerCount = DBQueue().countPlayingItems()
+        playingServerCount = DBQueue(self.bot.dbConnection).countPlayingItems()
        
         embed=discord.Embed(title=f"{self.bot.user.name}'s stats", description="[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)", color=discord.Colour.random())
         embed.set_thumbnail(url=f'{self.bot.user.avatar_url}')

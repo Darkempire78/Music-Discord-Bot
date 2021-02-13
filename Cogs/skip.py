@@ -28,7 +28,7 @@ class CogSkip(commands.Cog):
 
         if not ctx.author.guild_permissions.administrator:
             
-            users = DBSkip().displayUsers(ctx.guild.id)
+            users = DBSkip(self.bot.dbConnection).displayUsers(ctx.guild.id)
             usersCount = len(users)
             
             # If user had already skip
@@ -36,7 +36,7 @@ class CogSkip(commands.Cog):
                 return await ctx.send(f"{ctx.author.mention} Waiting for other voice users! ({usersCount}/{ceil(len(ctx.author.voice.channel.voice_states)/2)})")
 
             # Add to the DB
-            DBSkip().add(ctx.guild.id, ctx.author.id)
+            DBSkip(self.bot.dbConnection).add(ctx.guild.id, ctx.author.id)
             usersCount += 1
 
             # Calcul the ratio
@@ -45,7 +45,7 @@ class CogSkip(commands.Cog):
                 return await ctx.send(f"{ctx.author.mention} Waiting for other voice users! ({usersCount}/{ceil(len(ctx.author.voice.channel.voice_states)/2)})")
 
         # Clean the dict
-        DBSkip().clear(ctx.guild.id)
+        DBSkip(self.bot.dbConnection).clear(ctx.guild.id)
         await ctx.send(f"{ctx.author.mention} Current music skipped!")
 
         player = self.bot.wavelink.get_player(ctx.guild.id)

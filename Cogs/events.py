@@ -77,18 +77,18 @@ class EventsCog(commands.Cog, name="EventsCog"):
                     player = self.bot.wavelink.get_player(before.channel.guild.id)
                     await player.disconnect()
                 
-                DBServer().clearMusicParameters(before.channel.guild.id, False, False)
+                DBServer(self.bot.dbConnection).clearMusicParameters(before.channel.guild.id, False, False)
 
         elif (before.channel is  None) and (after.channel is not None):
             if member == self.bot.user:
 
-                DBServer().clearMusicParameters(after.channel.guild.id, False, False)
+                DBServer(self.bot.dbConnection).clearMusicParameters(after.channel.guild.id, False, False)
 
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         
-        DBServer().add(guild.id, "?", False, False, "")
+        DBServer(self.bot.dbConnection).add(guild.id, "?", False, False, "")
 
         # Print the log on the support server
         channel = self.bot.get_channel(799998669926563860)
@@ -98,7 +98,7 @@ class EventsCog(commands.Cog, name="EventsCog"):
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
 
-        DBServer().remove(guild.id)
+        DBServer(self.bot.dbConnection).remove(guild.id)
 
         # Print the log on the support server
         channel = self.bot.get_channel(799998669926563860)
