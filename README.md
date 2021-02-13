@@ -12,7 +12,7 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
 ## Installation
 
 * Install all dependencies : ``pip install -r requirements.txt``.
-* Download [Lavalink]https://github.com/Frederikam/Lavalink).
+* Download [Lavalink](https://github.com/Frederikam/Lavalink).
 * Create a MySQL database and use the ``Scripts/generateDatabase.sql`` file to create the table.
 * Edit `configuration example.json` :
 
@@ -25,10 +25,10 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
     "spotifyClientId": "", // Your Spotify ID (OPTIONAL : Spotify links support)
     "spotifyClientSecret": "", // Your Spotify secret (OPTIONAL : Spotify links support)
     
-    "MySQLHost": "", // Your MySQL host (playlist system)
-    "MySQLLogin": "", // Your MySQL login (playlist system)
-    "MySQLPasword": "", // Your MySQL password (playlist system)
-    "MySQLDatabase": "" // Your MySQL database name (playlist system)
+    "MySQLHost": "", // Your MySQL host
+    "MySQLLogin": "", // Your MySQL login
+    "MySQLPasword": "", // Your MySQL password
+    "MySQLDatabase": "" // Your MySQL database
 }
 ```
 
