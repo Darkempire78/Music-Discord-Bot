@@ -37,6 +37,10 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
 
 Finally, host the bot and invite it to your own server.
 
+## Run the bot
+
+* Run Lavalink.jar
+* Run The bot
 
 ## Features
 
