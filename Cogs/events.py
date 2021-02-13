@@ -3,7 +3,12 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import CommandOnCooldown, MissingPermissions, CommandNotFound, MissingRequiredArgument, ExpectedClosingQuoteError, BotMissingPermissions
 
+import traceback
+import sys
+import datetime
+
 from Tools.Utils import Utils
+from DataBase.Server import DBServer
 
 # ------------------------ COGS ------------------------ #  
 
@@ -50,9 +55,12 @@ class EventsCog(commands.Cog, name="EventsCog"):
                 invite = await ctx.guild.channels[0].create_invite()
             except:
                 invite = None
-            embed = discord.Embed(title=f"**ERROR :**", description=f"**Command name :** {ctx.command.name}\n**Server link :** <{invite}>\n\n```{error}```", color=discord.Colour.red())
+            embed = discord.Embed(title=f"**ERROR :**", description=f"**Date :** " + datetime.datetime.now().strftime("%x at %X") + f"\n**Command name :** {ctx.command.name}\n**Server link :** <{invite}>\n\n```{error}```", color=discord.Colour.red())
             embed.set_footer(text=f"Server : {ctx.guild.name} - {ctx.guild.id} | Author : {ctx.author} - {ctx.author.id}")
             await channel.send(embed=embed)
+
+            print("\n\n⚠️⚠️⚠️ " + datetime.datetime.now().strftime("%x at %X") + " Ignoring exception in command {}\n:".format(ctx.command), file=sys.stderr)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
 
     @commands.Cog.listener()
@@ -66,26 +74,21 @@ class EventsCog(commands.Cog, name="EventsCog"):
                 (member == self.bot.user)
             ):
                 if member != self.bot.user:
-                    client = before.channel.guild.voice_client
-                    await client.disconnect()
-                self.bot.music[before.channel.guild.id]["musics"] = []
-                self.bot.music[before.channel.guild.id]["volume"] = 0.5
-                self.bot.music[before.channel.guild.id]["skip"] = {"count": 0, "users": []}
-                self.bot.music[before.channel.guild.id]["nowPlaying"] = None
-                self.bot.music[before.channel.guild.id]["loop"] = False
-                self.bot.music[before.channel.guild.id]["loopQueue"] = False
+                    player = self.bot.wavelink.get_player(before.channel.guild.id)
+                    await player.disconnect()
+                
+                DBServer().clearMusicParameters(before.channel.guild.id, False, False)
+
         elif (before.channel is  None) and (after.channel is not None):
             if member == self.bot.user:
-                self.bot.music[after.channel.guild.id]["musics"] = []
-                self.bot.music[after.channel.guild.id]["volume"] = 0.5
-                self.bot.music[after.channel.guild.id]["skip"] = {"count": 0, "users": []}
-                self.bot.music[after.channel.guild.id]["nowPlaying"] = None
-                self.bot.music[after.channel.guild.id]["loop"] = False
-                self.bot.music[after.channel.guild.id]["loopQueue"] = False
+
+                DBServer().clearMusicParameters(after.channel.guild.id, False, False)
+
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        await Utils().generateGuildDictionnary(self.bot, guild)
+        
+        DBServer().add(guild.id, "?", False, False, "")
 
         # Print the log on the support server
         channel = self.bot.get_channel(799998669926563860)
@@ -94,7 +97,8 @@ class EventsCog(commands.Cog, name="EventsCog"):
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        del self.bot.music[guild.id]
+
+        DBServer().remove(guild.id)
 
         # Print the log on the support server
         channel = self.bot.get_channel(799998669926563860)

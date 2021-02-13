@@ -2,6 +2,9 @@ import discord
 from discord.ext import commands
 
 from Tools.Check import Check
+from Tools.Utils import Utils
+
+from DataBase.Queue import DBQueue
 
 class CogQueue(commands.Cog):
     def __init__(self, bot):
@@ -12,26 +15,24 @@ class CogQueue(commands.Cog):
                     usage="",
                     description = "Display the queue.")
     @commands.guild_only()
-    @commands.cooldown(1, 2, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def queue(self, ctx):
-
-        if not await Check().queueEmpty(ctx, self.bot): return 
 
         isFirstMessage = True
         message = ""
-        for number, i in enumerate(self.bot.music[ctx.guild.id]["musics"], start=1):
-            if i["music"].duration is None:
-                duration = "Live"
-            else:
-                musicDurationSeconds = round(i["music"].duration % 60)
-                if musicDurationSeconds < 10:
-                    musicDurationSeconds = "0" + str(round(musicDurationSeconds))
-                duration = str(round(i["music"].duration//60)) + f":{round(int(musicDurationSeconds))}"
-            i["music"].title = i["music"].title.replace("*", "\\*")
 
-            i["music"].title =i["music"].title.replace("*", "\\*")
+        tracks = DBQueue().display(ctx.guild.id)
 
-            message += f"**{number}) ["+ i["music"].title + "](https://www.youtube.com"+ i["music"].url + f"])** ({duration})\n"
+        if len(tracks) == 0:
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The queue is empty!")
+        
+        for number, track in enumerate(tracks, start=1):
+            
+            trackDuration = await Utils().durationFormat(track[6])
+            trackTitle = track[5].replace("*", "\\*")
+            trackUrl = track[4]
+
+            message += f"**{number}) [{trackTitle}]({trackUrl})** ({trackDuration})\n"
             if len(message) > 1800:
                 
                 if isFirstMessage:

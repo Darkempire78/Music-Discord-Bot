@@ -1,8 +1,12 @@
 import discord
+import wavelink
 from discord.ext import commands
 from math import ceil
 
 from Tools.Check import Check
+
+from DataBase.Skip import DBSkip
+
 
 
 class CogSkip(commands.Cog):
@@ -23,24 +27,29 @@ class CogSkip(commands.Cog):
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
 
         if not ctx.author.guild_permissions.administrator:
-            # If user had already skip
-            if ctx.author.id in self.bot.music[ctx.guild.id]["skip"]["users"]:
-                return await ctx.send(f"{ctx.author.mention} Waiting for other voice users! (" + str(self.bot.music[ctx.guild.id]["skip"]["count"]) + f"/{ceil(len(ctx.author.voice.channel.voice_states)/2)})")
             
-            self.bot.music[ctx.guild.id]["skip"]["count"] += 1
-            self.bot.music[ctx.guild.id]["skip"]["users"].append(ctx.author.id)
+            users = DBSkip().displayUsers(ctx.guild.id)
+            usersCount = len(users)
+            
+            # If user had already skip
+            if ctx.author.id in [ i[0] for i in users]:
+                return await ctx.send(f"{ctx.author.mention} Waiting for other voice users! ({usersCount}/{ceil(len(ctx.author.voice.channel.voice_states)/2)})")
+
+            # Add to the DB
+            DBSkip().add(ctx.guild.id, ctx.author.id)
+            usersCount += 1
+
             # Calcul the ratio
-            ratio = self.bot.music[ctx.guild.id]["skip"]["count"]/(len(ctx.author.voice.channel.voice_states) -1) *100 # It's a percentage
+            ratio = usersCount/(len(ctx.author.voice.channel.voice_states) -1) *100 # It's a percentage
             if not ratio > 50:
-                return await ctx.send(f"{ctx.author.mention} Waiting for other voice users! (" + str(self.bot.music[ctx.guild.id]["skip"]["count"]) + f"/{ceil(len(ctx.author.voice.channel.voice_states)/2)})")
+                return await ctx.send(f"{ctx.author.mention} Waiting for other voice users! ({usersCount}/{ceil(len(ctx.author.voice.channel.voice_states)/2)})")
 
         # Clean the dict
-        self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
+        DBSkip().clear(ctx.guild.id)
         await ctx.send(f"{ctx.author.mention} Current music skipped!")
 
-        client = ctx.guild.voice_client
-        client.stop()
-
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+        await player.seek(player.current.duration)
 
 def setup(bot):
     bot.add_cog(CogSkip(bot))

@@ -15,9 +15,14 @@ class CogNowPlaying(commands.Cog):
     @commands.guild_only()
     @commands.cooldown(1, 2, commands.BucketType.member)
     async def nowplaying(self, ctx):
-        if self.bot.music[ctx.guild.id]["nowPlaying"]:
-            return sendPlayingSongEmbed(self, ctx, self.bot.music[ctx.guild.id]["nowPlaying"])
-        await ctx.channel.send(f"{ctx.author.mention} There is currently no song!")
+
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+
+        if not player.is_playing:
+            return await ctx.channel.send(f"{ctx.author.mention} There is currently no song!")
+        
+        await sendPlayingSongEmbed(self, ctx.channel, player.current)
+
 
 
 def setup(bot):

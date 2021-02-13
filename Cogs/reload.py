@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from math import ceil
 
 from Tools.Check import Check
 
@@ -13,23 +12,17 @@ class CogReaload(commands.Cog):
                     usage="",
                     description = "Reload the current music.")
     @commands.guild_only()
-    @commands.cooldown(1, 2, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def skip(self, ctx):
 
         if not await Check().userInVoiceChannel(ctx, self.bot): return 
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
         
-        self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []} # Clean the dict
-        self.bot.music[ctx.guild.id]["musics"].insert(0,
-            {
-            "music": self.bot.music[ctx.guild.id]["nowPlaying"]["music"],
-            "requestedBy": self.bot.music[ctx.guild.id]["nowPlaying"]["requestedBy"]
-            }
-        )
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+        await player.seek(0) # Relaod the song
+
         await ctx.send(f"{ctx.author.mention} Current music reload!")
-        client = ctx.guild.voice_client
-        client.stop()
 
 
 def setup(bot):

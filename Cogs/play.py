@@ -4,11 +4,13 @@ import aiohttp
 import asyncio
 import tekore # Spotify
 
+import wavelink
+
 from discord.ext import commands
 
-from youtubesearchpython import VideosSearch, PlaylistsSearch, Video, ResultMode
+from youtubesearchpython import PlaylistsSearch
 
-from sclib.asyncio import SoundcloudAPI, Track, Playlist
+from Tools.Utils import Utils
 
 from Tools.addTrack import addTrack
 from Tools.Check import Check
@@ -27,11 +29,11 @@ async def searchSpotifyTrack(self, ctx, args):
     title = track.name
     artist = track.artists[0].name
     # Search on youtube
-    results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
-    if len(results) == 0:
+    track = await self.bot.wavelink.get_tracks(f'ytsearch:{title} {artist}')
+    if len(track) == 0:
         await noResultFound(self, ctx)
         return None
-    return results[0]["link"]
+    return track[0]
 
 async def searchSpotifyPlaylist(self, ctx, args):
     """Get Spotify links from a playlist link."""
@@ -45,7 +47,7 @@ async def searchSpotifyPlaylist(self, ctx, args):
         return None
 
     trackLinks = []
-    if playlist.tracks.total > 25:
+    if playlist.tracks.total > 15:
         await playlistTooLarge(self, ctx)
         return None
     await ctx.send(f"{self.bot.emojiList.spotifyLogo} Loading... (This process can take several seconds)", delete_after=60)
@@ -53,11 +55,11 @@ async def searchSpotifyPlaylist(self, ctx, args):
         title = i.track.name
         artist = i.track.artists[0].name
         # Search on youtube
-        results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
-        if len(results) == 0:
+        track = await self.bot.wavelink.get_tracks(f'ytsearch:{title} {artist}')
+        if track is None:
             await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} No song found to : `{title} - {artist}` !")
         else:
-            trackLinks.append(results[0]["link"])
+            trackLinks.append(track[0])
     if not trackLinks: # if len(trackLinks) == 0:
         return None
     return trackLinks
@@ -90,18 +92,18 @@ async def searchDeezerTrack(self, ctx, session, response):
         title = response["title_short"]
         artist = response["artist"]["name"]
         # Search on youtube
-        results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
-        if len(results) == 0:
+        track = await self.bot.wavelink.get_tracks(f'ytsearch:{title} {artist}')
+        if len(track) == 0:
             await noResultFound(self, ctx)
             return None
-        return results[0]["link"]
+        return track[0]
 
 async def searchDeezerPlaylist(self, ctx, session, response):
     #Get the playlist ID
     playlistId = response._real_url.name
     async with session.get(f"https://api.deezer.com/playlist/{playlistId}") as response:
         response = await response.json()
-        if response["nb_tracks"] > 25:
+        if response["nb_tracks"] > 15:
             await playlistTooLarge(self, ctx)
             return None
         await ctx.send(f"{self.bot.emojiList.deezerLogo} Loading... (This process can take several seconds)", delete_after=60)
@@ -110,11 +112,11 @@ async def searchDeezerPlaylist(self, ctx, session, response):
             title = i["title_short"]
             artist = i["artist"]["name"]
             # Search on youtube
-            results = VideosSearch(f"{title} {artist}", limit = 1).result()["result"]
-            if len(results) == 0:
+            track = await self.bot.wavelink.get_tracks(f'ytsearch:{title} {artist}')
+            if len(track) == 0:
                 await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} No song found to : `{title} - {artist}` !")
             else:
-                trackLinks.append(results[0]["link"])
+                trackLinks.append(track[0])
         if not trackLinks:
             return None
         return trackLinks
@@ -123,65 +125,37 @@ async def searchDeezerPlaylist(self, ctx, session, response):
 async def searchSoundcloud(self, ctx, args):
     """Get a YouTube link from a SoundCloud link."""
     await ctx.send(f"{self.bot.emojiList.soundcloudLogo} Searching...", delete_after=10)
-    soundcloud = SoundcloudAPI()
-    try:
-        trackOrPlaylist = await soundcloud.resolve(args)
-        if isinstance(trackOrPlaylist, Track):
-            link = await searchSoundcloudTrack(self, ctx, trackOrPlaylist)
-            if link is None: 
-                return None
-            return link
-        if isinstance(trackOrPlaylist, Playlist):
-            links = await searchSoundcloudPlaylist(self, ctx, trackOrPlaylist)
-            if links is None: 
-                return None
-            return links
-        await ctx.send(f"{self.bot.emojiList.false}{ctx.author.mention} The Soundcloud link is not a track or a playlist!")
-        return None
-    except:
-        await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} The Soundcloud link is invalid!")
-        return None
 
-async def searchSoundcloudTrack(self, ctx, track):
-    # Search on youtube
-    results = VideosSearch(track.title.replace("-", " ") + f" {track.artist}", limit = 1).result()["result"]
-    if len(results) == 0:
+    track = await self.bot.wavelink.get_tracks(args)
+
+    if len(track) == 0:
         await noResultFound(self, ctx)
         return None
-    return results[0]["link"] 
+    
+    elif len(track) > 1:
+        if len(track) > 15:
+            await playlistTooLarge(self, ctx)
+            return None
+        return track.tracks
 
-async def searchSoundcloudPlaylist(self, ctx, playlist):
-    if playlist.track_count > 25:
-        await playlistTooLarge(self, ctx)
-        return None
-    await ctx.send(f"{self.bot.emojiList.soundcloudLogo} Loading... (This process can take several seconds)", delete_after=60)
-    trackLinks = []
-    for i in playlist.tracks:
-        results = VideosSearch(i.title.replace("-", " ") + f" {i.artist}", limit = 1).result()["result"]
-        if len(results) == 0:
-            await ctx.send(f"{self.bot.emojiList.false}{ctx.author.mention} No song found to : `{i.title} - {i.artist}` !")
-        else:
-            trackLinks.append(results[0]["link"])
-    return trackLinks
+    return track
 
 
 async def searchQuery(self, ctx, args):
     """Get a YouTube link from a query."""
     await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
 
-    results = VideosSearch(args, limit = 5).result()["result"]
-            
+    tracks = await self.bot.wavelink.get_tracks(f'ytsearch:{args}')
+
     message = ""
     number = 0
-    if len(results) == 0:
+    if tracks is None:
         await noResultFound(self, ctx)
         return None
-    for i in results:
-        if i["duration"] is None:
-            i["duration"] = "Live"
+    for i in tracks[:5]:
         number += 1
-        i["title"] =i["title"].replace("*", "\\*")
-        message += f"**{number}) ["+ i["title"] + "]("+ i["link"] + "])** ("+ str(i["duration"]) + ")\n"
+        duration = await Utils().durationFormat(i.duration)
+        message += f"**{number}) [{i.title}]({i.uri}])** ({duration})\n"
     embed=discord.Embed(title="Search results :", description=f"choose the number that corresponds to the music.\nWrite `0` to pass the cooldown.\n\n{message}", color=discord.Colour.random())
     embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
@@ -196,7 +170,7 @@ async def searchQuery(self, ctx, args):
         if int(msg.content) == 0:
             await ctx.send(f"{ctx.author.mention} Search exit!")
             return None
-        return results[int(msg.content) -1]["link"]
+        return tracks[int(msg.content) -1]
     except asyncio.TimeoutError:
         embed = discord.Embed(title = f"**TIME IS OUT**", description = f"{self.bot.emojiList.false} {ctx.author.mention} You exceeded the response time (15s)", color = discord.Colour.red())
         await ctx.channel.send(embed = embed)
@@ -209,19 +183,18 @@ async def searchPlaylist(self, ctx, args):
     if videoCount == 0:
         await noResultFound(self, ctx)
         return None
-    if videoCount > 25:
+    if videoCount > 15:
         await playlistTooLarge(self, ctx)
         return None
     await ctx.send("<:YouTubeLogo:798492404587954176> Loading... (This process can take several seconds)", delete_after=60)
-    with self.bot.ytdl:
-        result = self.bot.ytdl.extract_info(args, download=False)
-        videos = result['entries']
-        return [i["webpage_url"] for i in videos]
+    
+    tracks = await self.bot.wavelink.get_tracks(args)
+    return tracks.tracks
 
 
 async def playlistTooLarge(self, ctx):
     """Send an embed with the error : playlist is too big."""
-    embed=discord.Embed(title="Search results :", description=f"{self.bot.emojiList.false} The playlist is too big! (max : 25 tracks)", color=discord.Colour.random())
+    embed=discord.Embed(title="Search results :", description=f"{self.bot.emojiList.false} The playlist is too big! (max : 15 tracks)", color=discord.Colour.random())
     embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
 
@@ -241,11 +214,10 @@ class CogPlay(commands.Cog):
                     usage="<Link/Query>",
                     description = "The bot searches and plays the music.")
     @commands.guild_only()
-    @commands.cooldown(1, 3, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def play(self, ctx, *args):
 
         if not await Check().userInVoiceChannel(ctx, self.bot): return 
-        if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return
 
         args = " ".join(args)
 
@@ -279,8 +251,9 @@ class CogPlay(commands.Cog):
         elif args.startswith("https://www.youtube.com/watch"):
             await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
             # Check if the link exists
-            isYoutubeVideo = Video.get(args, mode = ResultMode.json)
-            if not isYoutubeVideo:
+            track = await self.bot.wavelink.get_tracks(args)
+            args = track[0]
+            if track is None:
                 return await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} The YouTube link is invalid!")
         
         # Query
@@ -288,9 +261,9 @@ class CogPlay(commands.Cog):
             args = await searchQuery(self, ctx, args)
             if args is None: return
 
-        links = args
+        tracks = args
 
-        await addTrack(self, ctx, links) 
+        await addTrack(self, ctx, tracks) 
             
 
 def setup(bot):

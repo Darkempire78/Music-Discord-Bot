@@ -3,6 +3,7 @@ from discord.ext import commands
 
 from Tools.Check import Check
 
+from DataBase.Queue import DBQueue
 
 class CogMove(commands.Cog):
     def __init__(self, bot):
@@ -13,29 +14,53 @@ class CogMove(commands.Cog):
                     usage="<IndexFrom> <IndexTo>",
                     description = "Move a song in the queue.")
     @commands.guild_only()
-    @commands.cooldown(1, 2, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def move(self, ctx, indexFrom, indexTo):
         
         if not await Check().userInVoiceChannel(ctx, self.bot): return 
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
-        if not await Check().queueEmpty(ctx, self.bot): return 
+        
+        tracks = DBQueue().display(ctx.guild.id)
+        tracksCount = len(tracks)
+
+        if len(tracks) == 0:
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The queue is empty!")
 
         if not indexFrom.isdigit() or not indexTo.isdigit():
             return await ctx.channel.send(f"{self.bot.emojiList.false}{ctx.author.mention} The index have to be a number!")
-        if (int(indexFrom) -1) > len(self.bot.music[ctx.guild.id]["musics"]) or (int(indexTo) -1) > len(self.bot.music[ctx.guild.id]["musics"]):
+        if ((int(indexFrom)) > tracksCount) or ((int(indexTo)) > tracksCount):
             return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The index is invalid!")
+        if (int(indexFrom) == int(indexTo)):
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The indexes can not be the same!")
 
-        former = self.bot.music[ctx.guild.id]["musics"][int(indexFrom) -1]
-        self.bot.music[ctx.guild.id]["musics"].insert(int(indexTo), former.copy())
-        self.bot.music[ctx.guild.id]["musics"].remove(former)
-        
-        embed=discord.Embed(title="Song moved", description="- [**" + former["music"].title + f"**](" + former["music"].url + f") was moved from `{indexFrom}` to `{indexTo}`.", color=discord.Colour.random())
-        embed.set_thumbnail(url=former["music"].thumbnails)
+        indexFromFake = int(indexFrom)
+        indexToFake = int(indexTo)
+
+        # Get real index 
+        indexFrom = DBQueue().getIndexFromFakeIndex(ctx.guild.id, indexFromFake -1)
+        indexTo = DBQueue().getIndexFromFakeIndex(ctx.guild.id, indexToFake -1)
+
+        # Get the track to move
+        trackToMove = DBQueue().displaySpecific(ctx.guild.id, indexFrom)
+        indexFrom = trackToMove[7]
+
+        # Delete the track to move
+        DBQueue().remove(ctx.guild.id, indexFrom)
+
+        if indexFrom < indexTo:
+            # -1 to each track between trackToMove index and 
+            DBQueue().updateRemoveOneToEach(ctx.guild.id, indexFrom, indexTo)
+        else:
+            # +1 to each track between trackToMove index and 
+            DBQueue().updateAddOneToEach(ctx.guild.id, indexFrom, indexTo)
+    
+        # Re-create the track
+        DBQueue().add(trackToMove[0], trackToMove[1], trackToMove[2], trackToMove[3], trackToMove[4], trackToMove[5], trackToMove[6], indexTo) 
+
+        embed=discord.Embed(title="Song moved", description=f"- [**{trackToMove.title}**]({trackToMove.uri}) was moved from `{indexFromFake}` to `{indexToFake}`.", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
         await ctx.channel.send(embed=embed)
-
-        
 
 
 def setup(bot):

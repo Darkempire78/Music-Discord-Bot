@@ -1,0 +1,120 @@
+import discord
+from discord.ext import commands
+import wavelink
+import json
+
+from Tools.playTrack import playTrack
+
+from DataBase.Queue import DBQueue
+from DataBase.Server import DBServer
+from DataBase.Skip import DBSkip
+
+
+class Track(wavelink.Track):
+    """Wavelink Track object with a requester attribute."""
+
+    __slots__ = ('requester', )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args)
+
+        self.requester = kwargs.get('requester')
+
+
+class CogLavalinkEvents(commands.Cog, wavelink.WavelinkMixin):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @wavelink.WavelinkMixin.listener('on_track_stuck')
+    @wavelink.WavelinkMixin.listener('on_track_end')
+    @wavelink.WavelinkMixin.listener('on_track_exception')
+    async def on_player_stop(self, node: wavelink.Node, payload):
+           
+        serverParameters = DBServer().displayServer(payload.player.guild_id)
+        isLoop = serverParameters[2]
+        isLoopQueue = serverParameters[3]
+
+        # Clear the skip DB
+        DBSkip().clear(payload.player.guild_id)
+
+        if isLoop == 1:
+            currentTrack = DBQueue().getCurrentSong(payload.player.guild_id)
+            requester = currentTrack[2]
+            channelID = currentTrack[3]
+            channel = self.bot.get_channel(int(channelID))
+            track = await self.bot.wavelink.get_tracks(currentTrack[4])
+            track = track[0]
+            await channel.send(f"🔄 Looped!")
+            return await playTrack(self, channel, payload.player, track, requester)
+        
+        # If not looped
+        track = DBQueue().getNextSong(payload.player.guild_id)
+        if track is None:
+            currentTrack = DBQueue().getCurrentSong(payload.player.guild_id)
+            channelID = currentTrack[3]
+            channel = self.bot.get_channel(int(channelID))
+            if channel:
+                await channel.send(f"{self.bot.emojiList.false} Disconnected because the queue is empty!")
+                await payload.player.disconnect()
+            return 
+
+        channelID = track[3]
+        channel = self.bot.get_channel(int(channelID))
+        requester = track[2]
+        track = track[4]
+
+        # Remove the former track
+        DBQueue().removeFormer(payload.player.guild_id)
+        # update playing track to former track (index = 0)
+        DBQueue().updatePlayingToFormer(payload.player.guild_id)
+        # Change the new track to isPlaying
+        trackIndex = DBQueue().getNextIndex(payload.player.guild_id)
+        DBQueue().setIsPlaying(payload.player.guild_id, trackIndex)
+
+        await playTrack(self, channel, payload.player, track, requester)
+
+        if isLoopQueue == 1:
+            formerTrack = DBQueue().displayFormer(payload.player.guild_id)
+
+            if len(formerTrack) > 0:
+                futureIndex = DBQueue().getFutureIndex(payload.player.guild_id)
+                futureIndex += 1
+
+                title = formerTrack[5]
+                duration = formerTrack[6]
+
+                # Add the former track at the end of the queue
+                DBQueue().add(payload.player.guild_id, False, requester, channel.id, track, title, duration, futureIndex)
+
+
+    @wavelink.WavelinkMixin.listener()
+    async def on_node_ready(self, node: wavelink.Node):
+        print(f'Lavalink node {node.identifier} is ready!')
+
+        # Restart the queue and playing music
+        # with open("logoutData.json", "r") as logoutData:
+        #     logoutData = json.load(logoutData)
+
+        # serversInQueue = DBQueue().displayAllPlaying()
+
+        # if serversInQueue:
+        #     for server in serversInQueue:
+        #         serverID = int(server[0])
+        #         if str(serverID) in logoutData:
+        #             voiceChannelID = logoutData[str(serverID)]
+        #             voiceChannel = self.bot.get_channel(int(voiceChannelID))
+        #             if voiceChannel:
+        #                 # Get the track
+        #                 track = await node.get_tracks(server[4])
+        #                 if track:
+        #                     track = track[0]
+        #                     track = Track(track.id, track.info, requester=server[2])
+                            
+        #                     # Play the track
+        #                     player = node.get_player(serverID)
+        #                     if player:
+        #                         await player.play(track)
+
+    
+def setup(bot):
+    bot.add_cog(CogLavalinkEvents(bot))

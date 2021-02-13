@@ -16,6 +16,9 @@ class HelpCog(commands.Cog, name="help command"):
     @commands.cooldown(1, 3, commands.BucketType.member)
     async def help(self, ctx, commandName=None):
         
+        a = 2/0
+        print(a)
+
         commandName2 = None
         stop = False
 
@@ -70,15 +73,11 @@ class HelpCog(commands.Cog, name="help command"):
             **{self.bot.command_prefix}resume :** Resume the current song.
             **{self.bot.command_prefix}volume <0-100> :** Change the bot's volume.
             **{self.bot.command_prefix}queue :** Display the queue.
-            **{self.bot.command_prefix}shuffle :** Shuffle the queue.
-            **{self.bot.command_prefix}move <IndexFrom> <IndexTo> :** Move a song in the queue.
-                
+            **{self.bot.command_prefix}move <IndexFrom> <IndexTo> :** Move a song in the queue.   
             """)
 
             message2 = (f"""
             **{self.bot.command_prefix}remove <Index> :** Remove the song with its index.
-            **{self.bot.command_prefix}removedupes :** Remove all duplicates song from the queue.
-            **{self.bot.command_prefix}leavecleanup :** Remove absent user's songs from the queue.
             **{self.bot.command_prefix}clear :** Clear the queue.
             **{self.bot.command_prefix}replay :** Replay the current song.
             **{self.bot.command_prefix}reload :** Reload the current song.
@@ -92,6 +91,11 @@ class HelpCog(commands.Cog, name="help command"):
 
             **{self.bot.command_prefix}stats :** Display the bot's stats.
             """)
+
+            # **{self.bot.command_prefix}shuffle :** Shuffle the queue.
+            # **{self.bot.command_prefix}removedupes :** Remove all duplicates song from the queue.
+            # **{self.bot.command_prefix}leavecleanup :** Remove absent user's songs from the queue.
+
             embed = discord.Embed(title=f"__**Help page of {self.bot.user.name.upper()}**__", description="[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)", color=discord.Colour.random())
             embed.set_thumbnail(url=f'{self.bot.user.avatar_url}')
             embed.add_field(name=f"__COMMANDS :__", value=message1, inline=False)

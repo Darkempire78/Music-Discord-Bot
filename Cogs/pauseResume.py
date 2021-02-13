@@ -12,16 +12,17 @@ class CogPauseResume(commands.Cog):
                     usage="",
                     description = "Resume the song.")
     @commands.guild_only()
-    @commands.cooldown(1, 2, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def resume(self, ctx):
 
         if not await Check().userInVoiceChannel(ctx, self.bot): return 
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
 
-        client = ctx.guild.voice_client
-        if client.is_paused():
-            client.resume()
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+
+        if player.is_paused:
+            await player.set_pause(False)
             return await ctx.channel.send(f"{ctx.author.mention} The song is resumed!")
         await ctx.channel.send(f"{ctx.author.mention} The song is already resumed!")
             
@@ -31,16 +32,17 @@ class CogPauseResume(commands.Cog):
                     usage="",
                     description = "Pause the song.")
     @commands.guild_only()
-    @commands.cooldown(1, 2, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def pause(self, ctx):
         
         if not await Check().userInVoiceChannel(ctx, self.bot): return 
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
 
-        client = ctx.guild.voice_client
-        if not client.is_paused():
-            client.pause()
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+
+        if not player.is_paused:
+            await player.set_pause(True)
             return await ctx.channel.send(f"{ctx.author.mention} The song is paused!")
         await ctx.channel.send(f"{ctx.author.mention} The song is already paused!")
 

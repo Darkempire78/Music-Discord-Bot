@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
-import asyncio
+
+import json
+
+from DataBase.Queue import DBQueue
 
 class CogAdmin(commands.Cog):
     def __init__(self, bot):
@@ -12,50 +15,40 @@ class CogAdmin(commands.Cog):
                     description = "Stop the bot.")
     @commands.is_owner()
     @commands.guild_only()
-    @commands.cooldown(1, 2, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def logout(self, ctx):
 
         await ctx.send(f"{self.bot.emojiList.alert} Stoping process...")
-        for i in self.bot.voice_clients:
-            try:
-                await i.disconnect()
-                await ctx.send(f"{self.bot.emojiList.true} Disconected from {i.channel.id} in {i.channel.guild.name}")
-                print(f"Disconected from {i.channel.id} in {i.channel.guild.name}")
-            except:
-                await ctx.send(f"{self.bot.emojiList.false} **Error :** Can't disconect from {i.channel.id} in {i.channel.guild.name}")
-                print(f"Error : Can't disconect from {i.channel.id} in {i.channel.guild.name}")
+
+        serversInQueue = DBQueue().displayAllPlaying()
+
+        if serversInQueue:
+            for server in serversInQueue:
+                textChannel = self.bot.get_channel(int(server[3]))
+                await textChannel.send(f"{self.bot.emojiList.alert} **THE BOT WILL RESTART !**")
+
+        with open("logoutData.json", "w+") as logoutData:
+            data = {}
+            for k, player in self.bot.wavelink.players.items():
+                try:
+                    # Write in logoutData.json
+                    data[player.guild_id] = player.channel_id
+
+                    if player.is_playing:
+                        await player.destroy()
+                    await player.disconnect()
+                    await ctx.send(f"{self.bot.emojiList.true} Disconected from {player.guild_id}")
+                    print(f"Disconected from {player.guild_id}")
+                except:
+                    await ctx.send(f"{self.bot.emojiList.false} **Error :** Can't disconect from {player.guild_id}")
+                    print(f"Error : Can't disconect from {player.guild_id}")
+
+            data = json.dumps(data, indent=4, ensure_ascii=False)
+            logoutData.write(data)
+        
         await ctx.send(f"{self.bot.emojiList.alert} Stoped!")
-        print(f"Stoping process... (by {ctx.author})")
-        await self.bot.logout() # Stop the bot
-
-        
-        # def closeApp(self, ctx, voice_clients):
-        #     if playingWarning[i.channel.id] is True:
-        #         playingWarning[i.channel.id] = False
-        #     else:
-        #         asyncio.run_coroutine_threadsafe(voice_clients.disconnect(), self.bot.loop)
-        #         asyncio.run_coroutine_threadsafe(ctx.send(f"{self.bot.emojiList.true} Disconected from {voice_clients.channel.id} in {voice_clients.channel.guild.name}"), self.bot.loop)
-        #         print(f"Disconected from {voice_clients.channel.id} in {voice_clients.channel.guild.name}")
-
-        #         if len(self.bot.voice_clients) == 0:
-        #             asyncio.run_coroutine_threadsafe(ctx.send(f"{self.bot.emojiList.alert} Stoped!"), self.bot.loop)
-        #             print(f"Stoping process... (by {ctx.author})")
-        #             asyncio.run_coroutine_threadsafe(self.bot.logout(), self.bot.loop) # Stop the bot
-
-        # await ctx.send(f"{self.bot.emojiList.alert} Stoping process...")
-        
-        # playingWarning = {}
-
-        # for i in self.bot.voice_clients:
-        #     # try:
-        #     i.stop()
-        #     audio_source = discord.FFmpegPCMAudio("RestartWarning.mp3", before_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5")
-        #     if not i.is_playing():
-        #         playingWarning[i.channel.id] = True
-        #         i.play(audio_source, after=closeApp(self, ctx, i))
-        # print('test')
-
-        
+        print(f"\n⛔⛔⛔ Stoping process... (by {ctx.author})")
+        await self.bot.logout() # Stop the bot    
 
 
 def setup(bot):

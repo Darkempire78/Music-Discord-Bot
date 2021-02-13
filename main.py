@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import discord
+import wavelink
 import os
 import json
 import youtube_dl
@@ -9,6 +10,9 @@ import tekore # Spotify
 from discord.ext import commands
 
 from Tools.Utils import Utils
+
+from DataBase.Server import DBServer
+
 
 class createEmojiList:
     def __init__(self, emojiList):
@@ -34,8 +38,7 @@ with open("configuration.json", "r") as config:
     spotifyClientSecret = data["spotifyClientSecret"]
 
     dblToken = data["dblToken"]
-    dblWebhookPath = data["dblWebhookPath"]
-    dblWebhookAuth = data["dblWebhookAuth"]
+
 
 with open("emojis.json", "r") as emojiList:
     emojiList = json.load(emojiList)
@@ -59,8 +62,6 @@ bot.spotify = tekore.Spotify(spotifyAppToken, asynchronous=True)
 
 # Top.gg
 bot.dblToken = dblToken
-bot.dblWebhookPath = dblWebhookPath
-bot.dblWebhookAuth = dblWebhookAuth
 
 # Create music dictionary
 bot.music = {}
@@ -82,9 +83,18 @@ if __name__ == '__main__':
 
 @bot.event
 async def on_ready():
-    await Utils().generateGuildDictionnary(bot, bot.guilds)
-    
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name =f"{bot.command_prefix}help"))
+    
+    # Check if each server is in the DB
+    print("Database check")
+    servers = DBServer().display()
+    serversId = [int(i[0]) for i in servers]
+    for guild in bot.guilds:
+        if guild.id not in serversId:
+            DBServer().add(guild.id, "?", False, False, "")
+            print(f"* {guild.name} ({guild.id}) added")
+    
+    print("----------------------------")
     print(f'We have logged in as {bot.user}')
     print(discord.__version__)
 

@@ -1,90 +1,88 @@
 import discord
+import wavelink
+import json
 
-from Tools.Music import Music
+from Tools.Check import Check
+from Tools.Utils import Utils
 from Tools.playTrack import playTrack
 
-async def addTrack(self, ctx, links):
+from DataBase.Queue import DBQueue
+from DataBase.Server import DBServer
 
-    client = ctx.guild.voice_client
 
-    if not isinstance(links, list):
-        links = [links]
+async def addTrack(self, ctx, tracks):
+
+    if not await Check().userInVoiceChannel(ctx, self.bot): return 
+
+    # If there is only one track
+    if not isinstance(tracks, list):
+        tracks = [tracks]
+
+    player = self.bot.wavelink.get_player(ctx.guild.id)
+
+    if not player.is_connected:
+        # Clear all the queue
+        DBQueue().clear(ctx.guild.id)
+
+        channel = ctx.author.voice.channel
+        await player.connect(channel.id)
+        await ctx.send(f"{ctx.author.mention} Connected in **`{channel.name}`**!")
 
     playlistMessage = None
-    isPlaylist = False
-    if len(links) > 1:
-        isPlaylist = True
 
-    for link in links:
-        if client and client.channel:
-            if (self.bot.user.id not in [i.id for i in ctx.author.voice.channel.members]):
-                return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} I'm already connected in a voice channel!")
-            if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
-                await ctx.send("Loading...", delete_after=10)
-            music = Music(ctx, self, link)
-            music.title = music.title.replace("*", "\\*")
-            if music.duration is None:
-                duration = "Live"
-            else:
-                musicDurationSeconds = round(music.duration % 60)
-                if musicDurationSeconds < 10:
-                    musicDurationSeconds = "0" + str(round(musicDurationSeconds))
-                duration = f"{round(music.duration//60)}:{musicDurationSeconds}"
-            
-            if self.bot.music[ctx.guild.id]["nowPlaying"] is None:
-                self.bot.music[ctx.guild.id]["musics"] = []
-                self.bot.music[ctx.guild.id]["volume"] = 0.5
-                return playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
 
-            self.bot.music[ctx.guild.id]["musics"].append(
-                {
-                "music": music,
-                "requestedBy": ctx.author
-                }
-            )
+    for track in tracks:
+        
+        requester = f"{ctx.author.name}#{ctx.author.discriminator}"
+        # Add the requester
+        if player.is_playing:
+            queueSize = DBQueue().countQueueItems(ctx.guild.id)
+            if queueSize >= 50:
+                return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} You are over the queue limit! The limit of the queue is 50 songs.")
+            index = DBQueue().getFutureIndex(ctx.guild.id)
+            if index is not None:
+                index += 1
+            # Add to the queue
+            DBQueue().add(ctx.guild.id, False, requester, ctx.channel.id, track.uri, track.title, track.duration, index) 
 
-            # Queue duration
-            queueDuration = sum(
-                i["music"].duration
-                for i in self.bot.music[ctx.guild.id]["musics"]
-                if i["music"].duration is not None
-            )
-            queueDurationSeconds = round(queueDuration % 60)
-            if queueDurationSeconds < 10:
-                queueDurationSeconds = f"0{round(queueDurationSeconds)}"
-            queueDuration = f"{round(queueDuration//60)}:{queueDurationSeconds}"
+            trackDuration = await Utils().durationFormat(track.duration)
+            trackTitle = track.title.replace("*", "\\*")
 
-            if not isPlaylist:
-                embed=discord.Embed(title="Song added in the queue", description=f"New song added : **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
-                embed.add_field(name="Place in the queue : ", value="`" + str(len(self.bot.music[ctx.guild.id]["musics"])) + f"`", inline=True)
+            if len(tracks) == 1:
+
+                # Queue size and duration
+                queueSizeAndDuration = DBQueue().queueSizeAndDuration(ctx.guild.id)
+                if queueSizeAndDuration:
+                    queueDuration = int(queueSizeAndDuration[0])
+                    queueDuration = await Utils().durationFormat(queueDuration)
+                    queueSize = queueSizeAndDuration[1]
+                else:
+                    queueSize = 0
+                    queueDuration = "00:00"
+
+                embed=discord.Embed(title="Song added in the queue", description=f"New song added : **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
+                embed.add_field(name="Place in the queue : ", value=f"`{queueSize}`", inline=True)
                 embed.add_field(name="Estimated time before playing :", value=f"`{queueDuration}`", inline=True)
-                embed.set_thumbnail(url=music.thumbnails)
+                embed.set_thumbnail(url=track.thumb)
                 await ctx.channel.send(embed=embed)
             else:
                 # If it's a playlist => Update the same message to do not spam the channel
                 if playlistMessage is None:
-                    embed=discord.Embed(title="Song added in the queue", description=f"- **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
-                    embed.set_thumbnail(url=music.thumbnails)
+                    embed=discord.Embed(title="Song added in the queue", description=f"- **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
+                    embed.set_thumbnail(url=track.thumb)
                     playlistMessage = await ctx.channel.send(embed=embed)
                 else:
                     # Update the message
-                    embedEdited = discord.Embed(title="Songs added in the queue", description= playlistMessage.embeds[0].description + f"\n- **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
+                    embedEdited = discord.Embed(title="Songs added in the queue", description= playlistMessage.embeds[0].description + f"\n- **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
                     playlistMessage.embeds[0].description = embedEdited.description
                     if len(playlistMessage.embeds[0].description) > 1800:
-                        embed=discord.Embed(title="Song added in the queue", description=f"- **[{music.title}]({music.url})** ({duration})", color=discord.Colour.random())
-                        embed.set_thumbnail(url=music.thumbnails)
+                        embed=discord.Embed(title="Song added in the queue", description=f"- **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
+                        embed.set_thumbnail(url=track.thumb)
                         playlistMessage = await ctx.channel.send(embed=embed)
                     else:
                         await playlistMessage.edit(embed=embedEdited)
-                        
         else:
-            voice = ctx.author.voice
-            if ctx.author.voice is None:
-                return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} You are not connected in a voice channel!")
-            await ctx.send("Loading...", delete_after=10)
-            # perm = voice.channel.overwrites_for(self.bot.user)
-            client = await voice.channel.connect() # Connect the bot to the voice channel
-            music = Music(ctx, self, link) # Get music data
-            self.bot.music[ctx.guild.id]["musics"] = []
-            self.bot.music[ctx.guild.id]["volume"] = 0.5
-            playTrack(self, ctx, client, {"music": music, "requestedBy": ctx.author})
+            DBServer().clearMusicParameters(ctx.guild.id, False, False)
+            DBQueue().add(ctx.guild.id, True, requester, ctx.channel.id, track.uri, track.title, track.duration, 1) # Add to the DB
+            # Play the track
+            await playTrack(self, ctx, player, track, requester)

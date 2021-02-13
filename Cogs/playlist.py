@@ -4,7 +4,7 @@ from discord.ext import commands
 import json
 from youtubesearchpython import Video, ResultMode
 
-from DataBase.playlist import DBPlaylist
+from DataBase.Playlist import DBPlaylist
 
 from Tools.addTrack import addTrack
 
@@ -28,20 +28,20 @@ class CogPlaylist(commands.Cog):
         if not link.startswith("https://www.youtube.com/watch"):
             return await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} The YouTube link is invalid!")
         # Check if the link exists
-        song = Video.get(link, mode = ResultMode.json)
-        if not song:
+        track = await self.bot.wavelink.get_tracks(link)
+        track = track[0]
+        if track is None:
             return await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} The YouTube link is invalid!")
-        song = json.loads(song)
         
         playlistSize = DBPlaylist().countPlaylistItems(ctx.author.id, "liked") # Request
         if playlistSize >= 25:
             return await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} Your playlist (liked) is full (25 songs)!")
-        DBPlaylist().add(ctx.author.id, "liked", song["title"], link) # Request
+        DBPlaylist().add(ctx.author.id, "liked", track.title, track.uri) # Request
 
-        embed=discord.Embed(title="Song added in your playlist", description=f"- **[" + song["title"] + "](" + song["link"] + ")**", color=discord.Colour.random())
+        embed=discord.Embed(title="Song added in your playlist", description=f"- **[{track.title}]({track.uri})**", color=discord.Colour.random())
         embed.add_field(name="playlist name :", value=f"`liked`", inline=True)
         embed.add_field(name="playlist size :", value=f"`{playlistSize+1}/25`", inline=True)
-        embed.set_thumbnail(url=song["thumbnails"][len(song["thumbnails"] )-1]["url"])
+        embed.set_thumbnail(url=track.thumb)
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
         await ctx.channel.send(embed=embed)
 

@@ -1,51 +1,36 @@
 import discord
-import asyncio
+import wavelink
 
 from Tools.sendPlayingSongEmbed import sendPlayingSongEmbed
 
-def playTrack(self, ctx, client, music):
+from DataBase.Queue import DBQueue
 
-    def clearVoiceParameters(self):
-        self.bot.music[ctx.guild.id]["nowPlaying"] = None
-        self.bot.music[ctx.guild.id]["skip"] = {"count": 0, "users": []}
-        self.bot.music[ctx.guild.id]["volume"] = 0.5
+class Track(wavelink.Track):
+    """Wavelink Track object with a requester attribute."""
+
+    __slots__ = ('requester', )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args)
+
+        self.requester = kwargs.get('requester')
 
 
-    if music["music"].streamUrl:
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(music["music"].streamUrl, 
-                before_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"), self.bot.music[ctx.guild.id]["volume"])
+async def playTrack(self, channel, player, track, requester):
+    if player.is_playing:
+        return
 
-        
+    if isinstance(track, str):
+        # Convert the link in a track
+        track = await self.bot.wavelink.get_tracks(track)
+        track = track[0]
+        if track is None:
+            return await channel.send(f"{self.bot.emojiList.false} The song link is invalid!")
 
-        def nextSong(_):
-            if self.bot.music[ctx.guild.id]["loop"] and self.bot.music[ctx.guild.id]["nowPlaying"]:
-                asyncio.run_coroutine_threadsafe(ctx.channel.send(f"🔄 Looped!"), self.bot.loop)
-                playTrack(self, ctx, client, self.bot.music[ctx.guild.id]["nowPlaying"])
-                
-            else:
-                queue = self.bot.music[ctx.guild.id]["musics"]
-                if len(queue) > 0:
-                    new_music = queue[0]
-                    del queue[0]
-                    if client:
-                        playTrack(self, ctx, client, new_music)
-                        if self.bot.music[ctx.guild.id]["loopQueue"]:
-                            queue.append(new_music)
-                    else:
-                        clearVoiceParameters(self)
-                else:
-                    asyncio.run_coroutine_threadsafe(client.disconnect(), self.bot.loop)
-                    clearVoiceParameters(self)
-                    asyncio.run_coroutine_threadsafe(ctx.channel.send(f"Disconnected because the queue is empty!"), self.bot.loop)
-        if client:
-            client.play(source, after=nextSong)
-            sendPlayingSongEmbed(self, ctx, music) # Send message
-            self.bot.music[ctx.guild.id]["nowPlaying"] = {
-                "music": music["music"],
-                "requestedBy": music["requestedBy"]
-            } # Update nowPlawing
-        else:
-            clearVoiceParameters(self)
-    else:
-        asyncio.run_coroutine_threadsafe(ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The song is unreadable!"), self.bot.loop)
-        clearVoiceParameters(self)
+    # Add the requester
+    track = Track(track.id, track.info, requester=requester)
+
+    await player.play(track)
+    
+    # Send the embed
+    await sendPlayingSongEmbed(self, channel, track)
