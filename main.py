@@ -5,7 +5,6 @@ import discord
 import wavelink
 import os
 import json
-import youtube_dl
 import tekore # Spotify
 
 from discord.ext import commands

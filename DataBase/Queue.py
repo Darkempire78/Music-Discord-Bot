@@ -2,6 +2,8 @@ import mysql.connector
 
 from DataBase.Connection import DBConnection
 
+
+import datetime
 class DBQueue:
 
     def __init__(self, dbConnection):
@@ -9,7 +11,9 @@ class DBQueue:
 
     def add(self, server, isPlaying, requester, textChannel, track, title, duration, index):
         """Add a song in the queue"""
-        mydb = DBConnection().getConnection()
+        t1 = datetime.datetime.now()
+        # print("DB QUEUE add", t1)
+        mydb = self.dbConnection.getConnection()
         mycursor = mydb.cursor()
         query = f"INSERT INTO `queue` (`server`, `isPlaying`, `requester`, `textChannel`, `track`, `title`, `duration`, `index`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
         val = (str(server), isPlaying, requester, str(textChannel), track, title, duration, index)
@@ -17,6 +21,7 @@ class DBQueue:
         mydb.commit()
         mycursor.close()
         mydb.close()
+        # print("DB QUEUE add", datetime.datetime.now() - t1)
         
     def remove(self, server, index):
         """Remove the song from the queue"""
@@ -76,15 +81,21 @@ class DBQueue:
         mydb.close()
         
     def getFutureIndex(self, server):
-        """Return the max index of a server's queue"""
+        """Return the max index of a server's queue""" 
+        # t1 = datetime.datetime.now()
+        # print("DB QUEUE getFutureIndex", t1)
         mydb = self.dbConnection.getConnection()
+        # print("connection_id", mydb._cnx.connection_id)
         mycursor = mydb.cursor()
         query = f"SELECT MAX(`index`) FROM queue WHERE `server`= %s;"
         val = (str(server), )
         mycursor.execute(query, val)
         result = mycursor.fetchall()
+        mydb.commit()
         mycursor.close()
         mydb.close()
+        # print("DB QUEUE getFutureIndex", datetime.datetime.now() - t1)
+        # print(result[0][0])
         return result[0][0]
 
     def getNextIndex(self, server):
