@@ -8,7 +8,9 @@ import sys
 import datetime
 
 from Tools.Utils import Utils
+
 from DataBase.Server import DBServer
+from DataBase.Queue import DBQueue
 
 # ------------------------ COGS ------------------------ #  
 
@@ -65,7 +67,17 @@ class EventsCog(commands.Cog, name="EventsCog"):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-            
+        
+        # If the bot leave a voice channel
+        if (before.channel is not None) and (after.channel is None):
+            if member == self.bot.user:
+
+                player = self.bot.wavelink.get_player(before.channel.guild.id)
+                if player.is_playing:
+                    await player.destroy()
+                DBQueue(self.bot.dbConnection).clear(before.channel.guild.id)
+                DBServer(self.bot.dbConnection).clearMusicParameters(before.channel.guild.id, False, False)
+
         if (before.channel is not None) and (after.channel is not before.channel):
             if (
                 (self.bot.user.id in before.channel.voice_states.keys() and 
@@ -79,7 +91,8 @@ class EventsCog(commands.Cog, name="EventsCog"):
                 
                 DBServer(self.bot.dbConnection).clearMusicParameters(before.channel.guild.id, False, False)
 
-        elif (before.channel is  None) and (after.channel is not None):
+        # If the bot join a voice channel
+        elif (before.channel is None) and (after.channel is not None):
             if member == self.bot.user:
 
                 DBServer(self.bot.dbConnection).clearMusicParameters(after.channel.guild.id, False, False)
