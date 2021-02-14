@@ -44,9 +44,9 @@ class EventsCog(commands.Cog, name="EventsCog"):
         if isinstance(error, MissingRequiredArgument):
             return await ctx.send(f"{ctx.author.mention} Required argument is missed!\nUse this model : `{self.bot.command_prefix}{ctx.command.name} {ctx.command.usage}`")
         if isinstance(error, ExpectedClosingQuoteError):
-            return await ctx.send(f"{ctx.author.mention} Your request can't only contain `{error.close_quote}`")
+            return await ctx.send(f"{ctx.author.mention} Your request cannot only contain `{error.close_quote}`")
         
-        embed = discord.Embed(title=f"__**COMMAND ERROR**__", description=f"[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)\n\n**You may repport this issue on the [GitHub repository](https://github.com/Darkempire78/Music-Discord-Bot)**\n```{error}```", color=discord.Colour.red())
+        embed = discord.Embed(title=f"__**COMMAND ERROR**__", description=f"[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)\n\n**You may report this issue on the [GitHub repository](https://github.com/Darkempire78/Music-Discord-Bot)**\n```{error}```", color=discord.Colour.red())
         embed.set_footer(text="Bot Created by Darkempire#8245")
         await ctx.channel.send(embed=embed)
 

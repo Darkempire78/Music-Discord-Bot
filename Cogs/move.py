@@ -28,11 +28,11 @@ class CogMove(commands.Cog):
             return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The queue is empty!")
 
         if not indexFrom.isdigit() or not indexTo.isdigit():
-            return await ctx.channel.send(f"{self.bot.emojiList.false}{ctx.author.mention} The index have to be a number!")
+            return await ctx.channel.send(f"{self.bot.emojiList.false}{ctx.author.mention} Index have to be a number!")
         if ((int(indexFrom)) > tracksCount) or ((int(indexTo)) > tracksCount):
-            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The index is invalid!")
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} Index is invalid!")
         if (int(indexFrom) == int(indexTo)):
-            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The indexes can not be the same!")
+            return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} Indexes cannot be the same!")
 
         indexFromFake = int(indexFrom)
         indexToFake = int(indexTo)
