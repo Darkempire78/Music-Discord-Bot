@@ -13,6 +13,7 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
 
 * Install all dependencies : ``pip install -r requirements.txt``.
 * Download [Lavalink](https://github.com/Frederikam/Lavalink).
+* Install Java 11+
 * Create a MySQL database and use the ``Scripts/generateDatabase.sql`` file to create the table.
 * Edit `configuration example.json` :
 
@@ -39,7 +40,7 @@ Finally, host the bot and invite it to your own server.
 
 ## Run the bot
 
-* Run `Lavalink.jar` (from [Lavalink](https://github.com/Frederikam/Lavalink))
+* Run `Lavalink.jar` (from [Lavalink](https://github.com/Frederikam/Lavalink)) with `java -jar Lavalink.jar `
 * Run the bot
 
 ## Features
