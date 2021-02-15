@@ -22,7 +22,10 @@ class CogStats(commands.Cog):
     async def stats(self, ctx):
 
         serverCount = len(self.bot.guilds)
-        userCount = sum(i.member_count for i in self.bot.guilds)
+        try:
+            userCount = sum(i.member_count for i in self.bot.guilds)
+        except:
+            userCount = None
         playingServerCount = DBQueue(self.bot.dbConnection).countPlayingItems()
        
         embed=discord.Embed(title=f"{self.bot.user.name}'s stats", description="[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)", color=discord.Colour.random())
