@@ -35,7 +35,8 @@ async def sendPlayingSongEmbed(self, channel, track):
 
     # Embed 
     embed=discord.Embed(title="Playing Song :", description=f"**[{trackTitle}]({track.uri})**", color=discord.Colour.random())
-    embed.set_thumbnail(url=track.thumb)
+    if track.thumb:
+        embed.set_thumbnail(url=track.thumb)
     embed.add_field(name="Requested by :", value=f"`{track.requester}`", inline=True)
     embed.add_field(name="Duration :", value=f"`{trackDuration}`", inline=True)
     embed.add_field(name="Volume :", value=f"`{volume} %`", inline=True)
