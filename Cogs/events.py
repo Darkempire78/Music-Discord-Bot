@@ -48,7 +48,10 @@ class EventsCog(commands.Cog, name="EventsCog"):
         
         embed = discord.Embed(title=f"__**COMMAND ERROR**__", description=f"[**GitHub**](https://github.com/Darkempire78/Music-Discord-Bot)\n\n**You may report this issue on the [GitHub repository](https://github.com/Darkempire78/Music-Discord-Bot)**\n```{error}```", color=discord.Colour.red())
         embed.set_footer(text="Bot Created by Darkempire#8245")
-        await ctx.channel.send(embed=embed)
+        try:
+            await ctx.channel.send(embed=embed)
+        except:
+            pass
 
         # Send the error on the support server 
         channel = self.bot.get_channel(800839028659453952)

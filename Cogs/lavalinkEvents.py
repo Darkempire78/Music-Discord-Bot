@@ -51,11 +51,12 @@ class CogLavalinkEvents(commands.Cog, wavelink.WavelinkMixin):
         track = DBQueue(self.bot.dbConnection).getNextSong(payload.player.guild_id)
         if track is None:
             currentTrack = DBQueue(self.bot.dbConnection).getCurrentSong(payload.player.guild_id)
-            channelID = currentTrack[3]
-            channel = self.bot.get_channel(int(channelID))
-            if channel:
-                await channel.send(f"{self.bot.emojiList.false} Disconnected because the queue is empty!")
-                await payload.player.disconnect()
+            if currentTrack:
+                channelID = currentTrack[3]
+                channel = self.bot.get_channel(int(channelID))
+                if channel:
+                    await channel.send(f"{self.bot.emojiList.false} Disconnected because the queue is empty!")
+                    await payload.player.disconnect()
             return 
 
         channelID = track[3]

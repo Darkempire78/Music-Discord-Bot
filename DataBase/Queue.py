@@ -124,15 +124,18 @@ class DBQueue:
     
     def getCurrentSong(self, server):
         """Return the playing song of a server's queue"""
-        mydb = self.dbConnection.getConnection()
-        mycursor = mydb.cursor()
-        query = f"SELECT * FROM queue WHERE `server`= %s AND isPlaying= true;"
-        val = (str(server), )
-        mycursor.execute(query, val)
-        result = mycursor.fetchall()
-        mycursor.close()
-        mydb.close()
-        return result[0]
+        try:
+            mydb = self.dbConnection.getConnection()
+            mycursor = mydb.cursor()
+            query = f"SELECT * FROM queue WHERE `server`= %s AND isPlaying= true;"
+            val = (str(server), )
+            mycursor.execute(query, val)
+            result = mycursor.fetchall()
+            mycursor.close()
+            mydb.close()
+            return result[0]
+        except:
+            return None
 
     def getNextSong(self, server):
         """Return the next song of a server's queue"""
