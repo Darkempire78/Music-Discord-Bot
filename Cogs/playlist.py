@@ -23,7 +23,7 @@ class CogPlaylist(commands.Cog):
                     usage="<YouTubeLink>",
                     description = "Add a song to your playlist")
     @commands.guild_only()
-    @commands.cooldown(1, 4, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def playlist_add(self, ctx, link):
         if not link.startswith("https://www.youtube.com/watch"):
             return await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} The YouTube link is invalid!")
@@ -51,7 +51,7 @@ class CogPlaylist(commands.Cog):
                     usage="",
                     description = "Show your playlist")
     @commands.guild_only()
-    @commands.cooldown(1, 4, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def playlist_show(self, ctx):
         playlistContent = DBPlaylist(self.bot.dbConnection).display(ctx.author.id, "liked") # Request
 
@@ -87,7 +87,7 @@ class CogPlaylist(commands.Cog):
                     usage="<Index>",
                     description = "Remove a song of your playlist")
     @commands.guild_only()
-    @commands.cooldown(1, 4, commands.BucketType.member)
+    @commands.cooldown(1, 5, commands.BucketType.member)
     async def playlist_remove(self, ctx, index):
         
         index = int(index) -1
@@ -110,7 +110,7 @@ class CogPlaylist(commands.Cog):
                     usage="",
                     description = "Load all songs of your playlist in the queue")
     @commands.guild_only()
-    @commands.cooldown(1, 4, commands.BucketType.member)
+    @commands.cooldown(1, 30, commands.BucketType.member)
     async def playlist_load(self, ctx):
         
         playlistContent = DBPlaylist(self.bot.dbConnection).display(ctx.author.id, "liked") # Request

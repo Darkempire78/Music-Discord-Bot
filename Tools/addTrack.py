@@ -33,6 +33,14 @@ async def addTrack(self, ctx, tracks):
 
     for track in tracks:
         
+        tempLink = track
+        if isinstance(track, str):
+            # Convert the link in a track
+            track = await self.bot.wavelink.get_tracks(track)
+            track = track[0]
+            if track is None:
+                return await channel.send(f"{self.bot.emojiList.false} The link `{tempLink}` is invalid!")
+
         requester = f"{ctx.author.name}#{ctx.author.discriminator}"
         # Add the requester
         if player.is_playing:
@@ -83,6 +91,7 @@ async def addTrack(self, ctx, tracks):
                         await playlistMessage.edit(embed=embedEdited)
         else:
             DBServer(self.bot.dbConnection).clearMusicParameters(ctx.guild.id, False, False)
+
             DBQueue(self.bot.dbConnection).add(ctx.guild.id, True, requester, ctx.channel.id, track.uri, track.title, track.duration, 1) # Add to the DB
             # Play the track
             await playTrack(self, ctx, player, track, requester)
