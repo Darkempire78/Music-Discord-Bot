@@ -105,19 +105,17 @@ Finally, host the bot and invite it to your own server.
 
 **Project :** https://github.com/Darkempire78/Music-Discord-Bot/projects/2
 
+## Discord
+
+Join the Discord server !
+
+[![](https://i.imgur.com/UfyvtOL.png)](https://discord.gg/sPvJmY7mcV)
 
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-
-
-## Support
-
-<a href="https://discord.gg/FxXQwKvmUY">
-  <img src = "https://discordapp.com/api/guilds/798492323860185108/widget.png?style=banner2">
-</a>
 
 
 ## License
