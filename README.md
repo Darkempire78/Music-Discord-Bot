@@ -3,7 +3,7 @@
 ![](https://img.shields.io/codefactor/grade/github/Darkempire78/Music-Discord-Bot?style=for-the-badge) ![](https://img.shields.io/github/repo-size/Darkempire78/Music-Discord-Bot?style=for-the-badge) ![](https://img.shields.io/badge/SOURCERY-ENABLED-green?style=for-the-badge) <a href="https://discord.com/invite/sPvJmY7mcV"><img src="https://img.shields.io/discord/831524351311609907?color=%237289DA&label=DISCORD&style=for-the-badge"></a>
 
 * **INVITE :** https://top.gg/bot/796749718217555978
-* **SUPPORT SERVER :** https://discord.gg/f2UMbk95bv
+* **SUPPORT SERVER :** https://discord.com/invite/sPvJmY7mcV
 
 # Music Discord Bot
 
@@ -12,7 +12,7 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
 ## Installation
 
 * Install all dependencies : ``pip install -r requirements.txt``.
-* Download [Lavalink](https://github.com/Frederikam/Lavalink).
+* Download [Lavalink](https://github.com/freyacodes/Lavalink).
 * Install Java 11+
 * Create a MySQL database and use the ``Scripts/generateDatabase.sql`` file to create the table.
 * Edit `configuration example.json` :
