@@ -143,7 +143,7 @@ async def searchSoundcloud(self, ctx, args):
 
 async def searchQuery(self, ctx, args):
     """Get a YouTube link from a query."""
-    await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
+    await ctx.send(f"{self.bot.emojiList.youtubeLogo} Searching...", delete_after=10)
 
     tracks = await self.bot.wavelink.get_tracks(f'ytsearch:{args}')
 
