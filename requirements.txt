@@ -1,9 +1,9 @@
-discord.py[voice]
-aiohttp
-tekore
-git+https://github.com/3jackdaws/soundcloud-lib
-mysql-connector-python
-dblpy
-wavelink
-youtube-search-python
-psutil
+discord.py[voice]==1.7.3
+aiohttp==3.7.4.post0
+tekore==4.0.0
+soundcloud-lib @ git+https://github.com/3jackdaws/soundcloud-lib@00b4572098c399f1da3bd03c29c23f412a704036
+mysql-connector-python==8.0.26
+dblpy==0.4.0
+wavelink==0.9.10
+youtube-search-python==1.4.9
+psutil==5.8.0

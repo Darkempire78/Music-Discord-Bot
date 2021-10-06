@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  db:
+    image: mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      # this should match the mysqlPassword entry in the configuration.docker.json file
+      MYSQL_ROOT_PASSWORD: securePassword123
+    volumes:
+      - sql-data:/var/lib/mysql
+      - ./Scripts:/docker-entrypoint-initdb.d
+
+  lavalink:
+    image: fredboat/lavalink:master
+    restart: always
+    volumes:
+      - ./application.yml:/opt/Lavalink/application.yml
+
+  musicbot:
+    build: .
+    restart: always
+    volumes:
+      - ./configuration.json:/app/configuration.json
+      - ./emojis.json:/app/emojis.json
+    depends_on:
+        - db
+        - lavalink
+
+  # can be useful for debugging the db
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 3001:8080
+volumes:
+  sql-data:

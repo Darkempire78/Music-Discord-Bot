@@ -1,0 +1,21 @@
+{
+    "token": "",
+    "prefix": "?",
+    
+    "spotifyClientId": "",
+    "spotifyClientSecret": "",
+    
+    "dblToken": "",
+
+    "lavalinkHost": "lavalink",
+    "lavalinkPort": 2333,
+    "lavalinkRestUri": "http://lavalink:2333",
+    "lavalinkPassword": "youshallnotpass",
+    "lavalinkIdentifier": "BetterMusic",
+    "lavalinkRegion": "us_central",
+  
+    "MySQLHost": "db",
+    "MySQLLogin": "root",
+    "MySQLPasword": "securePassword123",
+    "MySQLDatabase": "BetterMusic"
+}
