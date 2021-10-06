@@ -47,7 +47,7 @@ async def searchSpotifyPlaylist(self, ctx, args):
         return None
 
     trackLinks = []
-    if playlist.tracks.total > 15:
+    if self.playlistLimit != 0 and playlist.tracks.total > self.playlistLimit:
         await playlistTooLarge(self, ctx)
         return None
     await ctx.send(f"{self.bot.emojiList.spotifyLogo} Loading... (This process can take several seconds)", delete_after=60)
@@ -103,7 +103,7 @@ async def searchDeezerPlaylist(self, ctx, session, response):
     playlistId = response._real_url.name
     async with session.get(f"https://api.deezer.com/playlist/{playlistId}") as response:
         response = await response.json()
-        if response["nb_tracks"] > 15:
+        if self.playlistLimit != 0 and response["nb_tracks"] > self.playlistLimit:
             await playlistTooLarge(self, ctx)
             return None
         await ctx.send(f"{self.bot.emojiList.deezerLogo} Loading... (This process can take several seconds)", delete_after=60)
@@ -133,7 +133,7 @@ async def searchSoundcloud(self, ctx, args):
         return None
     
     elif len(track) > 1:
-        if len(track) > 15:
+        if self.playlistLimit != 0 and len(track) > self.playlistLimit:
             await playlistTooLarge(self, ctx)
             return None
         return track.tracks
@@ -183,7 +183,7 @@ async def searchPlaylist(self, ctx, args):
     if videoCount == 0:
         await noResultFound(self, ctx)
         return None
-    if videoCount > 15:
+    if self.playlistLimit != 0 and videoCount > self.playlistLimit:
         await playlistTooLarge(self, ctx)
         return None
     await ctx.send("<:YouTubeLogo:798492404587954176> Loading... (This process can take several seconds)", delete_after=60)
@@ -194,7 +194,7 @@ async def searchPlaylist(self, ctx, args):
 
 async def playlistTooLarge(self, ctx):
     """Send an embed with the error : playlist is too big."""
-    embed=discord.Embed(title="Search results :", description=f"{self.bot.emojiList.false} The playlist is too big! (max : 15 tracks)", color=discord.Colour.random())
+    embed=discord.Embed(title="Search results :", description=f"{self.bot.emojiList.false} The playlist is too big! (max : {self.playlistLimit} tracks)", color=discord.Colour.random())
     embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
     await ctx.send(embed=embed)
 
@@ -207,7 +207,11 @@ async def noResultFound(self, ctx):
 class CogPlay(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+        with open("configuration.json", "r") as config:
+            data = json.load(config)
+            self.playlistLimit = int(data.get("playlistLimit", 15))
+            # 0 is nolimit
+            print(f"Playlist limit set to {self.playlistLimit}")
 
     @commands.command(name = "play",
                     aliases=["p"],
