@@ -69,8 +69,9 @@ intents = discord.Intents.default()
 bot = commands.Bot(prefix, intents = intents)
 
 # Spotify
-spotifyAppToken = tekore.request_client_token(spotifyClientId, spotifyClientSecret)
-bot.spotify = tekore.Spotify(spotifyAppToken, asynchronous=True)
+if (spotifyClientId != ""):
+    spotifyAppToken = tekore.request_client_token(spotifyClientId, spotifyClientSecret)
+    bot.spotify = tekore.Spotify(spotifyAppToken, asynchronous=True)
 
 # Lavalink
 bot.lavalink = createLavalink()
