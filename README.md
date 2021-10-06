@@ -51,7 +51,6 @@ Finally, host the bot and invite it to your own server.
 ## Run in docker
 
 * skip all but the first installation steps above
-* 
 * [install docker](https://docs.docker.com/get-docker/)
 * [install docker-compose](https://docs.docker.com/compose/install/#install-compose)
 * copy the [configuration.docker.json](configuration.docker.json) file to `./configuration.json`
