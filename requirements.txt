@@ -1,5 +1,5 @@
 discord.py[voice]==1.7.3
-aiohttp==3.7.4.post0
+aiohttp>=3.7.4
 tekore==4.0.0
 soundcloud-lib @ git+https://github.com/3jackdaws/soundcloud-lib@00b4572098c399f1da3bd03c29c23f412a704036
 mysql-connector-python==8.0.26
