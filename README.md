@@ -11,6 +11,7 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
 
 ## Installation
 
+* create a discord application / bot [here](https://discord.com/developers/applications)
 * Install all dependencies : ``pip install -r requirements.txt``.
 * Download [Lavalink](https://github.com/freyacodes/Lavalink).
 * Install Java 11+
@@ -40,8 +41,31 @@ Finally, host the bot and invite it to your own server.
 
 ## Run the bot
 
-* Run `Lavalink.jar` (from [Lavalink](https://github.com/Frederikam/Lavalink)) with `java -jar Lavalink.jar `
-* Run the bot
+* Run `Lavalink.jar` (from [Lavalink](https://github.com/freyacodes/Lavalink)) with `java -jar Lavalink.jar `
+  * Note: you will likely want to use a [config file](application.yml) in the same directory as `Lavalink.jar` to control its settings
+* Run the bot `python3 main.py`
+
+
+## Run in docker
+
+* skip all but the first installation steps above
+* 
+* [install docker](https://docs.docker.com/get-docker/)
+* [install docker-compose](https://docs.docker.com/compose/install/#install-compose)
+* copy the [configuration.docker.json](configuration.docker.json) file to `./configuration.json`
+* fill in your discord bot token 
+  * optionally the spotify client id/secret && dbl tokens
+* run `docker-compose build`
+* run `docker-compose up -d db`
+* run `docker-compose up -d`
+
+> Note: In theory you can skip `docker-compose up -d db` and just run `docker-compose up -d` but the timing of the db startup and running of the generateDatabase.sql on initial startup can sometimes cause the music bot to fail to start so its best to just start the db first to give it enough time
+
+### Docker running / debugging tips
+* you can run `docker-compose logs` to view logs for all services
+* you can run `docker-compose logs <service>` eg: `docker-compose logs musicbot` to see the logs for a specific service (look in the compose file for the service names)
+* you can run `docker-compose stop` to stop the music bot / db / lavalink containers
+* you can run `docker-compose start` to start the music bot / db / lavalink after stopping
 
 ## Features
 
