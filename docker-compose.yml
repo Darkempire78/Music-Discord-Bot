@@ -1,5 +1,5 @@
 version: '3.1'
-  
+
 services:
   db:
     image: mariadb
@@ -27,7 +27,7 @@ services:
     depends_on:
         - db
         - lavalink
-  
+
   # can be useful for debugging the db
   # adminer:
   #   image: adminer
