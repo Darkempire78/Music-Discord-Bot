@@ -2,7 +2,7 @@
     "token": "",
     "prefix": "?",
     
-    "playLimit": "15",
+    "playlistLimit": "15",
     
     "spotifyClientId": "",
     "spotifyClientSecret": "",
