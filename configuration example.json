@@ -3,6 +3,7 @@
     "prefix": "?",
     
     "playlistLimit": "15",
+    "sponsorblock": true,
     
     "spotifyClientId": "",
     "spotifyClientSecret": "",

@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 
 from Tools.sendPlayingSongEmbed import sendPlayingSongEmbed

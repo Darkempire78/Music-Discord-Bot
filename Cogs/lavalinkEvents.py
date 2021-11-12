@@ -1,6 +1,7 @@
-import discord
 from discord.ext import commands
 import wavelink
+import sponsorblock as sb
+import asyncio
 import json
 
 from Tools.playTrack import playTrack
@@ -24,6 +25,37 @@ class Track(wavelink.Track):
 class CogLavalinkEvents(commands.Cog, wavelink.WavelinkMixin):
     def __init__(self, bot):
         self.bot = bot
+
+    @wavelink.WavelinkMixin.listener('on_track_start')
+    async def on_track_start(self, node: wavelink.Node, payload):
+
+        with open("configuration.json", "r") as config:
+            data = json.load(config)
+            sponsorblock = data["sponsorblock"]
+            
+        # Sponsorblock
+        if sponsorblock:
+            currentTrack = DBQueue(self.bot.dbConnection).getCurrentSong(payload.player.guild_id)[4]
+            sbClient = sb.Client()
+            segments = None
+
+            try:
+                segments = sbClient.get_skip_segments(currentTrack, category="music_offtopic")
+            except:
+                pass
+
+            while True:
+                # Stop if it's another track
+                track = DBQueue(self.bot.dbConnection).getCurrentSong(payload.player.guild_id)[4]
+                if track != currentTrack:
+                    break
+                
+                currentPosition = payload.player.position
+                if segments:
+                    for segment in segments:
+                        if currentPosition >= segment.start*1000 and currentPosition <= segment.end*1000:
+                            await payload.player.seek(segment.end*1000)
+                await asyncio.sleep(0.5)
 
     @wavelink.WavelinkMixin.listener('on_track_stuck')
     @wavelink.WavelinkMixin.listener('on_track_end')

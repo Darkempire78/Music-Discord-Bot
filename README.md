@@ -7,7 +7,7 @@
 
 # Music Discord Bot
 
-A Discord bot with more than 30+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links.
+A Discord bot with more than 30+ commands which allows to play music on your server efficiently. Supports Youtube, Spotify, Deezer and Soundcloud links. Skips intros and blanks in the music with [Sponsorblock](https://sponsor.ajay.app/) (optional).
 
 ## Installation
 
@@ -24,6 +24,7 @@ A Discord bot with more than 30+ commands which allows to play music on your ser
     "prefix": "?", // Your prefix
     
     "playlistLimit": "15", // Optional - Defaults to 15 if not provided 0 is unlimited
+    "sponsorblock": true, // True if you want to skip intros and blanks in the music
 
     // Spotify => https://developer.spotify.com/dashboard/ 
     "spotifyClientId": "", // Your Spotify ID (OPTIONAL : Spotify links support)
