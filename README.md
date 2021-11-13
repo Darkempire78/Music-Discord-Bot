@@ -76,6 +76,7 @@ Finally, host the bot and invite it to your own server.
 * Support YouTube lives
 * Support playlists from Spotify, Deezer, Soundcloud and YouTube
 * Playlist system
+* Sponsorblock integration to skip intros and blanks in the music
 * Many commands
 * Complex queue commands
 
