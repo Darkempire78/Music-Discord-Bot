@@ -21,11 +21,12 @@ class CogRemoveRemoverange(commands.Cog):
         if not await Check().userInVoiceChannel(ctx, self.bot): return 
         if not await Check().botInVoiceChannel(ctx, self.bot): return 
         if not await Check().userAndBotInSameVoiceChannel(ctx, self.bot): return 
-
+        
+        tracks = DBQueue(self.bot.dbConnection).display(ctx.guild.id)
 
         if not index.isdigit():
             return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The index have to be a number!")
-        if (int(index) -1) > len(self.bot.music[ctx.guild.id]["musics"]):
+        if (int(index) -1) > len(tracks): 
             return await ctx.channel.send(f"{self.bot.emojiList.false} {ctx.author.mention} The index is invalid!")
 
         tracks = DBQueue(self.bot.dbConnection).display(ctx.guild.id)
@@ -39,7 +40,7 @@ class CogRemoveRemoverange(commands.Cog):
         # Remove
         DBQueue(self.bot.dbConnection).remove(ctx.guild.id, index)
         
-        track = tracks[index]
+        track = tracks[index-2]
         trackDuration = await Utils().durationFormat(track[6])
         trackTitle = track[5].replace("*", "\\*")
         trackUrl = track[4]

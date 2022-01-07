@@ -58,7 +58,7 @@ class CogMove(commands.Cog):
         # Re-create the track
         DBQueue(self.bot.dbConnection).add(trackToMove[0], trackToMove[1], trackToMove[2], trackToMove[3], trackToMove[4], trackToMove[5], trackToMove[6], indexTo) 
 
-        embed=discord.Embed(title="Song moved", description=f"- [**{trackToMove.title}**]({trackToMove.uri}) was moved from `{indexFromFake}` to `{indexToFake}`.", color=discord.Colour.random())
+        embed = discord.Embed(title="Song moved", description=f"- [**{trackToMove[5]}**]({trackToMove[4]}) was moved from `{indexFromFake}` to `{indexToFake}`.", color=discord.Colour.random())
         embed.set_footer(text=f"Requested by {ctx.author} | Open source", icon_url=ctx.author.avatar_url)
         await ctx.channel.send(embed=embed)
 
