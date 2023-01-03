@@ -65,9 +65,9 @@ async def addTrack(self, ctx, playlistLimit, tracks):
         trackTitle = track.title.replace("*", "\\*")
 
         if len(tracks) == 1:
-            # Queue size and duration
-            queueSizeAndDuration = DBQueue(self.bot.dbConnection).queueSizeAndDuration(ctx.guild.id)
-            if queueSizeAndDuration:
+            if queueSizeAndDuration := DBQueue(
+                self.bot.dbConnection
+            ).queueSizeAndDuration(ctx.guild.id):
                 queueDuration = int(queueSizeAndDuration[0])
                 queueDuration = await Utils().durationFormat(queueDuration)
                 queueSize = queueSizeAndDuration[1]
@@ -79,23 +79,30 @@ async def addTrack(self, ctx, playlistLimit, tracks):
             playlistMessage.add_field(name="Place in the queue : ", value=f"`{queueSize}`", inline=True)
             playlistMessage.add_field(name="Estimated time before playing :", value=f"`{queueDuration}`", inline=True)
             playlistMessage.set_thumbnail(url=track.thumb)
+        elif playlistMessage is None:
+            playlistMessage = discord.Embed(title="Song added in the queue", description=f"- **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
+            playlistMessage.set_thumbnail(url=track.thumb)
+        elif (
+            len(
+                f"{playlistMessage.description}\n- **[{trackTitle}]({track.uri})** ({trackDuration})"
+            )
+            > 4096
+        ):
+            embeds.append(playlistMessage)
+            playlistMessage = discord.Embed(title="Song added in the queue", description=f"- **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
+            playlistMessage.set_thumbnail(url=track.thumb)
         else:
-            # If it's a playlist => Update the same message to do not spam the channel
-            if playlistMessage is None:
-                playlistMessage = discord.Embed(title="Song added in the queue", description=f"- **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
-                playlistMessage.set_thumbnail(url=track.thumb)
-            else:
-                if len(playlistMessage.description + f"\n- **[{trackTitle}]({track.uri})** ({trackDuration})") > 4096:
-                    embeds.append(playlistMessage)
-                    playlistMessage = discord.Embed(title="Song added in the queue", description=f"- **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
-                    playlistMessage.set_thumbnail(url=track.thumb)
-                else:
-                    playlistMessage = discord.Embed(title="Songs added in the queue", description=playlistMessage.description + f"\n- **[{trackTitle}]({track.uri})** ({trackDuration})", color=discord.Colour.random())
-    
+            playlistMessage = discord.Embed(
+                title="Songs added in the queue",
+                description=f"{playlistMessage.description}\n- **[{trackTitle}]({track.uri})** ({trackDuration})",
+                color=discord.Colour.random(),
+            )
+
     embeds.append(playlistMessage)
 
-    queueSizeAndDuration = DBQueue(self.bot.dbConnection).queueSizeAndDuration(ctx.guild.id)
-    if queueSizeAndDuration:
+    if queueSizeAndDuration := DBQueue(
+        self.bot.dbConnection
+    ).queueSizeAndDuration(ctx.guild.id):
         queueSize = queueSizeAndDuration[1]
     else:
         queueSize = 0
@@ -103,7 +110,7 @@ async def addTrack(self, ctx, playlistLimit, tracks):
     if (queueLengthToAdd> 1):
         total=discord.Embed(title=f"{queueLengthToAdd} added, {queueSize} in queue")
     else:
-        total=discord.Embed(title=f"No Songs added to the queue")
+        total = discord.Embed(title="No Songs added to the queue")
 
     await ctx.channel.send(embed=total)
 
