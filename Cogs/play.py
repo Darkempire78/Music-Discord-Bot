@@ -8,7 +8,7 @@ import wavelink
 
 from discord.ext import commands
 
-from youtubesearchpython import PlaylistsSearch
+from youtubesearchpython.extras import Playlist
 
 from Tools.Utils import Utils
 
@@ -179,7 +179,8 @@ async def searchQuery(self, ctx, args):
 async def searchPlaylist(self, ctx, args):
     """Get YouTube links from a playlist link."""
     await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
-    videoCount = int(PlaylistsSearch(args, limit = 1).result()["result"][0]["videoCount"])
+    #videoCount = int(PlaylistsSearch(args, limit = 1).result()["result"][0]["videoCount"])
+    videoCount = int(Playlist.getInfo(args)["videoCount"])
     if videoCount == 0:
         await noResultFound(self, ctx)
         return None
@@ -190,7 +191,6 @@ async def searchPlaylist(self, ctx, args):
     
     tracks = await self.bot.wavelink.get_tracks(args)
     return tracks.tracks
-
 
 async def playlistTooLarge(self, ctx):
     """Send an embed with the error : playlist is too big."""
@@ -267,7 +267,7 @@ class CogPlay(commands.Cog):
 
         tracks = args
 
-        await addTrack(self, ctx, tracks) 
+        await addTrack(self, ctx, self.playlistLimit, tracks) 
             
 
 def setup(bot):

@@ -64,8 +64,8 @@ class EventsCog(commands.Cog, name="EventsCog"):
             embed.set_footer(text=f"Server : {ctx.guild.name} - {ctx.guild.id} | Author : {ctx.author} - {ctx.author.id}")
             await channel.send(embed=embed)
 
-            print("\n\n⚠️⚠️⚠️ " + datetime.datetime.now().strftime("%x at %X") + " Ignoring exception in command {}\n:".format(ctx.command), file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+        print("\n\n⚠️⚠️⚠️ " + datetime.datetime.now().strftime("%x at %X") + " Ignoring exception in command {}\n:".format(ctx.command), file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
 
     @commands.Cog.listener()
