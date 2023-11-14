@@ -8,7 +8,7 @@ import wavelink
 
 from discord.ext import commands
 
-from youtubesearchpython import PlaylistsSearch
+from youtubesearchpython.extras import Playlist
 
 from Tools.Utils import Utils
 
@@ -60,9 +60,7 @@ async def searchSpotifyPlaylist(self, ctx, args):
             await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} No song found to : `{title} - {artist}` !")
         else:
             trackLinks.append(track[0])
-    if not trackLinks: # if len(trackLinks) == 0:
-        return None
-    return trackLinks
+    return trackLinks or None
 
 
 async def searchDeezer(self, ctx, args):
@@ -73,14 +71,10 @@ async def searchDeezer(self, ctx, args):
             # Chack if it's a track
             if "track" in response._real_url.path:
                 link = await searchDeezerTrack(self, ctx, session, response)
-                if link is None: 
-                    return None
-                return link
+                return None if link is None else link
             if "playlist" in response._real_url.path:
                 links = await searchDeezerPlaylist(self, ctx, session, response)
-                if links is None: 
-                    return None
-                return links
+                return None if links is None else links
             await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} The Deezer link is not a track!")
             return None
             
@@ -117,9 +111,7 @@ async def searchDeezerPlaylist(self, ctx, session, response):
                 await ctx.send(f"{self.bot.emojiList.false} {ctx.author.mention} No song found to : `{title} - {artist}` !")
             else:
                 trackLinks.append(track[0])
-        if not trackLinks:
-            return None
-        return trackLinks
+        return trackLinks or None
 
 
 async def searchSoundcloud(self, ctx, args):
@@ -165,6 +157,7 @@ async def searchQuery(self, ctx, args):
             messageContent = int(message.content)
             if ((messageContent >= 0) and (messageContent <= 5)):
                 return message.content
+
     try:
         msg = await self.bot.wait_for('message', timeout=15.0, check=check)
         if int(msg.content) == 0:
@@ -172,14 +165,19 @@ async def searchQuery(self, ctx, args):
             return None
         return tracks[int(msg.content) -1]
     except asyncio.TimeoutError:
-        embed = discord.Embed(title = f"**TIME IS OUT**", description = f"{self.bot.emojiList.false} {ctx.author.mention} You exceeded the response time (15s)", color = discord.Colour.red())
+        embed = discord.Embed(
+            title="**TIME IS OUT**",
+            description=f"{self.bot.emojiList.false} {ctx.author.mention} You exceeded the response time (15s)",
+            color=discord.Colour.red(),
+        )
         await ctx.channel.send(embed = embed)
         return None
 
 async def searchPlaylist(self, ctx, args):
     """Get YouTube links from a playlist link."""
     await ctx.send("<:YouTubeLogo:798492404587954176> Searching...", delete_after=10)
-    videoCount = int(PlaylistsSearch(args, limit = 1).result()["result"][0]["videoCount"])
+    #videoCount = int(PlaylistsSearch(args, limit = 1).result()["result"][0]["videoCount"])
+    videoCount = int(Playlist.getInfo(args)["videoCount"])
     if videoCount == 0:
         await noResultFound(self, ctx)
         return None
@@ -190,7 +188,6 @@ async def searchPlaylist(self, ctx, args):
     
     tracks = await self.bot.wavelink.get_tracks(args)
     return tracks.tracks
-
 
 async def playlistTooLarge(self, ctx):
     """Send an embed with the error : playlist is too big."""
@@ -267,7 +264,7 @@ class CogPlay(commands.Cog):
 
         tracks = args
 
-        await addTrack(self, ctx, tracks) 
+        await addTrack(self, ctx, self.playlistLimit, tracks) 
             
 
 def setup(bot):
