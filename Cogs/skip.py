@@ -44,12 +44,12 @@ class CogSkip(commands.Cog):
             if not ratio > 50:
                 return await ctx.send(f"{ctx.author.mention} Waiting for other voice users! ({usersCount}/{ceil(len(ctx.author.voice.channel.voice_states)/2)})")
 
+        player = self.bot.wavelink.get_player(ctx.guild.id)
+        await player.seek(player.current.duration)
+
         # Clean the dict
         DBSkip(self.bot.dbConnection).clear(ctx.guild.id)
         await ctx.send(f"{ctx.author.mention} Current music skipped!")
-
-        player = self.bot.wavelink.get_player(ctx.guild.id)
-        await player.seek(player.current.duration)
 
 def setup(bot):
     bot.add_cog(CogSkip(bot))
